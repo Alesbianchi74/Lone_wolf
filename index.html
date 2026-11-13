@@ -214,7 +214,7 @@ html{font-size:17.5px}
 *,*::before,*::after{font-variant-numeric:lining-nums!important}
 body{font-size:18.5px}
 .hrow{align-items:center}
-.wolf{flex:none;display:block;height:3.1rem;color:var(--ink)}
+.wolf{flex:none;display:block;height:3.1rem;color:var(--accent)}
 .wolf svg{height:100%;width:auto;display:block}
 .nm{font:600 1.75rem/1.05 var(--fd);letter-spacing:0}
 .bk{font-size:1rem;margin-top:2px}
@@ -270,6 +270,32 @@ nav.tabs button svg{width:28px;height:28px}
 .rt{border-collapse:collapse;margin:6px 0}
 .rt th,.rt td{border-bottom:1px solid var(--line);padding:4px 16px 4px 0;text-align:left}
 .rtop{margin-top:10px!important}
+
+/* schermata iniziale */
+.welcome{position:fixed;inset:0;z-index:40;overflow:auto;background:#244A36;color:#fff;display:flex;flex-direction:column;align-items:center;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 7vh) 26px calc(env(safe-area-inset-bottom,0px) + 22px)}
+.welcome>*{width:100%;max-width:520px}
+.wtop{display:flex;flex-direction:column;align-items:center}
+.wmark{display:block;width:125px;color:#F2EBDC}
+.wmark svg{width:100%;height:auto;display:block}
+.welcome h1{margin:20px 0 0;color:#fff;font-family:var(--fd);font-weight:600;line-height:1}
+.welcome h1 span{display:block;font-size:3.1rem;letter-spacing:.005em}
+.welcome h1 small{display:block;font-size:2.3rem;font-weight:500;margin-top:4px;color:#F2EBDC}
+.wlead{margin:6vh auto 0;font-size:1.18rem;line-height:1.5;color:rgba(242,235,220,.88)}
+.wbtns{display:flex;flex-direction:column;gap:12px;margin-top:5vh;margin-bottom:28px}
+.wbig{min-height:60px;border-radius:16px;background:#FAF6EC;border:0;color:#244A36;font:600 1.35rem var(--fd)}
+.wsec{min-height:52px;border-radius:14px;background:transparent;border:1.5px solid #F2EBDC;color:#F2EBDC;font-weight:500}
+.wlang{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:0;width:auto!important}
+.wlang{background:none}
+.wlang::before{content:none}
+.wlang{position:relative}
+.wlang{--h:44px}
+.wlang .wflag{width:58px;height:44px;border:0;background:transparent;display:grid;place-items:center;padding:0}
+.wlang .wflag svg{width:40px;height:40px;display:block}
+.wlang .wflag[aria-pressed="false"] svg{opacity:.4;filter:grayscale(.6)}
+
+.wsep{width:1.5px;height:24px;background:#B7AE98}
+.wlang{background:#F2EBDC;border-radius:24px;padding:2px 8px;margin-bottom:6px}
+@media (max-height:720px){.welcome{padding-top:calc(env(safe-area-inset-top,0px) + 4vh)}.wmark{width:96px}.welcome h1{margin-top:12px}.welcome h1 span{font-size:2.6rem}.welcome h1 small{font-size:1.95rem}.wlead{margin-top:3vh;font-size:1.05rem}.wbtns{margin-top:3vh}.wbtns{margin-bottom:20px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -587,12 +613,15 @@ function nav(c){
   const t=[['pers','Personaggio',I.pers],['equip','Zaino',I.equip],['comb','Battaglia',I.comb],['diario','Diario',I.diario],['opz','Compendio',I.opz]];
   return `<nav class="tabs">${t.map(([k,l,ic])=>`<button data-a="tab" data-t="${k}" ${APP.tab===k?'aria-current="page"':''} class="${k==='comb'&&c.combat?'alert':''}">${ic}<span>${l}</span></button>`).join('')}</nav>`;
 }
+const FLAG_IT='<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M10 4H22V28H10z"/><path d="M5,4h6V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#41914d"/><path d="M25,4h6V28h-6c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 26 16)" fill="#bf393b"/><path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"/><path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"/></svg>';
+const FLAG_EN='<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="4" width="30" height="24" rx="4" ry="4" fill="#071b65"/><path d="M5.101,4h-.101c-1.981,0-3.615,1.444-3.933,3.334L26.899,28h.101c1.981,0,3.615-1.444,3.933-3.334L5.101,4Z" fill="#fff"/><path d="M22.25,19h-2.5l9.934,7.947c.387-.353,.704-.777,.929-1.257l-8.363-6.691Z" fill="#b92932"/><path d="M1.387,6.309l8.363,6.691h2.5L2.316,5.053c-.387,.353-.704,.777-.929,1.257Z" fill="#b92932"/><path d="M5,28h.101L30.933,7.334c-.318-1.891-1.952-3.334-3.933-3.334h-.101L1.067,24.666c.318,1.891,1.952,3.334,3.933,3.334Z" fill="#fff"/><rect x="13" y="4" width="6" height="24" fill="#fff"/><rect x="1" y="13" width="30" height="6" fill="#fff"/><rect x="14" y="4" width="4" height="24" fill="#b92932"/><rect x="14" y="1" width="4" height="30" transform="translate(32) rotate(90)" fill="#b92932"/><path d="M28.222,4.21l-9.222,7.376v1.414h.75l9.943-7.94c-.419-.384-.918-.671-1.471-.85Z" fill="#b92932"/><path d="M2.328,26.957c.414,.374,.904,.656,1.447,.832l9.225-7.38v-1.408h-.75L2.328,26.957Z" fill="#b92932"/><path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"/><path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"/></svg>';
 function renderWelcome(){
-  return `<div class="full"><div class="in"><span class="mark">${I.wolf}</span><h1>Lone Wolf Companion</h1>
-  <p class="lead">Il compagno di gioco per i libri 1-12 di Lupo Solitario: Arti Ramas e Arti Ramastan, equipaggiamento, combattimenti con la Tabella del Destino, salvataggi su dispositivo e sul tuo account Claude.</p>
-  <div class="row"><button class="btn pri big wide" data-a="new-char">Crea un nuovo personaggio</button></div>
-  <div class="row"><button class="btn wide" data-a="import">Importa un salvataggio (.json)</button></div>
-  <p class="note" id="cloudst">${esc(CLOUD.status)}</p></div></div>`;
+  const onClaude=!!(window.claude&&typeof window.claude.use==='function');
+  return `<div class="welcome"><div class="wtop"><span class="wmark">${I.wolf}</span><h1><span>Lone Wolf</span><small>Companion</small></h1></div>
+  <p class="wlead">Il compagno di gioco per i libri 1-12 di Lupo Solitario: scheda del personaggio con Arti Ramas e Ramastan, equipaggiamento, combattimenti con la Tabella del Destino, diario e mappe.${onClaude?'':' I salvataggi restano su questo dispositivo.'}</p>
+  <div class="wbtns"><button class="btn wbig" data-a="new-char">Crea un nuovo personaggio</button><button class="btn wsec" data-a="import">Importa un salvataggio (.json)</button></div>
+  <div class="wlang" role="group" aria-label="Lingua"><button class="wflag" aria-pressed="true" aria-label="Italiano">${FLAG_IT}</button><span class="wsep"></span><button class="wflag" aria-pressed="false" aria-label="English, in arrivo" disabled>${FLAG_EN}</button></div>
+  <p class="sr" id="cloudst">${esc(CLOUD.status)}</p></div>`;
 }
 function renderDead(c){
   return `<div class="dead"><h2>La tua missione finisce qui</h2><p class="lead">La RESISTENZA di ${esc(c.name)} è scesa a zero${c.para?' al paragrafo '+c.para.n:''}.</p>
