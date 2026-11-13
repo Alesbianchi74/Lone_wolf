@@ -592,7 +592,16 @@ function drawReel(title,sub,o={}){
 function drawFate(title,sub){return drawReel(title,sub).then(r=>r?r.d:null)}
 
 /* ====== RENDER ====== */
+// Ridisegna conservando la posizione di scorrimento quando si resta nella stessa schermata
+let LASTVIEW='';
 function render(){
+  const view=UI.create?'create':UI.wiz?'wiz':(C()?'tab:'+APP.tab:'welcome');
+  const box=document.querySelector('#app > .full');const boxTop=box?box.scrollTop:0;const winY=window.scrollY;
+  renderInner();
+  if(view===LASTVIEW){const nb=document.querySelector('#app > .full');if(nb&&boxTop)nb.scrollTop=boxTop;if(winY)window.scrollTo(0,winY)}
+  LASTVIEW=view;
+}
+function renderInner(){
   const c=C();const app=document.getElementById('app');
   if(UI.create){app.innerHTML=renderCreate();return}
   if(!c){app.innerHTML=renderWelcome();return}
