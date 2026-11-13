@@ -1,0 +1,1266 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Lone Wolf Companion</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/favicon-64.png">
+<meta name="apple-mobile-web-app-title" content="Lone Wolf">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FAF6EC" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#201C16" media="(prefers-color-scheme: dark)">
+<link rel="preload" href="fonts/vollkorn.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face{font-family:'Vollkorn';src:url('fonts/vollkorn.woff2') format('woff2');font-weight:400 900;font-style:normal;font-display:swap}
+@font-face{font-family:'Vollkorn';src:url('fonts/vollkorn-italic.woff2') format('woff2');font-weight:400 900;font-style:italic;font-display:swap}
+@font-face{font-family:'Alegreya Sans';src:url('fonts/alegreyasans-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Alegreya Sans';src:url('fonts/alegreyasans-400i.woff2') format('woff2');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'Alegreya Sans';src:url('fonts/alegreyasans-500.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Alegreya Sans';src:url('fonts/alegreyasans-700.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+</style>
+<style>
+:root{
+  --bg:#F2EBDC;--surface:#FAF6EC;--sunk:#E6DCC6;--ink:#1F1B15;--muted:#5F574A;--line:#C8BDA5;--rule:#5A5040;
+  --accent:#2D5A42;--on-accent:#EFF2E5;--gold:#8A6516;--blood:#982922;--ok:#2C6A3D;--veil:rgba(20,28,22,.55);
+  --fd:'Vollkorn',Georgia,'Times New Roman',serif;
+  --fi:'Vollkorn',Georgia,'Times New Roman',serif;
+  --fs:'Alegreya Sans',-apple-system,system-ui,'Helvetica Neue',sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#17140F;--surface:#201C16;--sunk:#0F0D0A;--ink:#EDE5D3;--muted:#ABA18D;--line:#3D362B;--rule:#8F8470;
+    --accent:#7EB494;--on-accent:#0D1610;--gold:#D5AE57;--blood:#E5695B;--ok:#7EC08F;--veil:rgba(0,0,0,.65);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17140F;--surface:#201C16;--sunk:#0F0D0A;--ink:#EDE5D3;--muted:#ABA18D;--line:#3D362B;--rule:#8F8470;
+  --accent:#7EB494;--on-accent:#0D1610;--gold:#D5AE57;--blood:#E5695B;--ok:#7EC08F;--veil:rgba(0,0,0,.65);
+  color-scheme:dark;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 130px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.45 var(--fs);-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface);border-bottom:1px solid var(--line);padding:10px 16px 10px}
+.hrow{display:flex;align-items:flex-start;gap:10px}
+.who{flex:1;min-width:0}
+.nm{font:1.45rem/1.1 var(--fd);letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk{font:italic .92rem/1.3 var(--fi);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ib{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:transparent;display:grid;place-items:center;padding:0}
+.ib:disabled{opacity:.35}
+.ib svg{width:22px;height:22px}
+.ib.fate{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.hstats{display:grid;grid-template-columns:1fr 1.35fr .9fr;gap:12px;margin-top:8px;align-items:end}
+.hs .l{display:block;font-size:.78rem;color:var(--muted)}
+.hs .v{font:2rem/1 var(--fi);font-variant-numeric:lining-nums}
+.hs .v small{font-size:1.05rem;color:var(--muted)}
+.bar{height:5px;background:var(--sunk);border-radius:3px;margin-top:5px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);transition:width .3s}
+.bar.low i{background:var(--blood)}
+
+/* layout */
+main{padding:6px 16px calc(96px + env(safe-area-inset-bottom,0px));max-width:680px;margin:0 auto}
+.sec{padding:18px 0 6px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:0}
+.sec h2{font:1.32rem/1.2 var(--fd);margin:0 0 4px;display:flex;align-items:baseline;gap:8px}
+.sec h2 .cnt{margin-left:auto;font:italic .95rem var(--fi);color:var(--muted)}
+.lead{color:var(--muted);font-size:.93rem;margin:0 0 10px}
+.note{font-size:.88rem;color:var(--muted);margin:6px 0}
+.warn{color:var(--blood)}
+.banner{margin:14px 0 4px;padding:12px 14px;border-left:3px solid var(--gold);background:var(--surface);font-size:.95rem}
+.banner b{font-weight:700}
+
+/* ledger rows */
+.ledger{list-style:none;margin:6px 0 10px;padding:0}
+.ledger li{display:flex;align-items:center;gap:10px;min-height:46px;border-bottom:1px solid var(--line);padding:4px 0}
+.ledger li:last-child{border-bottom:0}
+.ledger .n{font:1rem var(--fi);color:var(--muted);width:20px;text-align:right;flex:none}
+.ledger .t{flex:1;min-width:0}
+.ledger .t small{display:block;color:var(--muted);font-size:.82rem;line-height:1.25}
+.ledger .empty{color:var(--line);font-style:italic}
+.ledger .acts{display:flex;gap:6px;flex:none}
+
+/* buttons */
+.btn{min-height:44px;padding:8px 14px;border-radius:10px;border:1px solid var(--ink);background:transparent;font-weight:500}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.dng{border-color:var(--blood);color:var(--blood)}
+.btn.sm{min-height:36px;padding:5px 10px;font-size:.9rem;border-radius:8px}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.4;cursor:default}
+.x{width:36px;height:36px;border:0;background:transparent;color:var(--muted);font-size:1.3rem;border-radius:8px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+.row.end{justify-content:flex-end}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0}
+.chip{min-height:38px;padding:6px 12px;border-radius:19px;border:1px solid var(--line);background:var(--surface);font-size:.94rem}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.chip:disabled{opacity:.4}
+.step{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.step button{width:42px;height:42px;border:0;background:transparent;font-size:1.25rem}
+.step span{min-width:42px;text-align:center;font:1.25rem var(--fi)}
+label.f{display:block;margin:8px 0}
+label.f>span{display:block;font-size:.85rem;color:var(--muted);margin-bottom:3px}
+input[type=text],input[type=number],input:not([type]),select,textarea{width:100%;min-height:44px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+textarea{min-height:130px;resize:vertical;line-height:1.4}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1.25fr 1.15fr .8fr;gap:8px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:10px 0}
+.stat .l{font-size:.85rem;color:var(--muted)}
+.stat .v{font:2.6rem/1 var(--fi)}
+.stat .v small{font-size:1.2rem;color:var(--muted)}
+.brk{margin:6px 0 0;padding:0;list-style:none;font-size:.88rem;color:var(--muted)}
+.brk li{display:flex;justify-content:space-between;border-bottom:1px dotted var(--line);padding:2px 0}
+.arts{list-style:none;padding:0;margin:8px 0}
+.arts li{padding:9px 0;border-bottom:1px solid var(--line)}
+.arts li:last-child{border-bottom:0}
+.arts b{font:1.08rem var(--fd);font-weight:400}
+.arts p{margin:2px 0 0;font-size:.9rem;color:var(--muted)}
+.arts .perf{margin:4px 0 0;font-size:.88rem;color:var(--ink)}
+.arts .perf em{color:var(--gold);font-style:normal;font-weight:700}
+.tag{display:inline-block;font-size:.75rem;padding:1px 7px;border:1px solid var(--line);border-radius:9px;color:var(--muted);margin-left:6px;vertical-align:2px}
+.tag.on{border-color:var(--gold);color:var(--gold)}
+
+/* combat */
+.foe{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.foe .t{flex:1}
+.foe b{font:1.15rem var(--fd);font-weight:400}
+.foe.cur{border-left:3px solid var(--blood);padding-left:10px}
+.vs{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;text-align:center;gap:8px;margin:16px 0 8px}
+.vs .side .l{font-size:.82rem;color:var(--muted)}
+.vs .side .v{font:2.4rem/1 var(--fi)}
+.vs .ratio{font:italic .9rem var(--fi);color:var(--muted)}
+.vs .ratio b{display:block;font:normal 2.8rem/1 var(--fi);color:var(--gold)}
+.resbars{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.big{min-height:58px;font:1.35rem var(--fd);border-radius:14px}
+.log{list-style:none;padding:0;margin:8px 0;font-size:.9rem}
+.log li{display:grid;grid-template-columns:34px 1fr;gap:6px;padding:6px 0;border-bottom:1px dotted var(--line)}
+.log .d{font:1.4rem/1 var(--fi);color:var(--gold);text-align:center}
+.log .k{color:var(--blood);font-weight:700}
+
+/* nav */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs button{border:0;background:transparent;padding:8px 2px 7px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.74rem;color:var(--muted);min-height:56px}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-current="page"]{color:var(--accent);font-weight:700}
+nav.tabs button.alert{color:var(--blood)}
+
+/* overlays */
+.veil{position:fixed;inset:0;z-index:50;background:var(--veil);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:680px;max-height:92vh;overflow:auto;border-radius:18px 18px 0 0;padding:18px 18px calc(22px + env(safe-area-inset-bottom,0px));box-shadow:0 -8px 30px rgba(0,0,0,.25)}
+.sheet h3{font:1.45rem var(--fd);margin:0 0 6px}
+.full{position:fixed;inset:0;z-index:40;background:var(--bg);overflow:auto;padding:calc(env(safe-area-inset-top,0px) + 14px) 18px calc(30px + env(safe-area-inset-bottom,0px))}
+.full .in{max-width:640px;margin:0 auto}
+.full h1{font:2.1rem/1.05 var(--fd);margin:8px 0 4px}
+
+/* Tabella del Destino */
+.reel{position:relative;width:132px;height:176px;margin:6px auto 12px;perspective:560px;border-radius:16px;background:var(--surface);border:1.5px solid var(--ink);overflow:hidden;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.reel.spin{cursor:default}
+.drum{position:absolute;left:0;right:0;top:50%;height:0;transform-style:preserve-3d}
+.face{position:absolute;left:0;right:0;top:-32px;height:64px;display:grid;place-items:center;font:3.4rem/1 var(--fi);color:var(--ink);backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.reel::before,.reel::after{content:"";position:absolute;left:0;right:0;height:34%;z-index:2;pointer-events:none}
+.reel::before{top:0;background:linear-gradient(var(--surface),rgba(0,0,0,0))}
+.reel::after{bottom:0;background:linear-gradient(rgba(0,0,0,0),var(--surface))}
+.win{position:absolute;left:10px;right:10px;top:50%;height:66px;margin-top:-33px;border-top:1.5px solid var(--gold);border-bottom:1.5px solid var(--gold);z-index:3;pointer-events:none}
+.reel.hit .face.cur{color:var(--accent)}
+.rout{min-height:40px;margin-bottom:4px}
+.rres{display:grid;gap:6px}
+.rl{display:flex;align-items:baseline;gap:10px;padding:9px 12px;border-radius:10px;background:var(--surface);border-left:4px solid var(--line)}
+.rl.me{border-left-color:var(--accent)}
+.rl.foe{border-left-color:var(--blood)}
+.rl .who{flex:1;min-width:0;font:1.08rem var(--fd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rl b{font:1.55rem/1 var(--fi);color:var(--blood);white-space:nowrap}
+.rl b.zero{color:var(--muted);font-size:1.1rem}
+.rl small{color:var(--muted);font-size:.85rem;min-width:58px;text-align:right}
+.rend{margin:10px 0 0;font:1.15rem var(--fd);color:var(--gold);text-align:center}
+.rnum{text-align:center;font:1.15rem var(--fi);margin:0}
+.rnum b{font-size:1.5rem;color:var(--accent)}
+.sheet .lead b{color:var(--gold)}
+.fate-r{display:flex;align-items:center;gap:16px;min-height:76px}
+.fate-r .d{font:4.4rem/1 var(--fi);color:var(--gold);min-width:56px;text-align:center}
+.fate-r .t{flex:1;color:var(--muted);font-size:.95rem}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:.95rem;max-width:92vw;box-shadow:0 4px 18px rgba(0,0,0,.25);animation:tin .2s ease-out}
+@keyframes tin{from{opacity:0;transform:translate(-50%,8px)}}
+.dead{text-align:center;padding:30px 0}
+.dead h2{font:2rem var(--fd);color:var(--blood);margin:0 0 8px}
+.journal{font:1.04rem/1.55 var(--fi)}
+.journal>:first-child{margin-top:4px}
+.jbook{font:1.35rem var(--fd);font-weight:400;margin:18px 0 6px;padding-bottom:3px;border-bottom:1px solid var(--line)}
+.jbook small{display:block;font:italic .95rem var(--fi);color:var(--muted)}
+.jpath{margin:6px 0;line-height:1.9}
+.jpath i{color:var(--gold);margin:0 .3em;font-style:normal}
+.jnote{margin:8px 0;padding:2px 0 2px 12px;border-left:2px solid var(--gold);font-style:italic}
+.jnote small,.jcomb small{display:block;font:.8rem var(--fs);color:var(--muted);font-style:normal}
+.jev{margin:8px 0;font:1.02rem var(--fd);color:var(--gold)}
+.jcomb{margin:8px 0;padding:8px 12px;background:var(--surface);border-left:3px solid var(--blood);border-radius:0 10px 10px 0;font:.92rem/1.45 var(--fs)}
+.jcomb ol{margin:4px 0;padding-left:22px;color:var(--muted)}
+.jcomb .o{margin:2px 0 0;font-weight:700}
+.mark{width:72px;height:72px;margin:0 auto 6px;display:block;color:var(--accent)}
+/* tipografia Vollkorn, dimensioni e filetti */
+html{font-size:17.5px}
+*,*::before,*::after{font-variant-numeric:lining-nums!important}
+body{font-size:18.5px}
+.hrow{align-items:center}
+.wolf{flex:none;display:block;height:3.1rem;color:var(--ink)}
+.wolf svg{height:100%;width:auto;display:block}
+.nm{font:600 1.75rem/1.05 var(--fd);letter-spacing:0}
+.bk{font-size:1rem;margin-top:2px}
+.hs .v,.stat .v,.vs .side .v,.vs .ratio b,.face,.log .d,.fate-r .d{font-weight:600}
+.sec h2,.jbook,.full h1,.sheet h3,.dead h2,.foe b,.arts b,.rl .who,.big,.jev{font-weight:600}
+.sec h2{font-size:1.42rem}
+.top{border-bottom:0;padding-bottom:14px}
+.hbar{position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--line)}
+.hbar i{display:block;height:100%;background:var(--accent);transition:width .35s ease,background-color .35s}
+.hbar.low i{background:var(--blood)}
+.sec{border-bottom:1.5px solid var(--rule)}
+nav.tabs{border-top:3px solid var(--accent);padding-left:4px;padding-right:4px}
+nav.tabs button{border-radius:0 0 14px 14px;margin-bottom:4px}
+nav.tabs button[aria-current="page"]{background:var(--accent);color:var(--on-accent)}
+nav.tabs button[aria-current="page"].alert{color:var(--on-accent)}
+.top .ib{width:40px;height:40px}.top .ib svg{width:20px;height:20px}
+.hacts{display:flex;gap:8px;align-self:end;padding-bottom:2px}
+.hstats{grid-template-columns:.9fr 1.25fr .9fr auto}
+nav.tabs button{font-size:.72rem;letter-spacing:-.01em}
+nav.tabs button svg{width:28px;height:28px}
+.mark{width:96px;height:auto}
+.mark svg{width:100%;height:auto;display:block}
+/* Altro: regole e mappe */
+.big3 li{padding:0}
+.bigrow{display:block;width:100%;text-align:left;border:0;background:transparent;padding:12px 0;min-height:60px}
+.bigrow b{display:block;font:600 1.3rem var(--fd)}
+.bigrow small{color:var(--muted);font-size:.9rem}
+.bigrow::after{content:"›";float:right;margin-top:-1.6em;font:1.6rem var(--fd);color:var(--gold)}
+.maps li{align-items:flex-start;padding:10px 0}
+.maps li.curbook{background:var(--surface);margin:0 -8px;padding:10px 8px;border-radius:10px}
+.mthumb{flex:none;width:76px;height:56px;padding:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--sunk)}
+.mthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.maps .row a.btn{display:inline-flex;align-items:center;text-decoration:none;color:inherit}
+.mv{position:fixed;inset:0;z-index:70;background:#0c0b09;touch-action:none;overflow:hidden}
+.mv img{position:absolute;left:0;top:0;transform-origin:0 0;max-width:none;user-select:none;-webkit-user-select:none;-webkit-user-drag:none}
+.mvbar{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(12,11,9,.82);color:#EDE5D3}
+.mvbar span{flex:1;font:600 1rem var(--fd);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mvbar .btn{border-color:#EDE5D3;color:#EDE5D3}
+.mvbar .btn.pri{background:#EDE5D3;color:#17140F}
+.rules .rtoc{margin:10px 0 6px;padding-left:1.4em;columns:1}
+.rules .rtoc li{margin:2px 0}
+.rules .rtoc button{border:0;background:transparent;padding:6px 0;font:600 1.08rem var(--fd);color:var(--accent);text-align:left}
+.rsec{border-top:1.5px solid var(--rule);padding-top:12px;margin-top:16px}
+.rsec h2{font:600 1.4rem var(--fd);margin:0 0 6px}
+.rsec h3{font:600 1.15rem var(--fd);margin:14px 0 4px}
+.rsec p{margin:6px 0}
+.rsub{font:600 1rem var(--fd);color:var(--gold);margin:10px 0 2px!important}
+.rl2{margin:6px 0;padding-left:1.25em}
+.rl2 li{margin:4px 0}
+.rdl dt{font:600 1.05rem var(--fd);margin-top:8px}
+.rdl dt small{font:italic .85rem var(--fs);color:var(--muted);font-weight:400}
+.rdl dd{margin:2px 0 0;color:var(--ink)}
+.rt{border-collapse:collapse;margin:6px 0}
+.rt th,.rt td{border-bottom:1px solid var(--line);padding:4px 16px 4px 0;text-align:left}
+.rtop{margin-top:10px!important}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="layer"></div>
+<script>
+'use strict';
+/* ====== DATI DI REGOLAMENTO (Manuale del Lettore) ====== */
+const BOOKS={1:'I Signori delle Tenebre',2:'Traversata Infernale',3:'Gli Abissi di Kalte',4:'L’Altare del Sacrificio',5:'Ombre sulla Sabbia',6:'Nel Regno del Terrore',7:'Il Castello della Morte',8:'La Giungla degli Orrori',9:'L’Antro della Paura',10:'Le Segrete di Torgar',11:'I Prigionieri del Tempo',12:'Sfida alle Tenebre'};
+const RAMAS=[
+ {id:'mimetismo',n:'Mimetismo',d:'Ti confondi con l’ambiente: all’aperto ti nascondi, in città parli e ti comporti come un nativo.'},
+ {id:'caccia',n:'Caccia',d:'Nessun obbligo di consumare un Pasto quando devi mangiare, tranne nelle zone desertiche.'},
+ {id:'sestosenso',n:'Sesto Senso',d:'Avverti i pericoli imminenti e intuisci la vera natura di persone e oggetti.'},
+ {id:'orientamento',n:'Orientamento',d:'Trovi il percorso giusto, localizzi persone e oggetti, leggi tracce e impronte.'},
+ {id:'guarigione',n:'Guarigione',d:'+1 RESISTENZA per ogni paragrafo superato senza combattere.'},
+ {id:'scherma',n:'Scherma',d:'+2 COMBATTIVITÀ quando combatti con l’arma di cui sei maestro.'},
+ {id:'psicoschermo',n:'Psicoschermo',d:'Non perdi RESISTENZA quando subisci attacchi mentali.'},
+ {id:'psicolaser',n:'Psicolaser',d:'+2 COMBATTIVITÀ per tutto il combattimento, se il nemico non è immune.'},
+ {id:'affinita',n:'Affinità Animale',d:'Comunichi con alcuni animali e ne intuisci le intenzioni.'},
+ {id:'telecinesi',n:'Telecinesi',d:'Muovi piccoli oggetti con la sola concentrazione.'}];
+const RAMASTAN=[
+ {id:'guerra',n:'Guerra',from:'scherma',d:'+3 COMBATTIVITÀ con le armi in cui sei maestro; con l’Arco +3 alla Tabella del Destino.'},
+ {id:'medicina',n:'Medicina',from:'guarigione',d:'+1 RESISTENZA per ogni paragrafo senza combattere; curi malattie e ferite, riconosci erbe e pozioni.'},
+ {id:'interpretazione',n:'Interpretazione',from:'orientamento',d:'Leggi lingue e simboli, segui tracce anche alterate, scopri trappole, senti il nord.'},
+ {id:'sparizione',n:'Sparizione',from:'mimetismo',d:'Ti mimetizzi anche allo scoperto, mascheri odore e calore, imiti dialetti e usanze.'},
+ {id:'fiuto',n:'Fiuto',from:'caccia',d:'Trovi sempre cibo, anche nel deserto; ignori i malus extra di sorprese e imboscate.'},
+ {id:'controllo',n:'Controllo Animale',from:'affinita',d:'Comunichi con quasi tutti gli animali; ti avvantaggi combattendo in sella.'},
+ {id:'raggio',n:'Raggio Psichico',from:'psicolaser',d:'+4 COMBATTIVITÀ e -2 RESISTENZA per scontro, non usabile con RESISTENZA 6 o meno. Puoi sempre usare lo Psicolaser (+2).'},
+ {id:'scudo',n:'Scudo Psichico',from:'psicoschermo',d:'Nessuna perdita di RESISTENZA dagli attacchi mentali; difese contro illusioni e ipnosi.'},
+ {id:'difesa',n:'Difesa',from:'telecinesi',d:'Sopporti caldo e freddo estremi senza perdere RESISTENZA; sposti oggetti col pensiero.'},
+ {id:'divinazione',n:'Divinazione',from:'sestosenso',d:'Avverti pericoli e nemici occulti, intuisci intenzioni e proprietà nascoste, comunichi telepaticamente.'}];
+const PERF={
+ controllo:{4:'Blocchi i sensi di un animale che ti attacca',6:'Richiami e comandi un animale nelle vicinanze',9:'Sottometti quasi ogni animale'},
+ sparizione:{5:'Sposti l’attenzione del nemico dal tuo nascondiglio',6:'Mascheri i rumori dei tuoi movimenti',8:'Alteri il tuo aspetto fisico'},
+ medicina:{4:'Ritardi gli effetti di veleni e tossine',7:'Neutralizzi veleni e tossine',9:'+20 RESISTENZA se scendi a 6 o meno, una volta per libro'},
+ fiuto:{4:'Ti arrampichi senza attrezzi',6:'Vista acuta come un cannocchiale',9:'Sensi potenziati, vedi al buio'},
+ difesa:{4:'Resisti più a lungo a gas e fumi tossici',6:'Spegni fuochi con la forza di volontà',9:'Sopporti temperature estreme, immunità limitata a fiamme, gas e corrosivi'},
+ raggio:{4:'Fai vibrare oggetti fino a distruggerli',6:'Confondi i nemici in combattimento',9:'+6 COMBATTIVITÀ e -1 RESISTENZA per scontro (non con RESISTENZA 4 o meno); Psicolaser +3'},
+ scudo:{5:'Resisti a influenze mentali e telepatia',7:'Ti proteggi da spiriti maligni ed esseri incorporei',8:'Assorbi e controlli parte delle energie psichiche nemiche'},
+ divinazione:{5:'Individui oggetti e persone con poteri magici',7:'Percepisci tracce psichiche e rivedi eventi passati',8:'Cammini in spirito'},
+ interpretazione:{5:'Scopri imboscate entro 500 m',7:'Non lasci tracce quando ti muovi',8:'Conversi con ogni creatura senziente; non sei individuabile da incantesimi'},
+ guerra:{5:'Disarmato: -2 COMBATTIVITÀ invece di -4',7:'+2 alla Tabella del Destino con armi a distanza',8:'+4 COMBATTIVITÀ con le armi in cui sei maestro; disarmato -1'}};
+const PERF_TITLES={4:'Priore',5:'Precettore',6:'Protettore',7:'Mentore',8:'Illuminato',9:'Arcimaestro'};
+const CERCHI=[{n:'Cerchio del Fuoco',a:['guerra','fiuto'],c:1,r:2},{n:'Cerchio della Luce',a:['controllo','medicina'],c:0,r:3},{n:'Cerchio del Sole',a:['sparizione','fiuto','interpretazione'],c:1,r:3},{n:'Cerchio dello Spirito',a:['raggio','scudo','difesa','divinazione'],c:3,r:3}];
+const RAMAS_RANKS=['Novizio','Allievo','Diacono','Accolito','Iniziato','Aspirante','Guardiano','Tutore','Sapiente','Maestro'];
+const RAMASTAN_RANKS=['Maestro Ramas','Maestro Ramas anziano','Maestro Ramas superiore','Priore','Precettore','Protettore','Mentore','Illuminato','Arcimaestro','Grande Maestro Ramas'];
+const SCHERMA_DRAW=['Pugnale','Lancia','Mazza','Daga','Martello','Spada','Ascia','Spada','Asta','Spadone'];
+const MELEE=['Spada','Spadone','Daga','Pugnale','Ascia','Mazza','Martello','Lancia','Asta'];
+const WEAPON_TYPES=[...MELEE,'Arco','Altro'];
+const GUERRA_LIST=['Asta','Spada','Daga','Martello','Pugnale','Lancia','Spadone','Arco','Ascia','Mazza'];
+const TWO_HANDED=['Spadone','Asta','Lancia'];
+const SWORDS=['Spada','Daga','Spadone'];
+const ARMORS=['Corpetto di Cuoio','Cotta di Maglia','Veste di Bronin','Cotta di Kagonite','Bracciali d’Argento','Altra armatura'];
+const ARMOR_CLASH=[['Cotta di Maglia','Veste di Bronin']];
+const CURR={'Corone d’oro':1,'Lune':4,'Kika':10,'Ren':10,'Nobili':1,'Ain':1,'Orla':2,'Torq':4};
+const SPECIAL_KINDS={arma:'Arma speciale',armatura:'Armatura',elmo:'Elmo',scudo:'Scudo',faretra:'Faretra',altro:'Altro oggetto'};
+const OPTS=[
+ ['healLimit10','Guarigione e Medicina: al massimo 10 punti recuperati per libro','Regola del ciclo Nuovo Ordine applicata a tutti i libri.'],
+ ['healOnlyWounds','Guarigione e Medicina curano solo le ferite','I punti persi per fame o fatica non si recuperano con le Arti.'],
+ ['potionOnlyWounds','Pozioni curative: curano solo le ferite','Come sopra, applicato alle pozioni.'],
+ ['potionAfterCombat','Pozioni curative: solo al termine di un combattimento','Le puoi bere solo subito dopo uno scontro vinto, prima di passare al paragrafo successivo.'],
+ ['mealsPerish','Pasti deperibili','I Pasti avanzati vengono eliminati dallo Zaino a fine libro.'],
+ ['specialLimitRetro','Limite di 12 Oggetti Speciali anche nei libri 1-7','Dal libro 8 il limite vale comunque.'],
+ ['depositLocked','Deposito inaccessibile dal libro 9 al 12','Lupo Solitario non può raggiungere il deposito in quell’arco narrativo.'],
+ ['arciMedCombatOnly','Medicina da Arcimaestro solo durante un combattimento','Spento: attivabile in qualsiasi momento con RESISTENZA 6 o meno.']];
+const DEFAULT_SETTINGS={healLimit10:true,healOnlyWounds:true,potionOnlyWounds:true,potionAfterCombat:true,mealsPerish:true,specialLimitRetro:true,depositLocked:true,arciMedCombatOnly:true,animateFate:true,mapAlias:{2:1}};
+
+/* Tabella dei Risultati di Combattimento estesa. Ogni cella: [perdita Nemico, perdita Lupo Solitario]; 'K' = ucciso. Righe 1..9,0 */
+const rep=(v,n)=>Array(n).fill(v);
+const NEG_N=[[...rep(0,13),-1,-2,-3],[...rep(0,12),-1,-2,-3,-4],[...rep(0,11),-1,-2,-3,-4,-5],[...rep(0,10),-1,-2,-3,-4,-5,-6],[...rep(0,9),-1,-2,-3,-4,-5,-6,-7],[...rep(0,8),-1,-2,-3,-4,-5,-6,-7,-8],[...rep(0,7),-1,-2,-3,-4,-5,-6,-7,-8,-9],[...rep(0,6),-1,-2,-3,-4,-5,-6,-7,-8,-9,-10],[...rep(0,5),-1,-2,-3,-4,-5,-6,-7,-8,-9,-10,-11],[...rep(0,4),-1,-2,-2,-4,-5,-6,-7,-8,-9,-10,-11,-12]];
+const NEG_L=[[...rep('K',11),-8,-6,-6,-5,-5],[...rep('K',10),-8,-7,-6,-5,-5,-4],[...rep('K',9),-8,-7,-6,-5,-5,-4,-4],[...rep('K',8),-10,-8,-7,-6,-5,-4,-4,-3],[...rep('K',7),-10,-8,-7,-6,-5,-4,-4,-3,-2],[...rep('K',6),-10,-8,-7,-6,-6,-5,-4,-3,-2,-2],[...rep('K',5),-10,-8,-7,-6,-5,-5,-4,-3,-2,-2,-1],[...rep('K',3),-12,-10,-8,-7,-6,-5,-4,-4,-3,-2,-1,-1,0],[...rep('K',2),-12,-10,-8,-7,-6,-5,-3,-3,-3,-2,0,0,0,0],['K',-12,-10,-8,-6,-4,-2,-1,...rep(0,8)]];
+const POS_N=[[-3,-4,-5,-6,-7,-8,-9,-10,-11,-12,-14,-16,-18,-20,-22,'K'],[-4,-5,-6,-7,-8,-9,-10,-11,-12,-14,-16,-18,-20,-22,'K','K'],[-5,-6,-7,-8,-9,-10,-11,-12,-14,-16,-18,-20,-22,...rep('K',3)],[-6,-7,-8,-9,-10,-11,-12,-14,-16,-18,-20,...rep('K',5)],[-7,-8,-9,-10,-11,-12,-14,-16,-18,-20,...rep('K',6)],[-8,-9,-10,-11,-12,-14,-16,-18,-20,...rep('K',7)],[-9,-10,-11,-12,-14,-16,-18,-20,...rep('K',8)],[-10,-11,-12,-14,-16,-18,...rep('K',10)],[-11,-12,-14,-16,-18,...rep('K',11)],[-12,-14,-16,-18,...rep('K',12)]];
+const POS_L=[[-5,-5,-4,-4,-4,-3,-3,-2,-2,-1,-1,-1,0,0,0,0],[-4,-4,-3,-3,-3,-3,-2,-2,-1,-1,-1,0,0,0,0,0],[-4,-3,-3,-3,-2,-2,-2,-1,-1,-1,...rep(0,6)],[-3,-3,-2,-2,-2,-2,-2,-1,-1,...rep(0,7)],[-2,-2,-2,-2,-2,-2,-1,-1,...rep(0,8)],[-2,-2,-2,-2,-1,-1,-1,...rep(0,9)],[-1,-1,-1,-1,...rep(0,12)],rep(0,16),rep(0,16),rep(0,16)];
+function crt(ratio,d){
+  const r=d===0?9:d-1;
+  if(ratio<=0){const c=ratio===0?15:Math.max(0,15-Math.ceil(-ratio/2));return {n:NEG_N[r][c],l:NEG_L[r][c]}}
+  const c=Math.min(15,Math.ceil(ratio/2));return {n:POS_N[r][c],l:POS_L[r][c]};
+}
+/* Tabella del Destino: griglia fissa 10x10, ogni cifra compare 10 volte */
+const FATE=(()=>{let s=19840601;const r=()=>(s=(s*16807)%2147483647)/2147483647;const a=[];for(let i=0;i<100;i++)a.push(i%10);for(let i=99;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a})();
+function rnd(n){const u=new Uint32Array(1);crypto.getRandomValues(u);return u[0]%n}
+
+/* ====== ICONE ORIGINALI ====== */
+const I={
+ wolf:'<svg viewBox="3217 502 566 576" fill="currentColor"><path fill-rule="evenodd" d="M 3500 618.8 L 3439 611.1 L 3305.7 506.1 L 3286.3 605.6 L 3285.6 720.5 L 3344.0 667.5 L 3313.1 640.4 L 3325.1 575.4 L 3381.6 676.4 L 3289.5 747.8 L 3220.6 818.3 L 3284.9 848.5 L 3239.2 868.6 L 3329.8 936.8 L 3341.7 894.6 L 3400.5 1013.8 L 3453.9 917.8 L 3435 1040.5 L 3460.9 1074.2 L 3493.0 1057.9 L 3461.2 1012.6 L 3474.0 977.8 L 3525.9 977.8 L 3538.6 1012.6 L 3506.9 1057.9 L 3539.0 1074.2 L 3565 1040.5 L 3546.0 917.8 L 3599.4 1013.8 L 3658.2 894.6 L 3670.1 936.8 L 3760.7 868.6 L 3715.0 848.5 L 3779.3 818.3 L 3710.4 747.8 L 3618.3 676.4 L 3674.8 575.4 L 3686.8 640.4 L 3655.9 667.5 L 3714.3 720.5 L 3713.6 605.6 L 3694.2 506.1 L 3561 611.1 Z M 3611.0 843.6 C 3621.4 820.2 3642.5 794.0 3676.0 764.2 L 3569.2 803.7 L 3540.2 865.2 Z M 3388.9 843.6 C 3378.5 820.2 3357.4 794.0 3323.9 764.2 L 3430.7 803.7 L 3459.7 865.2 L 3388.9 843.6 "/></svg>',
+ undo:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>',
+ fate:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="3.2" y="3.2" width="17.6" height="17.6" rx="4"/><g fill="currentColor" stroke="none"><circle cx="8" cy="8" r="1.55"/><circle cx="16" cy="8" r="1.55"/><circle cx="12" cy="12" r="1.55"/><circle cx="8" cy="16" r="1.55"/><circle cx="16" cy="16" r="1.55"/></g></svg>',
+ pers:'<svg viewBox="1194.2 802.2 101.0 101.0" fill="currentColor"><path stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M1286.7,871v-19.5c0-12.7-6.4-24.4-17.2-31.1l-23.5-14.8c-0.8-0.5-1.8-0.5-2.7,0l-23.5,14.8 c-10.8,6.8-17.2,18.4-17.2,31.1V871c0,0,0,0,0,0v13.2c0,1,0.6,1.9,1.5,2.3l30.6,13.5c0.8,0.3,1.7,0.3,2.4-0.2 c0.7-0.5,1.1-1.2,1.1-2.1v-12.9c0,0,0,0,0,0v-21c0-1.4-1.1-2.5-2.5-2.5h-11.6v-11.9h41.1v11.9h-11.6c-1.4,0-2.5,1.1-2.5,2.5v21 c0,0,0,0,0,0v12.9c0,0.8,0.4,1.6,1.1,2.1c0.4,0.3,0.9,0.4,1.4,0.4c0.3,0,0.7-0.1,1-0.2l30.6-13.5c0.9-0.4,1.5-1.3,1.5-2.3V871 C1286.7,871.1,1286.7,871.1,1286.7,871z M1207.6,882.6V875l25.6,11.4v7.5L1207.6,882.6z M1267.7,866.3c1.4,0,2.5-1.1,2.5-2.5v-16.9 c0-1.4-1.1-2.5-2.5-2.5h-46.1c-1.4,0-2.5,1.1-2.5,2.5v16.9c0,1.4,1.1,2.5,2.5,2.5h11.6v14.6l-25.6-11.4v-17.9 c0-11,5.6-21,14.9-26.9l22.2-14l22.2,14c9.3,5.9,14.9,15.9,14.9,26.9v17.9l-25.6,11.4v-14.6H1267.7z M1256.1,893.9v-7.5l25.6-11.4 v7.6L1256.1,893.9z"/></svg>',
+ equip:'<svg viewBox="919.0 311.0 106.0 106.0" fill="currentColor"><path stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M996.6,327.7h-49.3c-14,0-25.3,11.4-25.3,25.3v1.1c-0.1,0.3-0.2,0.6-0.2,0.9s0.1,0.6,0.2,0.9v41.8 c0,1.4,1.1,2.5,2.5,2.5h94.9c1.4,0,2.5-1.1,2.5-2.5V353C1021.9,339,1010.5,327.7,996.6,327.7z M947.3,332.7h49.3 c11,0,20,8.8,20.3,19.8h-36.7h-16.4H927C927.3,341.5,936.3,332.7,947.3,332.7z M971.2,379.9h1.4c5.5,0,10-4.5,10-10v-4.1h24.9 v21.7H936v-21.7h25.2v4.1C961.2,375.4,965.7,379.9,971.2,379.9z M977.6,369.9c0,2.8-2.2,5-5,5h-1.4c-2.8,0-5-2.2-5-5v-12.4h11.4 V369.9z M927,395.1v-37.6h34.3v3.3h-27.7c-1.4,0-2.5,1.1-2.5,2.5V390c0,1.4,1.1,2.5,2.5,2.5h76.6c1.4,0,2.5-1.1,2.5-2.5v-26.7 c0-1.4-1.1-2.5-2.5-2.5h-27.4v-3.3h34.3v37.6H927z M971.9,370.5h2.7l-1.8-5c1-0.4,1.8-1.3,1.8-2.5c0-1.5-1.2-2.7-2.7-2.7c-1.5,0-2.7,1.2-2.7,2.7 c0,1.2,0.7,2.1,1.8,2.5l-1.8,5H971.9z"/></svg>',
+ comb:'<svg viewBox="649.4 69.9 99.2 99.2" fill="currentColor"><path stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M740.5,96.9c0.4-0.3,0.7-0.8,0.8-1.3l4.3-19.5c0.2-0.8-0.1-1.7-0.7-2.3c-0.6-0.6-1.5-0.9-2.3-0.7l-19.5,4.3 c-0.5,0.1-1,0.4-1.3,0.8l-22.7,25.5l-22.7-25.5c-0.3-0.4-0.8-0.7-1.3-0.8L655.5,73c-0.8-0.2-1.7,0.1-2.3,0.7 c-0.6,0.6-0.9,1.5-0.7,2.3l4.3,19.5c0.1,0.5,0.4,1,0.8,1.3l26.4,23.6l-5.4,6l-2.1-2.1c-2.3-2.3-6.1-2.3-8.5,0 c-2.3,2.3-2.3,6.1,0,8.5l4,4l-9.8,9.8c-2.5-1.4-5.6-1.1-7.7,1c-2.5,2.5-2.5,6.6,0,9.1l7.4,7.4c0,0,0,0,0,0c1.3,1.3,2.9,1.9,4.5,1.9 s3.3-0.6,4.5-1.9c2.1-2.1,2.4-5.3,1-7.7l9.8-9.8l4,4c1.2,1.2,2.7,1.8,4.2,1.8s3.1-0.6,4.2-1.8c2.3-2.3,2.3-6.1,0-8.5l-2.1-2.1 l6.8-6.1l6.8,6.1l-2.1,2.1c-2.3,2.3-2.3,6.1,0,8.5c1.2,1.2,2.7,1.8,4.2,1.8s3.1-0.6,4.2-1.8l4-4l9.8,9.8c-1.4,2.5-1.1,5.6,1,7.7 c1.3,1.3,2.9,1.9,4.5,1.9s3.3-0.6,4.5-1.9l7.4-7.4c2.5-2.5,2.5-6.6,0-9.1c-2.1-2.1-5.3-2.4-7.7-1l-9.8-9.8l4-4 c2.3-2.3,2.3-6.1,0-8.5c-2.3-2.3-6.1-2.3-8.5,0l-2.1,2.1l-5.4-6L740.5,96.9z M667.6,160.6c-0.6,0.6-1.5,0.6-2,0l-7.4-7.4 c-0.6-0.6-0.6-1.5,0-2c0.6-0.6,1.5-0.6,2,0l0.6,0.6l6.3,6.3c0,0,0,0,0,0l0.6,0.6C668.1,159.1,668.1,160,667.6,160.6z M678.4,143.1 l-9.6,9.6l-1.4-1.4l-1.4-1.4l9.6-9.6L678.4,143.1z M690.8,147c-0.4,0.4-1,0.4-1.4,0l-5.7-5.7c0,0,0,0,0,0l-6.3-6.3c0,0,0,0,0,0 l-5.7-5.7c-0.4-0.4-0.4-1,0-1.4c0.2-0.2,0.5-0.3,0.7-0.3s0.5,0.1,0.7,0.3l4,4c0,0,0,0,0,0l9.8,9.8c0,0,0,0,0,0l4,4 C691.2,146,691.2,146.7,690.8,147z M739.1,150.7c0.4,0,0.7,0.1,1,0.4c0.6,0.6,0.6,1.5,0,2l-7.4,7.4c0,0,0,0,0,0 c-0.6,0.6-1.5,0.6-2,0c-0.6-0.6-0.6-1.5,0-2l0.6-0.6c0,0,0,0,0,0l6.3-6.3c0,0,0,0,0,0l0.6-0.6C738.3,150.8,738.7,150.7,739.1,150.7 z M729.4,152.7l-9.6-9.6l2.8-2.8l9.6,9.6L729.4,152.7z M725.8,127.6c0.3,0,0.5,0.1,0.7,0.3c0.4,0.4,0.4,1,0,1.4l-5.7,5.7 c0,0,0,0,0,0l-6.3,6.3c0,0,0,0,0,0l-5.7,5.7c-0.4,0.4-1,0.4-1.4,0c-0.4-0.4-0.4-1,0-1.4l4-4c0,0,0,0,0,0l9.8-9.8c0,0,0,0,0,0l4-4 C725.3,127.7,725.6,127.6,725.8,127.6z M661.6,93.7l-3.3-14.9l14.9,3.3l22.6,25.3l-8.4,9.4L661.6,93.7z M689.4,121.9 C689.4,121.9,689.4,121.9,689.4,121.9C689.5,121.9,689.5,121.9,689.4,121.9L725,82.1l14.9-3.3l-3.3,14.9l-47.9,42.8l-6.5-6.5 L689.4,121.9z M716,130l-6.5,6.5l-6.6-5.9l7.6-6.8L716,130z"/></svg>',
+ diario:'<svg viewBox="367.3 793.8 118.0 118.0" fill="currentColor"><path stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" d="M481.6,806.5c-0.5-0.5-1.3-0.8-2.1-0.7c-7.8,0.9-17,6-24.5,13.5h0c-7.3,7.3-12.2,16-13.4,23.6l-0.4,0.4v-14.8 c0-4.9-4-9-9-9c-0.2,0-0.4,0-0.6,0.1c-0.2,0-0.4-0.1-0.6-0.1h-51.7c-4.9,0-9,4-9,9v6.3c0,0,0,0,0,0.1c0,0,0,0,0,0.1 c0,1.4,1.1,2.5,2.5,2.5h10.4v53.3c0,4.9,4,9,9,9c0.1,0,0.3,0,0.4,0c0.1,0,0.1,0,0.2,0h52.3c4.9,0,9-4,9-9v-6.3c0,0,0-0.1,0-0.1 c0,0,0-0.1,0-0.1c0-1.4-1.1-2.5-2.5-2.5h-10.4v-31.4l4-4c7.6-1.2,16.4-6.1,23.6-13.4c7.6-7.6,12.6-16.7,13.5-24.5 C482.4,807.8,482.1,807,481.6,806.5z M375.3,832.4v-3.9c0-2.2,1.8-4,4-4s4,1.8,4,4v3.9H375.3z M445.1,894.7h-44.8 c0.6-1.2,0.9-2.5,0.9-4v-4h47.9v4C449.1,893,447.3,894.7,445.1,894.7z M436.2,881.8h-37.4c-1.4,0-2.5,1.1-2.5,2.5c0,0,0,0.1,0,0.1 c0,0,0,0.1,0,0.1v6.3c0,2.2-1.8,4-4,4c-2.2,0-4-1.8-4-4v-62.2c0-1.4-0.3-2.8-0.9-4H431c0.2,0,0.4,0,0.6-0.1c0.2,0,0.4,0.1,0.6,0.1 c2.2,0,4,1.8,4,4v19.8l-4.2,4.2c0,0,0,0,0,0c-1.6,0.6-3.2,1.7-4.7,3.1c-2.7,2.7-4,6-3.9,9c2.9,0.1,6.3-1.2,9-3.9 c1.4-1.4,2.4-3,3.1-4.7c0,0,0,0,0,0l0.7-0.7V881.8z M465.2,829.5c-3.8,3.8-8.1,6.9-12.2,9.1l14.3-14.3c1-1,1-2.6,0-3.5 c-1-1-2.6-1-3.5,0l-14.3,14.3c2.1-4.2,5.2-8.4,9.1-12.2h0c5.7-5.7,12.2-9.7,18.1-11.4C475,817.3,470.9,823.9,465.2,829.5z"/></svg>',
+ opz:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 5 7 4.4 2.8 4.8v13.4C7 17.8 10 18.4 12 19.9c2-1.5 5-2.1 9.2-1.7V4.8C17 4.4 14 5 12 6.5Z"/><path d="M12 6.5v13.4"/><path d="M5.6 8.6c1.6-.1 3 .2 4.2.8M5.6 11.6c1.6-.1 3 .2 4.2.8M18.4 8.6c-1.6-.1-3 .2-4.2.8M18.4 11.6c-1.6-.1-3 .2-4.2.8"/></svg>',
+ sun:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2"><circle cx="32" cy="32" r="10"/><path d="M32 6v10M32 48v10M6 32h10M48 32h10M13.6 13.6l7 7M43.4 43.4l7 7M13.6 50.4l7-7M43.4 20.6l7-7" stroke-linecap="round"/></svg>'
+};
+
+/* ====== STATO ====== */
+const LSKEY='lupo-solitario-registro-v1';
+let APP={slots:{},current:null,settings:{...DEFAULT_SETTINGS},settingsUpdated:0,tab:'pers'};
+let UNDO=[];
+const UI={loseN:1,loseCat:'ferita',gainN:1,create:null,wiz:null,sheet:null,lastRound:null};
+const S=()=>APP.settings;
+const C=()=>APP.slots[APP.current]||null;
+function loadLocal(){try{const s=localStorage.getItem(LSKEY);if(s){const o=JSON.parse(s);APP.slots=o.slots||{};APP.current=o.current||null;APP.settings={...DEFAULT_SETTINGS,...(o.settings||{})};APP.settingsUpdated=o.settingsUpdated||0;APP.tab=o.tab||'pers'}}catch(e){}}
+function saveLocal(){try{localStorage.setItem(LSKEY,JSON.stringify({slots:APP.slots,current:APP.current,settings:APP.settings,settingsUpdated:APP.settingsUpdated,tab:APP.tab}))}catch(e){}}
+function persist(id){saveLocal();queueCloud(id)}
+function mutate(fn,undo=true){
+  const c=C();if(!c)return;
+  if(undo){UNDO.push(JSON.stringify(c));if(UNDO.length>40)UNDO.shift()}
+  migrate(c);fn(c);normalize(c);c.updated=Date.now();persist(c.id);render();
+}
+function undo(){const s=UNDO.pop();if(!s)return;const o=JSON.parse(s);o.updated=Date.now();APP.slots[o.id]=o;APP.current=o.id;persist(o.id);render();toast('Ultima azione annullata')}
+const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const uid=()=>Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-5);
+const sum=(a,f)=>a.reduce((t,x)=>t+(f(x)||0),0);
+const num=(v,d=0)=>{const n=parseInt(v,10);return Number.isFinite(n)?n:d};
+
+/* ====== REGOLE DERIVATE ====== */
+const isRamastan=c=>c.book>=6;
+const rsN=c=>c.ramastan.length;
+const has=(c,id)=>c.ramas.includes(id)||c.ramastan.includes(id);
+const hasR=(c,id)=>c.ramastan.includes(id);
+function circles(c){return CERCHI.filter(k=>k.a.every(a=>c.ramastan.includes(a)))}
+function circ(c){const k=circles(c);return {c:sum(k,x=>x.c),r:sum(k,x=>x.r)}}
+function rankName(c){return isRamastan(c)?(RAMASTAN_RANKS[rsN(c)-1]||'—'):(RAMAS_RANKS[c.ramas.length-1]||'—')}
+function equippedSpecials(c){return c.specials.filter(s=>s.kind!=='faretra'&&(s.kind==='arma'?false:s.eq))}
+function maxRes(c){return c.resBase+circ(c).r+sum(c.specials.filter(s=>s.eq&&s.kind!=='arma'),s=>s.res)}
+function baseComb(c){return c.combBase+circ(c).c}
+function idleComb(c){return baseComb(c)+sum(equippedSpecials(c),s=>s.comb)}
+function canHeal(c){return c.ramas.includes('guarigione')||hasR(c,'medicina')}
+function canHunt(c,desert){return hasR(c,'fiuto')||(c.ramas.includes('caccia')&&!desert)}
+function mindShield(c){return c.ramas.includes('psicoschermo')||hasR(c,'scudo')}
+function specialLimit(c){return (c.book>=8||S().specialLimitRetro)?12:Infinity}
+function depositOpen(c){return c.book>=5&&!(S().depositLocked&&c.book>=9&&c.book<=12)}
+function meals(c){return c.backpack.filter(i=>i.kind==='pasto').length}
+function healCeil(c,src){const only=src==='potion'?S().potionOnlyWounds:S().healOnlyWounds;return maxRes(c)-(only?c.debt:0)}
+function arciMed(c){return hasR(c,'medicina')&&rsN(c)>=9}
+function arciMedReady(c,inCombat){return arciMed(c)&&!c.arciUsed&&c.resCur>0&&c.resCur<=6&&(inCombat||!S().arciMedCombatOnly)}
+function migrate(c){if(!c)return;if(!c.journal)c.journal=[{k:'b',book:c.book}];if(c.notesLogged===undefined)c.notesLogged=c.notes||''}
+function normalize(c){
+  migrate(c);
+  const m=maxRes(c);
+  if(c.resCur>m)c.resCur=m;
+  if(c.resCur<=0){c.resCur=0;if(c.status==='alive'){if(c.combat)endCombat(c,'morte');c.status='dead';c.combat=null;c.journal.push({k:'e',txt:'Lupo Solitario cade'+(c.para?' al paragrafo '+c.para.n:''),t:Date.now()})}}
+  c.debt=Math.max(0,Math.min(c.debt,m-c.resCur));
+  if(c.gold>50)c.gold=50;if(c.gold<0)c.gold=0;
+  if(c.log.length>120)c.log=c.log.slice(-120);
+  if(c.history.length>500)c.history=c.history.slice(-500);
+}
+function withMaxDelta(c,fn){const a=maxRes(c);fn();const b=maxRes(c);if(b!==a)c.resCur=b>a?c.resCur+(b-a):Math.max(1,c.resCur+(b-a))}
+function loseRes(c,n,cat){if(n<=0)return;c.resCur-=n;if(cat==='stenti')c.debt+=n;if(c.para)c.para.lost=true}
+function textHeal(c,n){c.resCur=Math.min(maxRes(c),c.resCur+n);c.debt=Math.max(0,c.debt-n)}
+
+/* armi e bonus */
+function weaponTypes(w){return w.sun?SWORDS:[w.type]}
+function allWeapons(c){return [...c.weapons.map(w=>({...w,src:'arm'})),...c.specials.filter(s=>s.kind==='arma').map(s=>({id:s.id,name:s.name,type:s.wtype||'Altro',comb:s.comb||0,sun:!!s.sun,src:'spec'}))]}
+function mastery(c,w){
+  const t=weaponTypes(w);
+  if(hasR(c,'guerra')&&t.some(x=>c.guerra.includes(x)))return ['Guerra ('+t.find(x=>c.guerra.includes(x))+')',rsN(c)>=8?4:3];
+  if(c.ramas.includes('scherma')&&c.scherma&&t.includes(c.scherma))return ['Scherma ('+c.scherma+')',2];
+  return null;
+}
+function unarmedMalus(c){if(hasR(c,'guerra')){if(rsN(c)>=8)return -1;if(rsN(c)>=5)return -2}return -4}
+function psiInfo(c){
+  const laser=c.ramas.includes('psicolaser')||hasR(c,'raggio');
+  const arci=hasR(c,'raggio')&&rsN(c)>=9;
+  return {laser,laserV:arci?3:2,raggio:hasR(c,'raggio'),raggioV:arci?6:4,cost:arci?1:2,min:arci?4:6};
+}
+function combatComb(c,cb,e){
+  const parts=[];const w=cb.weapon?allWeapons(c).find(x=>x.id===cb.weapon):null;
+  parts.push(['COMBATTIVITÀ di base',c.combBase]);
+  const k=circ(c);if(k.c)parts.push(['Cerchi di Sapienza',k.c]);
+  const realW=w&&w.type!=='Arco'?w:null;
+  if(!realW)parts.push([w?'Solo arco: combatti disarmato':'Senza armi',unarmedMalus(c)]);
+  else{if(w.comb)parts.push([w.name,w.comb]);const m=mastery(c,realW);if(m)parts.push(m)}
+  const twoH=realW&&!realW.sun&&TWO_HANDED.includes(realW.type);
+  for(const s of equippedSpecials(c)){if(!s.comb)continue;if(s.kind==='scudo'&&twoH){parts.push([s.name+' (non usabile con arma a due mani)',0]);continue}parts.push([s.name,s.comb])}
+  const p=psiInfo(c);
+  if(e&&!e.immune){if(cb.psi==='laser'&&p.laser)parts.push(['Psicolaser',p.laserV]);if(cb.psi==='raggio'&&p.raggio)parts.push(['Raggio Psichico',p.raggioV])}
+  if(cb.alether)parts.push(['Pozione di Alether',cb.alether]);
+  if(cb.mod)parts.push(['Modificatore dal testo',cb.mod]);
+  if(cb.ambush){if(hasR(c,'fiuto'))parts.push(['Sorpresa o imboscata (ignorata: Fiuto)',0]);else parts.push(['Sorpresa o imboscata',cb.ambush])}
+  return {total:sum(parts,x=>x[1]),parts,w:realW};
+}
+function bestWeapon(c){
+  const cand=[null,...allWeapons(c).filter(w=>w.type!=='Arco').map(w=>w.id)];let best=null,bv=-99;
+  for(const id of cand){const v=combatComb(c,{weapon:id,psi:'none'},null).total;if(v>bv){bv=v;best=id}}return best;
+}
+
+/* ====== CLOUD (account Claude) ====== */
+const CLOUD={db:null,uid:null,status:'Connessione in corso…',pending:new Set(),settingsDirty:false,timer:null,busy:false};
+const col=()=>CLOUD.db.collection('data/users/'+CLOUD.uid);
+async function initCloud(){
+  if(!window.claude||typeof window.claude.use!=='function'){CLOUD.status='Salvataggio su questo dispositivo. Esporta ogni tanto un backup su iCloud Drive';refreshCloud();return}
+  try{
+    const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
+    if(!db||!user){CLOUD.status='Non disponibile: salvataggio solo sul dispositivo';refreshCloud();return}
+    const id=await user.id();if(!id){CLOUD.status='Accedi a Claude per sincronizzare: salvataggio solo sul dispositivo';refreshCloud();return}
+    CLOUD.db=db;CLOUD.uid=id;await cloudPull();
+  }catch(e){CLOUD.status='Connessione non riuscita: salvataggio solo sul dispositivo';refreshCloud()}
+}
+async function cloudPull(){
+  const snap=await col().get();const seen=new Set();let changed=false;
+  for(const d of snap.docs){
+    const v=d.data();if(!v)continue;
+    if(d.id==='settings'){if((v.updated||0)>(APP.settingsUpdated||0)){try{APP.settings={...DEFAULT_SETTINGS,...JSON.parse(v.json)};APP.settingsUpdated=v.updated;changed=true}catch(e){}}else if(APP.settingsUpdated>(v.updated||0))CLOUD.settingsDirty=true;continue}
+    if(!d.id.startsWith('slot_'))continue;
+    const id=d.id.slice(5);seen.add(id);const loc=APP.slots[id];
+    if(v.deleted){if(loc&&(loc.updated||0)<=(v.updated||0)){delete APP.slots[id];changed=true}else if(loc)CLOUD.pending.add(id);continue}
+    if(!loc||(loc.updated||0)<(v.updated||0)){try{APP.slots[id]=JSON.parse(v.json);changed=true}catch(e){}}
+    else if((loc.updated||0)>(v.updated||0))CLOUD.pending.add(id);
+  }
+  for(const id in APP.slots)if(!seen.has(id))CLOUD.pending.add(id);
+  if(!APP.slots[APP.current]){APP.current=Object.keys(APP.slots).sort((a,b)=>(APP.slots[b].updated||0)-(APP.slots[a].updated||0))[0]||null;changed=true}
+  CLOUD.status='Sincronizzato con il tuo account Claude';
+  saveLocal();if(changed){UNDO=[];render()}else refreshCloud();
+  if(CLOUD.pending.size||CLOUD.settingsDirty)queueCloud();
+}
+function queueCloud(id){if(id)CLOUD.pending.add(id);clearTimeout(CLOUD.timer);CLOUD.timer=setTimeout(flushCloud,1200)}
+async function flushCloud(){
+  if(!CLOUD.db||CLOUD.busy)return;CLOUD.busy=true;
+  try{
+    for(const id of [...CLOUD.pending]){
+      CLOUD.pending.delete(id);const s=APP.slots[id];const ref=col().doc('slot_'+id);
+      if(s)await ref.set({json:JSON.stringify(s),updated:s.updated||Date.now(),name:s.name,book:s.book});
+      else await ref.set({deleted:true,updated:Date.now()});
+    }
+    if(CLOUD.settingsDirty){CLOUD.settingsDirty=false;await col().doc('settings').set({json:JSON.stringify(APP.settings),updated:APP.settingsUpdated||Date.now()})}
+    const t=new Date();CLOUD.status='Sincronizzato alle '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');
+  }catch(e){CLOUD.status='Sincronizzazione non riuscita: riprovo alla prossima modifica'}
+  CLOUD.busy=false;refreshCloud();if(CLOUD.pending.size)queueCloud();
+}
+function refreshCloud(){const el=document.getElementById('cloudst');if(el)el.textContent=CLOUD.status}
+
+/* ====== UI DI BASE ====== */
+let toastT=null;
+function toast(msg){const old=document.querySelector('.toast');if(old)old.remove();const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.appendChild(t);clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),2600)}
+function confirmBox(title,text,okLabel,danger){return new Promise(res=>{
+  const L=document.getElementById('layer');const v=document.createElement('div');v.className='veil';
+  v.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><p class="lead">${esc(text)}</p><div class="row end"><button class="btn" data-k="0">Annulla</button><button class="btn ${danger?'dng':'pri'}" data-k="1">${esc(okLabel)}</button></div></div>`;
+  v.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b||e.target===v){v.remove();res(!!(b&&b.dataset.k==='1'))}});L.appendChild(v);
+})}
+const step=(a,v,extra='')=>`<div class="step"><button data-a="${a}" data-d="-1" ${extra} aria-label="Diminuisci">−</button><span>${v}</span><button data-a="${a}" data-d="1" ${extra} aria-label="Aumenta">+</button></div>`;
+const chip=(a,label,on,attrs='')=>`<button class="chip" data-a="${a}" aria-pressed="${on?'true':'false'}" ${attrs}>${label}</button>`;
+const sgn=v=>v>0?'+'+v:String(v);
+
+/* ====== TABELLA DEL DESTINO ====== */
+/* Rullo del Destino: cilindro con le cifre 0-9. Il numero è estratto con crypto, la rotazione viene calcolata per fermarsi su quella cifra. */
+function drawReel(title,sub,o={}){
+  return new Promise(res=>{
+    if(!S().animateFate){res({d:rnd(10),again:false});return}
+    const L=document.getElementById('layer');const v=document.createElement('div');v.className='veil';
+    const H=64,RZ=(H/2)/Math.tan(Math.PI/10);
+    const faces=Array.from({length:10},(_,i)=>`<div class="face" data-i="${i}" style="transform:rotateX(${-i*36}deg) translateZ(${RZ.toFixed(1)}px)">${i}</div>`).join('');
+    v.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><p class="lead">${o.pre||esc(sub||'Fai scorrere il rullo con il dito, oppure tocca Gira.')}</p>
+      <div class="reel" id="reel" role="img" aria-label="Rullo del Destino"><div class="drum" id="drum">${faces}</div><div class="win"></div></div>
+      <div class="rout" id="rout" aria-live="polite">${o.pre?'<p class="note" style="text-align:center">Fai scorrere il rullo con il dito, oppure tocca Gira.</p>':''}</div>
+      <div class="row end" id="rbtn"><button class="btn" id="fx">Annulla</button><button class="btn pri" id="fspin">Gira</button></div></div>`;
+    L.appendChild(v);
+    const drum=v.querySelector('#drum'),reel=v.querySelector('#reel');let A=rnd(10)*36,state='idle',drag=null;
+    const setA=x=>{A=x;drum.style.transform=`rotateX(${A.toFixed(2)}deg)`};setA(A);
+    const close=r=>{v.remove();res(r)};
+    const land=k=>{
+      state='done';reel.classList.add('hit');const f=reel.querySelector(`.face[data-i="${k}"]`);if(f)f.classList.add('cur');
+      v.querySelector('#rout').innerHTML=o.describe?o.describe(k):`<p class="rnum">È uscito il <b>${k}</b></p>`;
+      const b=v.querySelector('#rbtn');
+      b.innerHTML=o.describe&&o.canAgain&&o.canAgain(k)?`<button class="btn" data-r="0">Applica</button><button class="btn pri" data-r="1">Applica e nuovo scontro</button>`:`<button class="btn pri" data-r="0">${o.describe?'Applica':'Usa questo numero'}</button>`;
+      b.querySelectorAll('[data-r]').forEach(x=>x.onclick=()=>close({d:k,again:x.dataset.r==='1'}));
+      b.querySelector('.pri').focus();
+    };
+    const spin=vel=>{
+      state='spin';reel.classList.add('spin');v.querySelector('#fspin').disabled=true;v.querySelector('#fx').disabled=true;
+      const k=rnd(10),dir=vel<0?-1:1,speed=Math.min(3,Math.max(.5,Math.abs(vel)));
+      const turns=Math.round(1+speed*2)+rnd(2);
+      const cur=((A%360)+360)%360,target=k*36;
+      const delta=dir>0?(target-cur+360)%360:-((cur-target+360)%360);
+      const total=delta+dir*turns*360,start=A,dur=1200+turns*380;
+      if(matchMedia('(prefers-reduced-motion: reduce)').matches){setA(start+total);land(k);return}
+      const t0=performance.now();
+      const tick=now=>{const t=Math.min(1,(now-t0)/dur);setA(start+total*(1-Math.pow(1-t,4)));if(t<1)requestAnimationFrame(tick);else land(k)};
+      requestAnimationFrame(tick);
+    };
+    reel.addEventListener('pointerdown',e=>{if(state!=='idle')return;e.preventDefault();try{reel.setPointerCapture(e.pointerId)}catch(_){}drag={y:e.clientY,a:A,samples:[{t:performance.now(),a:A}]};state='drag'});
+    reel.addEventListener('pointermove',e=>{if(state!=='drag')return;setA(drag.a-(e.clientY-drag.y)*36/H);const t=performance.now();drag.samples.push({t,a:A});drag.samples=drag.samples.filter(s=>t-s.t<120)});
+    const up=()=>{if(state!=='drag')return;const s=drag.samples,f=s[0],l=s[s.length-1];const moved=A-drag.a;
+      let vel=s.length>1?(l.a-f.a)/Math.max(16,l.t-f.t):0;
+      if(Math.abs(moved)<6)vel=.7+rnd(9)/10;else if(Math.abs(vel)<.3)vel=.3*Math.sign(moved);
+      spin(vel)};
+    reel.addEventListener('pointerup',up);reel.addEventListener('pointercancel',up);
+    v.querySelector('#fspin').onclick=()=>{if(state==='idle')spin(.7+rnd(12)/10)};
+    v.querySelector('#fx').onclick=()=>{if(state!=='idle')return;close(null)};
+  });
+}
+function drawFate(title,sub){return drawReel(title,sub).then(r=>r?r.d:null)}
+
+/* ====== RENDER ====== */
+function render(){
+  const c=C();const app=document.getElementById('app');
+  if(UI.create){app.innerHTML=renderCreate();return}
+  if(!c){app.innerHTML=renderWelcome();return}
+  if(UI.wiz){app.innerHTML=renderWizard(c);return}
+  const tab=APP.tab;
+  const body={pers:renderPers,equip:renderEquip,comb:renderComb,diario:renderDiario,opz:renderOpz}[tab](c);
+  app.innerHTML=header(c)+`<main id="main">${c.status==='dead'&&tab!=='opz'?renderDead(c):body}</main>`+nav(c);
+}
+function header(c){
+  const m=maxRes(c),p=Math.max(0,Math.min(100,c.resCur/m*100));
+  return `<header class="top"><div class="hrow"><span class="wolf" aria-hidden="true">${I.wolf}</span><div class="who"><div class="nm">${esc(c.name)}</div><div class="bk">Libro ${c.book}, ${BOOKS[c.book]}</div></div>
+</div>
+  <div class="hstats"><div class="hs"><span class="l">Combattività</span><span class="v">${idleComb(c)}</span></div>
+  <div class="hs"><span class="l">Resistenza</span><span class="v">${c.resCur}<small> / ${m}</small></span></div>
+  <div class="hs"><span class="l">Paragrafo</span><span class="v">${c.para?c.para.n:'—'}</span></div><div class="hacts"><button class="ib" data-a="undo" ${UNDO.length?'':'disabled'} aria-label="Annulla l’ultima azione">${I.undo}</button><button class="ib fate" data-a="fate" aria-label="Estrai un numero">${I.fate}</button></div></div><div class="hbar ${p<30?'low':''}" role="meter" aria-label="Resistenza" aria-valuemin="0" aria-valuemax="${m}" aria-valuenow="${c.resCur}"><i style="width:${p}%"></i></div></header>`;
+}
+function nav(c){
+  const t=[['pers','Personaggio',I.pers],['equip','Zaino',I.equip],['comb','Battaglia',I.comb],['diario','Diario',I.diario],['opz','Compendio',I.opz]];
+  return `<nav class="tabs">${t.map(([k,l,ic])=>`<button data-a="tab" data-t="${k}" ${APP.tab===k?'aria-current="page"':''} class="${k==='comb'&&c.combat?'alert':''}">${ic}<span>${l}</span></button>`).join('')}</nav>`;
+}
+function renderWelcome(){
+  return `<div class="full"><div class="in"><span class="mark">${I.wolf}</span><h1>Lone Wolf Companion</h1>
+  <p class="lead">Il compagno di gioco per i libri 1-12 di Lupo Solitario: Arti Ramas e Arti Ramastan, equipaggiamento, combattimenti con la Tabella del Destino, salvataggi su dispositivo e sul tuo account Claude.</p>
+  <div class="row"><button class="btn pri big wide" data-a="new-char">Crea un nuovo personaggio</button></div>
+  <div class="row"><button class="btn wide" data-a="import">Importa un salvataggio (.json)</button></div>
+  <p class="note" id="cloudst">${esc(CLOUD.status)}</p></div></div>`;
+}
+function renderDead(c){
+  return `<div class="dead"><h2>La tua missione finisce qui</h2><p class="lead">La RESISTENZA di ${esc(c.name)} è scesa a zero${c.para?' al paragrafo '+c.para.n:''}.</p>
+  <div class="row" style="justify-content:center"><button class="btn pri" data-a="restart-book">Ricomincia il libro ${c.book}</button><button class="btn" data-a="undo" ${UNDO.length?'':'disabled'}>Annulla l’ultima azione</button></div>
+  <p class="note">Ricominciando ritrovi il personaggio com’era all’inizio del libro.</p></div>`;
+}
+
+/* --- Personaggio --- */
+function renderPers(c){
+  const m=maxRes(c),k=circ(c),eqS=equippedSpecials(c);
+  const prep=c.phase==='prep'?`<div class="banner"><b>Preparazione del libro ${c.book}.</b> Sistema l’equipaggiamento iniziale, poi apri il Diario e inserisci il primo paragrafo.</div>`:'';
+  let h=prep+`<section class="sec"><h2>${esc(rankName(c))}<span class="cnt">${isRamastan(c)?rsN(c)+' Arti Ramastan':c.ramas.length+' Arti Ramas'}</span></h2>
+  <div class="stats"><div class="stat"><div class="l">Combattività</div><div class="v">${idleComb(c)}</div>
+  <ul class="brk"><li><span>Base</span><span>${c.combBase}</span></li>${k.c?`<li><span>Cerchi di Sapienza</span><span>${sgn(k.c)}</span></li>`:''}${eqS.filter(s=>s.comb).map(s=>`<li><span>${esc(s.name)}</span><span>${sgn(s.comb)}</span></li>`).join('')}</ul></div>
+  <div class="stat"><div class="l">Resistenza</div><div class="v">${c.resCur}<small> / ${m}</small></div>
+  <ul class="brk"><li><span>Base</span><span>${c.resBase}</span></li>${k.r?`<li><span>Cerchi di Sapienza</span><span>${sgn(k.r)}</span></li>`:''}${c.specials.filter(s=>s.eq&&s.kind!=='arma'&&s.res).map(s=>`<li><span>${esc(s.name)}</span><span>${sgn(s.res)}</span></li>`).join('')}</ul></div></div>
+  <p class="note">L’arma, le Arti psichiche e i modificatori del momento si sommano nella schermata Battaglia.</p></section>`;
+  const healInfo=canHeal(c)?`${hasR(c,'medicina')?'Medicina':'Guarigione'}: ${S().healLimit10?`${c.healed} su 10 punti recuperati in questo libro.`:`${c.healed} punti recuperati in questo libro.`}`:'';
+  h+=`<section class="sec"><h2>Resistenza</h2><p class="lead">Registra perdite e recuperi indicati dal testo. La Guarigione si applica da sola quando cambi paragrafo.</p>
+  <div class="row">${step('lose-n',UI.loseN)}${chip('lose-cat','Ferita',UI.loseCat==='ferita','data-v="ferita"')}${chip('lose-cat','Fame o fatica',UI.loseCat==='stenti','data-v="stenti"')}</div>
+  <div class="row"><button class="btn dng" data-a="lose">Perdi ${UI.loseN} RESISTENZA</button></div>
+  <div class="row">${step('gain-n',UI.gainN)}<button class="btn" data-a="gain">Recupera ${UI.gainN} (indicato dal testo)</button></div>
+  <div class="row"><button class="btn" data-a="eat" ${c.phase==='prep'?'disabled':''}>Devi consumare un Pasto</button>${arciMedReady(c,false)?`<button class="btn pri" data-a="arci-med">Medicina da Arcimaestro: +20</button>`:''}</div>
+  ${healInfo?`<p class="note">${healInfo}</p>`:''}${c.debt?`<p class="note">${c.debt} punti persi per fame o fatica non sono recuperabili ${S().healOnlyWounds&&S().potionOnlyWounds?'con Arti o pozioni':S().healOnlyWounds?'con le Arti':'con le pozioni'}.</p>`:''}</section>`;
+  if(isRamastan(c)){
+    h+=`<section class="sec"><h2>Arti Ramastan</h2><ul class="arts">${RAMASTAN.filter(a=>c.ramastan.includes(a.id)).map(a=>{
+      const perf=Object.entries(PERF[a.id]||{}).filter(([lv])=>rsN(c)>=+lv).map(([lv,t])=>`<div class="perf"><em>${PERF_TITLES[lv]}</em> ${esc(t)}</div>`).join('');
+      return `<li><b>${a.n}</b>${a.id==='guerra'?`<span class="tag on">${c.guerra.join(', ')||'nessuna arma'}</span>`:''}<p>${a.d}</p>${perf}</li>`}).join('')}</ul></section>`;
+    h+=`<section class="sec"><h2>Cerchi di Sapienza</h2><ul class="arts">${CERCHI.map(k=>{const done=k.a.every(a=>c.ramastan.includes(a));
+      return `<li><b>${k.n}</b><span class="tag ${done?'on':''}">${done?'completato':k.a.filter(a=>c.ramastan.includes(a)).length+' su '+k.a.length}</span><p>${k.a.map(a=>RAMASTAN.find(x=>x.id===a).n).join(', ')}: ${k.c?sgn(k.c)+' COMBATTIVITÀ, ':''}${sgn(k.r)} RESISTENZA</p></li>`}).join('')}</ul></section>`;
+  }
+  h+=`<section class="sec"><h2>Arti Ramas</h2>${isRamastan(c)?'<p class="lead">Importate dal ciclo precedente. Quando possiedi l’Arte Ramastan corrispondente, i suoi effetti sostituiscono quelli dell’Arte Ramas.</p>':''}
+  <ul class="arts">${RAMAS.filter(a=>c.ramas.includes(a.id)).map(a=>{
+    const sup=RAMASTAN.find(x=>x.from===a.id&&c.ramastan.includes(x.id));
+    return `<li><b>${a.n}</b>${a.id==='scherma'?`<span class="tag on">${esc(c.scherma||'arma da scegliere')}</span>`:''}${sup?`<span class="tag">sostituita da ${sup.n}</span>`:''}<p>${a.d}</p></li>`}).join('')}</ul></section>`;
+  return h;
+}
+
+/* --- Equipaggiamento --- */
+function renderEquip(c){
+  const lim=specialLimit(c);const busy=!!c.combat;
+  let h=busy?`<div class="banner">Sei in combattimento: puoi modificare l’equipaggiamento solo a scontro finito.</div>`:'';
+  h+=`<section class="sec"><h2>Armamento<span class="cnt">${c.weapons.length} su 2</span></h2>
+  <ul class="ledger">${[0,1].map(i=>{const w=c.weapons[i];return `<li><span class="n">${i+1}</span><span class="t">${w?`${esc(w.name)}<small>${esc(w.type)}${(()=>{const m=w.type==='Arco'?null:mastery(c,w);return m?', '+m[0]+' '+sgn(m[1]):''})()}${w.type==='Arco'&&hasR(c,'guerra')&&c.guerra.includes('Arco')?', Guerra: +3 alla Tabella del Destino':''}</small>`:'<span class="empty">libero</span>'}</span>${w?`<span class="acts">${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="arm" data-id="${w.id}">Deposita</button>`:''}<button class="x" data-a="del-weapon" data-id="${w.id}" aria-label="Elimina ${esc(w.name)}" ${busy?'disabled':''}>×</button></span>`:''}</li>`}).join('')}</ul>
+  ${c.weapons.length<2&&!busy?`<div class="grid3"><label class="f"><span>Nome</span><input id="wname" placeholder="es. Spada"></label><label class="f"><span>Tipo</span><select id="wtype">${WEAPON_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></label><label class="f"><span>&nbsp;</span><button class="btn pri wide" data-a="add-weapon">Aggiungi</button></label></div>`:''}
+  <p class="note">Senza armi: ${unarmedMalus(c)} COMBATTIVITÀ. Le armi non vanno nello Zaino.${c.seized?' ':''}</p>
+  <div class="row">${c.seized?`<button class="btn" data-a="unseize">Recupera le armi sequestrate (${c.seized.weapons.length+c.seized.specials.length})</button>`:`<button class="btn sm" data-a="seize" ${busy||!(c.weapons.length||c.specials.some(s=>s.kind==='arma'))?'disabled':''}>Il testo ti sequestra le armi</button>`}</div></section>`;
+  // Zaino
+  h+=`<section class="sec"><h2>Zaino<span class="cnt">${c.hasBackpack?c.backpack.length+' su 8':'perso'}</span></h2>`;
+  if(!c.hasBackpack)h+=`<p class="lead">Hai perso lo Zaino e il suo contenuto.</p><button class="btn" data-a="regain-pack">Hai trovato uno Zaino</button>`;
+  else{
+    h+=`<ul class="ledger">${Array.from({length:8},(_,i)=>{const it=c.backpack[i];if(!it)return `<li><span class="n">${i+1}</span><span class="t"><span class="empty">libero</span></span></li>`;
+      const desc=it.kind==='pasto'?'Pasto':it.kind==='cura'?`Pozione curativa, +${it.v} RESISTENZA`:it.kind==='alether'?`Pozione di Alether, +${it.v} COMBATTIVITÀ in combattimento`:'';
+      return `<li><span class="n">${i+1}</span><span class="t">${esc(it.name)}${desc&&desc!==it.name?`<small>${desc}</small>`:''}</span><span class="acts">${it.kind==='cura'?`<button class="btn sm" data-a="drink" data-id="${it.id}" ${busy?'disabled':''}>Bevi</button>`:''}${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="pack" data-id="${it.id}">Deposita</button>`:''}<button class="x" data-a="del-pack" data-id="${it.id}" aria-label="Elimina ${esc(it.name)}" ${busy?'disabled':''}>×</button></span></li>`}).join('')}</ul>`;
+    if(c.backpack.length<8&&!busy)h+=`<div class="grid3"><label class="f"><span>Oggetto</span><input id="pname" placeholder="es. Corda"></label><label class="f"><span>Tipo</span><select id="pkind" data-f="pkind"><option value="altro">Oggetto</option><option value="pasto">Pasto</option><option value="cura">Pozione curativa</option><option value="alether">Alether</option></select></label><label class="f"><span id="pvl">Nessun valore</span><input id="pval" type="number" inputmode="numeric" disabled></label></div>
+    <div class="row"><button class="btn pri" data-a="add-pack">Metti nello Zaino</button><button class="btn" data-a="add-meal">+1 Pasto</button></div>`;
+    h+=`<p class="note">Pasti nello Zaino: ${meals(c)}. Senza cibo, quando devi mangiare perdi 3 RESISTENZA. Per le pozioni indica i punti: RESISTENZA recuperata per quelle curative, COMBATTIVITÀ in più per l’Alether.</p>
+    <div class="row"><button class="btn sm dng" data-a="lose-pack" ${busy?'disabled':''}>Il testo ti fa perdere lo Zaino</button></div>`;
+  }
+  h+=`</section>`;
+  // Borsa
+  h+=`<section class="sec"><h2>Borsa<span class="cnt">massimo 50 monete</span></h2><div class="row">${step('gold',c.gold)}<select id="curr" data-f="currency" style="width:auto;flex:1">${Object.keys(CURR).map(k=>`<option ${c.currency===k?'selected':''}>${k}</option>`).join('')}</select></div>
+  <div class="row"><button class="btn sm" data-a="gold5" data-d="-5">−5</button><button class="btn sm" data-a="gold5" data-d="5">+5</button><button class="btn sm" data-a="gold5" data-d="10">+10</button>${c.currency!=='Corone d’oro'?`<button class="btn sm" data-a="convert">Converti in Corone d’oro (1 Corona = ${CURR[c.currency]} ${esc(c.currency)})</button>`:''}</div></section>`;
+  // Speciali
+  h+=`<section class="sec"><h2>Oggetti Speciali<span class="cnt">${c.specials.length}${lim<99?' su '+lim:''}</span></h2><p class="lead">Non vanno nello Zaino. Le armi speciali non contano nel limite delle 2 armi. Tocca un’armatura, un elmo o uno scudo per indossarlo o toglierlo.</p>
+  <ul class="ledger">${c.specials.map((s,i)=>`<li><span class="n">${i+1}</span><span class="t">${esc(s.name)}<small>${specialDesc(c,s)}</small></span><span class="acts">${s.kind==='faretra'?step('arrows',s.arrows,`data-id="${s.id}"`):''}${['armatura','elmo','scudo','altro'].includes(s.kind)?chip('toggle-eq',s.eq?'Indossato':'Riposto',s.eq,`data-id="${s.id}" ${busy?'disabled':''}`):''}${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="spec" data-id="${s.id}">Deposita</button>`:''}<button class="x" data-a="del-special" data-id="${s.id}" aria-label="Elimina ${esc(s.name)}" ${busy?'disabled':''}>×</button></span></li>`).join('')||'<li><span class="t"><span class="empty">Nessun Oggetto Speciale</span></span></li>'}</ul>
+  <div class="row"><button class="btn pri" data-a="special-sheet" ${busy||c.specials.length>=lim?'disabled':''}>Aggiungi Oggetto Speciale</button>${c.specials.some(s=>s.sun)?'':`<button class="btn" data-a="sun-sword" ${busy||c.specials.length>=lim?'disabled':''}>Spada del Sole</button>`}</div></section>`;
+  // Tiro
+  const bow=c.weapons.some(w=>w.type==='Arco');const arrows=sum(c.specials.filter(s=>s.kind==='faretra'),s=>s.arrows);
+  if(bow||c.specials.some(s=>s.kind==='faretra')||rsN(c)>=7)h+=`<section class="sec"><h2>Armi a distanza</h2><p class="lead">Usale solo quando il testo lo consente. Il numero estratto riceve i bonus delle Arti.</p>
+  <div class="row"><button class="btn pri" data-a="shoot" data-k="arco" ${bow&&arrows>0?'':'disabled'}>Tira con l’Arco (${arrows} Frecce)</button><button class="btn" data-a="shoot" data-k="lancio">Arma da lancio</button></div>
+  ${bow&&!c.specials.some(s=>s.kind==='faretra')?'<p class="note">Per usare l’Arco ti servono una Faretra e almeno una Freccia.</p>':''}</section>`;
+  // Deposito
+  if(c.book>=5){const open=depositOpen(c);
+    h+=`<section class="sec"><h2>Deposito<span class="cnt">${c.deposit.length} oggetti</span></h2><p class="lead">${!open?'Inaccessibile dal libro 9 al 12 (regola opzionale attiva).':c.phase==='prep'?'Puoi depositare e ritirare oggetti all’inizio del libro.':'Puoi usarlo solo all’inizio di un libro.'}</p>
+    <ul class="ledger">${c.deposit.map(d=>`<li><span class="t">${esc(d.item.name)}<small>${d.src==='pack'?'Oggetto dello Zaino':d.src==='arm'?'Arma':'Oggetto Speciale'}</small></span>${open&&c.phase==='prep'?`<span class="acts"><button class="btn sm" data-a="withdraw" data-id="${d.item.id}">Ritira</button></span>`:''}</li>`).join('')||'<li><span class="t"><span class="empty">Vuoto</span></span></li>'}</ul></section>`;}
+  return h;
+}
+function specialDesc(c,s){
+  const b=[];if(s.kind==='arma'){b.push(s.sun?'Arma unica, conta come Spada, Daga o Spadone':'Arma speciale, '+(s.wtype||'Altro'));const m=mastery(c,{type:s.wtype,sun:s.sun});if(m)b.push(m[0]+' '+sgn(m[1]))}
+  else if(s.kind==='armatura')b.push(s.atype||'Armatura');else if(s.kind==='faretra')b.push('Faretra, massimo 6 Frecce');else b.push(SPECIAL_KINDS[s.kind]);
+  if(s.comb)b.push(sgn(s.comb)+' COMBATTIVITÀ');if(s.res)b.push(sgn(s.res)+' RESISTENZA');if(s.sun)b.push('danni doppi ai non-morti');if(s.note)b.push(esc(s.note));
+  return b.join(', ');
+}
+
+/* --- Combattimento --- */
+function renderComb(c){
+  const cb=c.combat;
+  if(!cb){
+    return `<section class="sec"><h2>Nuovo combattimento</h2><p class="lead">Inserisci il nemico come indicato nel paragrafo. Puoi aggiungerne altri in coda.</p>${foeForm()}
+    <div class="row"><button class="btn pri big wide" data-a="foe-add" ${c.phase==='prep'?'disabled':''}>Inizia il combattimento</button></div>${c.phase==='prep'?'<p class="note">Prima inserisci il paragrafo di partenza nel Diario.</p>':''}</section>
+    ${c.postCombat&&c.backpack.some(i=>i.kind==='cura')?`<div class="banner">Combattimento concluso: se vuoi, ora puoi bere una pozione curativa dallo Zaino.</div>`:''}
+    <section class="sec"><h2>Diario di combattimento</h2>${c.log.length?`<ul class="ledger">${c.log.slice().reverse().slice(0,15).map(l=>`<li><span class="t">${esc(l.foes)}<small>Paragrafo ${l.para??'—'}, ${l.rounds} scontri, ${esc(l.out)}</small></span></li>`).join('')}</ul>`:'<p class="lead">Nessun combattimento ancora.</p>'}</section>`;
+  }
+  const e=cb.enemies[cb.idx];const cc=combatComb(c,cb,e);const ratio=cc.total-e.comb;const p=psiInfo(c);
+  const allW=allWeapons(c).filter(w=>w.type!=='Arco');
+  let h=`<section class="sec"><h2>${esc(e.name)}<span class="cnt">${cb.enemies.length>1?`nemico ${cb.idx+1} di ${cb.enemies.length}`:`paragrafo ${c.para?c.para.n:'—'}`}</span></h2>
+  <div class="vs"><div class="side"><div class="l">Lupo Solitario</div><div class="v">${cc.total}</div></div><div class="ratio">Rapporto di Forza<b>${sgn(ratio)}</b></div><div class="side"><div class="l">${esc(e.name)}</div><div class="v">${e.comb}</div></div></div>
+  <div class="resbars"><div><div class="note">Tua RESISTENZA: <b>${c.resCur}</b></div><div class="bar ${c.resCur<=6?'low':''}"><i style="width:${Math.min(100,c.resCur/maxRes(c)*100)}%"></i></div></div>
+  <div><div class="note">Nemico: <b>${e.res}</b> / ${e.res0}</div><div class="bar low"><i style="width:${Math.min(100,e.res/e.res0*100)}%"></i></div></div></div>
+  <div class="row"><button class="btn pri big wide" data-a="round">${cb.rounds.length?'Nuovo scontro':'Primo scontro'}</button></div>
+  <div class="row">${e.flee&&e.roundsHere>0?`<button class="btn" data-a="flee">Fuggi (scontro di fuga)</button>`:''}${arciMedReady(c,true)?`<button class="btn pri" data-a="arci-med">Medicina da Arcimaestro: +20</button>`:''}<button class="btn sm" data-a="end-combat">Il testo interrompe il combattimento</button></div>
+  ${UI.lastRound?`<p class="note" aria-live="polite">${UI.lastRound}</p>`:''}</section>`;
+  // Impostazioni dello scontro
+  const locked=cb.rounds.length>0;
+  h+=`<section class="sec"><h2>Modificatori</h2>
+  <p class="note">Arma${locked?' (non puoi cambiarla durante il combattimento)':''}</p><div class="chips">${chip('cb-weapon','Senza armi',!cb.weapon,`data-id="" ${locked?'disabled':''}`)}${allW.map(w=>chip('cb-weapon',esc(w.name),cb.weapon===w.id,`data-id="${w.id}" ${locked?'disabled':''}`)).join('')}</div>
+  ${p.laser||p.raggio?`<p class="note">Attacco psichico${e.immune?': il nemico è immune':''}</p><div class="chips">${chip('cb-psi','Nessuno',cb.psi==='none','data-v="none"')}${p.laser?chip('cb-psi','Psicolaser '+sgn(p.laserV),cb.psi==='laser',`data-v="laser" ${e.immune?'disabled':''}`):''}${p.raggio?chip('cb-psi',`Raggio Psichico ${sgn(p.raggioV)}, −${p.cost} RES a scontro`,cb.psi==='raggio',`data-v="raggio" ${e.immune||c.resCur<=p.min?'disabled':''}`):''}</div>`:''}
+  ${!locked?alForm(c,cb):cb.alether?`<p class="note">Pozione di Alether bevuta: +${cb.alether}.</p>`:''}
+  <div class="row"><span style="flex:1">Modificatore dal testo</span>${step('cb-mod',sgn(cb.mod))}</div>
+  <div class="row"><span style="flex:1">Sorpresa o imboscata${hasR(c,'fiuto')?' (Fiuto la annulla)':''}</span>${step('cb-amb',sgn(cb.ambush))}</div>
+  <ul class="brk">${cc.parts.map(([l,v])=>`<li><span>${esc(l)}</span><span>${sgn(v)}</span></li>`).join('')}<li><span><b>Totale</b></span><span><b>${cc.total}</b></span></li></ul>
+  <p class="note">${[e.immune?'Immune agli attacchi psichici':'',e.undead?'Non-morto'+(cc.w&&cc.w.sun?': danni raddoppiati dalla Spada del Sole':''):'',e.mind?`Attacco mentale: −${e.mind} RES a scontro${mindShield(c)?' (annullato dalla tua difesa psichica)':''}`:'',e.flee?'Fuga consentita dal testo':''].filter(Boolean).join('. ')}</p></section>`;
+  if(cb.rounds.length)h+=`<section class="sec"><h2>Scontri</h2><ul class="log">${cb.rounds.slice().reverse().map(r=>`<li><span class="d">${r.d}</span><span>${esc(r.foe)}: ${r.eL==='K'?'<span class="k">ucciso</span>':'−'+r.eL}. Lupo Solitario: ${r.lL==='K'?'<span class="k">ucciso</span>':'−'+r.lL}${r.extra?` (di cui ${r.extra} per ${esc(r.why)})`:''}. Rapporto ${sgn(r.ratio)}.${r.flee?' Fuga.':''}</span></li>`).join('')}</ul></section>`;
+  if(cb.enemies.length>1||true)h+=`<section class="sec"><h2>Nemici</h2>${cb.enemies.map((x,i)=>`<div class="foe ${i===cb.idx?'cur':''}"><span class="t"><b>${esc(x.name)}</b><br><small class="note">COMBATTIVITÀ ${x.comb}, RESISTENZA ${x.res}/${x.res0}${x.res<=0?', sconfitto':''}</small></span></div>`).join('')}
+  <details><summary class="note" style="padding:10px 0">Aggiungi un nemico in coda</summary>${foeForm()}<button class="btn" data-a="foe-queue">Aggiungi in coda</button></details></section>`;
+  return h;
+}
+function foeForm(){return `<label class="f"><span>Nome</span><input id="fname" placeholder="es. Giak"></label>
+  <div class="grid2"><label class="f"><span>Combattività</span><input id="fcomb" type="number" inputmode="numeric"></label><label class="f"><span>Resistenza</span><input id="fres" type="number" inputmode="numeric"></label></div>
+  <div class="chips"><label class="chip"><input type="checkbox" id="fimm"> Immune agli attacchi psichici</label><label class="chip"><input type="checkbox" id="fund"> Non-morto</label><label class="chip"><input type="checkbox" id="fflee"> Fuga consentita</label></div>
+  <label class="f"><span>Attacco mentale del nemico (RESISTENZA persa a ogni scontro, 0 se assente)</span><input id="fmind" type="number" inputmode="numeric" value="0"></label>`}
+function alForm(c,cb){const al=c.backpack.filter(i=>i.kind==='alether');if(!al.length)return '';
+  return `<div class="row"><span style="flex:1">Pozione di Alether (da bere prima del primo scontro)</span>${al.map(i=>`<button class="btn sm" data-a="cb-alether" data-id="${i.id}" ${cb.alether?'disabled':''}>Bevi ${esc(i.name)} +${i.v}</button>`).join('')}</div>`}
+
+/* --- Diario --- */
+function renderDiario(c){
+  let h=`<section class="sec"><h2>Paragrafo</h2><p class="lead">${c.phase==='prep'?'Inserisci il primo paragrafo per iniziare il libro.':'Inserisci il numero del paragrafo in cui ti sposti.'}${canHeal(c)?' Se nel paragrafo che lasci non hai combattuto né perso RESISTENZA, recuperi 1 punto.':''}</p>
+  <div class="row" style="margin-top:0"><button class="btn sm" data-a="map-cur">Mappa del libro ${c.book}</button></div><div class="grid2"><input id="pn" type="number" inputmode="numeric" placeholder="${c.phase==='prep'?'1':'numero'}" aria-label="Numero del paragrafo"><button class="btn pri" data-a="goto" ${c.combat?'disabled':''}>Vai al paragrafo</button></div>
+  ${c.combat?'<p class="note warn">Concludi prima il combattimento in corso.</p>':''}
+</section>
+  <section class="sec"><h2>Note</h2><p class="lead">Le righe nuove finiscono anche nel diario quando esci dal campo.</p><textarea id="notes" data-f="notes" placeholder="Indizi, codici, parole chiave, incontri…">${esc(c.notes)}</textarea></section>
+  <section class="sec"><h2>Diario<span class="cnt">ultime pagine</span></h2><div class="journal" id="jprev">${journalHtml(journalTail(c.journal||[]))}</div>
+  <div class="row"><button class="btn pri" data-a="journal" ${(c.journal||[]).length>1?'':'disabled'}>Leggi il diario</button></div></section>
+  <section class="sec"><h2>Fine del libro</h2>
+  <div class="row"><button class="btn pri" data-a="book-done" ${c.phase==='prep'||c.combat||c.book>12?'disabled':''}>Libro ${c.book} completato</button><button class="btn dng" data-a="restart-book">Ricomincia il libro</button></div>
+  <p class="note">Al completamento scegli la nuova Arte, la RESISTENZA torna al massimo${S().mealsPerish?' e i Pasti avanzati vengono eliminati':''}.</p></section>`;
+  return h;
+}
+
+/* --- Opzioni --- */
+function renderOpz(c){
+  const slots=Object.values(APP.slots).sort((a,b)=>(b.updated||0)-(a.updated||0));
+  return `<section class="sec"><ul class="ledger big3"><li><button class="bigrow" data-a="rules"><b>Regole</b><small>Il regolamento completo, con indice per argomenti</small></button></li><li><button class="bigrow" data-a="maps"><b>Mappe</b><small>Le mappe dei libri, da caricare e consultare con lo zoom</small></button></li></ul></section>
+  <section class="sec"><h2>Regole opzionali</h2><p class="lead">Dal Manuale del Lettore. La Spada del Sole resta sempre utilizzabile come arma.</p>
+  <ul class="ledger">${OPTS.map(([k,l,d])=>`<li><span class="t">${l}<small>${d}</small></span>${chip('opt',S()[k]?'Attiva':'Spenta',S()[k],`data-k="${k}"`)}</li>`).join('')}</ul></section>
+  <section class="sec"><h2>Rullo del Destino</h2><ul class="ledger"><li><span class="t">Animazione del rullo<small>Spenta: il numero viene estratto subito, senza far girare il rullo.</small></span>${chip('opt',S().animateFate?'Attiva':'Spenta',S().animateFate,'data-k="animateFate"')}</li></ul></section>
+  <section class="sec"><h2>Personaggi</h2><ul class="ledger">${slots.map(s=>`<li><span class="t">${esc(s.name)}<small>Libro ${s.book}, ${s.status==='dead'?'caduto':'paragrafo '+(s.para?s.para.n:'—')}</small></span><span class="acts">${s.id===APP.current?'<span class="tag on">in gioco</span>':`<button class="btn sm" data-a="slot-load" data-id="${s.id}">Riprendi</button>`}<button class="x" data-a="slot-del" data-id="${s.id}" aria-label="Elimina ${esc(s.name)}">×</button></span></li>`).join('')}</ul>
+  <div class="row"><button class="btn" data-a="new-char">Nuovo personaggio</button><button class="btn" data-a="rename">Rinomina</button></div></section>
+  <section class="sec"><h2>Salvataggi</h2><p class="lead">Ogni modifica viene salvata sul dispositivo e, quando disponibile, sul tuo account Claude. Per un backup su iCloud Drive o Google Drive esporta il file e salvalo dall’app File.</p>
+  <p class="note">Account Claude: <span id="cloudst">${esc(CLOUD.status)}</span></p>
+  <div class="row"><button class="btn pri" data-a="export">Esporta questo personaggio</button><button class="btn" data-a="export-all">Esporta tutto</button><button class="btn" data-a="import">Importa</button></div></section>`;
+}
+
+/* --- Creazione --- */
+function newCR(){return {name:'Lupo Solitario',book:1,comb:'',res:'',ramas:[],scherma:'',ramastan:[],guerra:[],gold:''}}
+function reqRamas(b){return b<=5?4+b:10}
+function reqRamastan(b){return b>=6?b-3:0}
+function reqGuerra(b){return 3+Math.max(0,b-6)}
+function crOk(){const r=UI.create,b=r.book,rs=b>=6;
+  const needSch=(rs||r.ramas.includes('scherma'));const needG=rs&&r.ramastan.includes('guerra');
+  return !!(r.name.trim()&&String(r.comb).trim()!==''&&String(r.res).trim()!==''&&(rs||r.ramas.length===reqRamas(b))&&(!rs||r.ramastan.length===reqRamastan(b))&&(!needSch||r.scherma)&&(!needG||r.guerra.length===reqGuerra(b)));}
+function crBtn(){const b=document.querySelector('[data-a="cr-done"]');if(b)b.disabled=!crOk()}
+function renderCreate(){
+  const r=UI.create,b=r.book,rs=b>=6;
+  const needSch=(rs||r.ramas.includes('scherma'));const needG=rs&&r.ramastan.includes('guerra');const ok=crOk();
+  let h=`<div class="full"><div class="in"><h1>Nuovo personaggio</h1><p class="lead">Segui la procedura del libro. Puoi anche trascrivere un personaggio già in gioco su carta.</p>
+  <label class="f"><span>Nome</span><input id="cr-name" data-f="cr-name" value="${esc(r.name)}"></label>
+  <p class="note">Libro di partenza</p><div class="chips">${Object.keys(BOOKS).map(k=>chip('cr-book',k,+k===b,`data-v="${k}"`)).join('')}</div><p class="note"><i>${BOOKS[b]}</i>, ciclo ${rs?'Ramastan':'Ramas'}</p>
+  <section class="sec"><h2>Combattività e Resistenza</h2><p class="lead">Combattività: 10 + numero estratto. Resistenza: 20 + numero estratto. Valori base, senza Cerchi né oggetti.</p>
+  <div class="grid2"><label class="f"><span>Combattività</span><input type="number" inputmode="numeric" data-f="cr-comb" value="${esc(r.comb)}"></label><label class="f"><span>Resistenza</span><input type="number" inputmode="numeric" data-f="cr-res" value="${esc(r.res)}"></label></div>
+  <div class="row"><button class="btn" data-a="cr-draw" data-k="comb">Estrai la Combattività</button><button class="btn" data-a="cr-draw" data-k="res">Estrai la Resistenza</button></div></section>`;
+  if(rs)h+=`<section class="sec"><h2>Arti Ramas</h2><p class="lead">Come Maestro Ramas possiedi tutte e dieci le Arti Ramas.</p></section>`;
+  else h+=`<section class="sec"><h2>Arti Ramas<span class="cnt">${r.ramas.length} su ${reqRamas(b)}</span></h2><div class="chips">${RAMAS.map(a=>chip('cr-ramas',a.n,r.ramas.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;
+  if(needSch)h+=`<section class="sec"><h2>Arma della Scherma</h2><p class="lead">Estrai un numero: 0 Pugnale, 1 Lancia, 2 Mazza, 3 Daga, 4 Martello, 5 e 7 Spada, 6 Ascia, 8 Asta, 9 Spadone.</p><div class="row"><button class="btn" data-a="cr-sch">Estrai l’arma</button><select data-f="cr-sch" style="flex:1"><option value="">scegli…</option>${[...new Set(SCHERMA_DRAW)].map(w=>`<option ${r.scherma===w?'selected':''}>${w}</option>`).join('')}</select></div></section>`;
+  if(rs){h+=`<section class="sec"><h2>Arti Ramastan<span class="cnt">${r.ramastan.length} su ${reqRamastan(b)}</span></h2><div class="chips">${RAMASTAN.map(a=>chip('cr-rs',a.n,r.ramastan.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;
+    if(needG)h+=`<section class="sec"><h2>Armi della Guerra<span class="cnt">${r.guerra.length} su ${reqGuerra(b)}</span></h2><div class="chips">${GUERRA_LIST.map(w=>chip('cr-g',w,r.guerra.includes(w),`data-v="${w}"`)).join('')}</div></section>`;}
+  h+=`<section class="sec"><h2>Corone d’oro</h2><div class="row"><input type="number" inputmode="numeric" data-f="cr-gold" value="${esc(r.gold)}" style="flex:1" placeholder="0"><button class="btn" data-a="cr-gold">Estrai</button></div><p class="note">L’equipaggiamento iniziale lo inserisci dopo, nella schermata Equipaggio.</p></section>
+  <div class="row"><button class="btn" data-a="cr-cancel">Annulla</button><button class="btn pri" data-a="cr-done" ${ok?'':'disabled'} style="flex:1">Inizia l’avventura</button></div></div></div>`;
+  return h;
+}
+
+/* --- Libro completato --- */
+function renderWizard(c){
+  const w=UI.wiz,b=c.book;let h=`<div class="full"><div class="in"><h1>Libro ${b} completato</h1><p class="lead">${BOOKS[b]}</p>`;
+  let ok=true;
+  if(b<=4){const miss=RAMAS.filter(a=>!c.ramas.includes(a.id));
+    h+=`<section class="sec"><h2>Nuova Arte Ramas</h2><div class="chips">${miss.map(a=>chip('wz-ramas',a.n,w.ramas===a.id,`data-v="${a.id}"`)).join('')}</div></section>`;ok=!miss.length||!!w.ramas;
+    if(w.ramas==='scherma'){h+=schSel(w);ok=ok&&!!w.scherma}}
+  else if(b===5){const miss=RAMAS.filter(a=>!c.ramas.includes(a.id));
+    h+=`<section class="sec"><h2>Maestro Ramas</h2><p class="lead">${miss.length?'Acquisisci le Arti Ramas mancanti: '+miss.map(a=>a.n).join(', ')+'.':'Possiedi tutte e dieci le Arti Ramas.'} Nel libro 6 prosegui con lo stesso personaggio, COMBATTIVITÀ e RESISTENZA di base.</p></section>`;
+    if(miss.some(a=>a.id==='scherma')){h+=schSel(w);ok=!!w.scherma}
+    h+=`<section class="sec"><h2>Scegli 3 Arti Ramastan<span class="cnt">${w.rs.length} su 3</span></h2><div class="chips">${RAMASTAN.map(a=>chip('wz-rs',a.n,w.rs.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;ok=ok&&w.rs.length===3;
+    if(w.rs.includes('guerra')){h+=gSel(c,w,3);ok=ok&&w.g.length===3}}
+  else if(b<=11){const miss=RAMASTAN.filter(a=>!c.ramastan.includes(a.id));
+    h+=`<section class="sec"><h2>Nuova Arte Ramastan</h2><div class="chips">${miss.map(a=>chip('wz-rs1',a.n,w.rs.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;ok=!miss.length||w.rs.length===1;
+    const newG=w.rs.includes('guerra');if(hasR(c,'guerra')||newG){const n=newG?3:1;h+=gSel(c,w,n);ok=ok&&(w.g.length===n||GUERRA_LIST.filter(x=>!c.guerra.includes(x)).length<n)}}
+  else h+=`<section class="sec"><h2>Ciclo Ramastan concluso</h2><p class="lead">Hai completato i libri coperti da questo registro. Il personaggio resta salvato e puoi esportarlo.</p></section>`;
+  h+=`<section class="sec"><h2>Passaggio al libro ${Math.min(12,b+1)}</h2><ul class="arts"><li><p>La RESISTENZA torna al massimo e azzeri i contatori di Guarigione.</p></li>${S().mealsPerish&&meals(c)?`<li><p>${meals(c)} Pasti avanzati vengono eliminati (pasti deperibili).</p></li>`:''}${c.currency!=='Corone d’oro'?`<li><p>Le monete vengono convertite in Corone d’oro.</p></li>`:''}<li><p>Zaino, armi, Oggetti Speciali e Corone restano con te.</p></li></ul></section>
+  <div class="row"><button class="btn" data-a="wz-cancel">Annulla</button>${b<12?`<button class="btn pri" data-a="wz-done" ${ok?'':'disabled'} style="flex:1">Inizia il libro ${b+1}</button>`:`<button class="btn pri" data-a="wz-cancel" style="flex:1">Chiudi</button>`}</div></div></div>`;
+  return h;
+}
+const schSel=w=>`<section class="sec"><h2>Arma della Scherma</h2><div class="row"><button class="btn" data-a="wz-sch">Estrai l’arma</button><select data-f="wz-sch" style="flex:1"><option value="">scegli…</option>${[...new Set(SCHERMA_DRAW)].map(x=>`<option ${w.scherma===x?'selected':''}>${x}</option>`).join('')}</select></div></section>`;
+const gSel=(c,w,n)=>`<section class="sec"><h2>${n===1?'Nuova arma della Guerra':'Armi della Guerra'}<span class="cnt">${w.g.length} su ${n}</span></h2><div class="chips">${GUERRA_LIST.filter(x=>!c.guerra.includes(x)).map(x=>chip('wz-g',x,w.g.includes(x),`data-v="${x}" data-n="${n}"`)).join('')}</div></section>`;
+
+/* ====== DIARIO ====== */
+function logNotes(c){
+  migrate(c);
+  const lines=t=>(t||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  const pool=new Map();lines(c.notesLogged).forEach(l=>pool.set(l,(pool.get(l)||0)+1));
+  const fresh=[];for(const l of lines(c.notes)){const n=pool.get(l)||0;if(n>0)pool.set(l,n-1);else fresh.push(l)}
+  c.notesLogged=c.notes||'';
+  if(fresh.length)c.journal.push({k:'n',txt:fresh.join('\n'),p:c.para?c.para.n:null,t:Date.now()});
+  return fresh.length>0;
+}
+function journalTail(j){
+  // ultime voci, partendo da un punto leggibile: almeno 12 paragrafi o 6 eventi
+  let i=j.length,ev=0,pp=0;while(i>0&&ev<6&&pp<14){i--;if(j[i].k==='p')pp++;else ev++}
+  return j.slice(i);
+}
+function journalHtml(list){
+  if(!list.length)return '<p class="lead">Il diario si riempie mentre giochi: paragrafi, combattimenti e note.</p>';
+  let h='',run=[];
+  const flush=()=>{if(run.length){h+=`<p class="jpath">§ ${run.join('<i>›</i>')}</p>`;run=[]}};
+  const OUT={vittoria:'Vittoria',fuga:'Fuga',morte:'Sconfitta',interrotto:'Combattimento interrotto dal testo'};
+  for(const e of list){
+    if(e.k==='p'){run.push(esc(e.n));continue}
+    flush();
+    if(e.k==='b')h+=`<h4 class="jbook">Libro ${e.book}<small>${BOOKS[e.book]||''}</small></h4>`;
+    else if(e.k==='e')h+=`<p class="jev">${esc(e.txt)}</p>`;
+    else if(e.k==='n')h+=`<blockquote class="jnote">${esc(e.txt).replace(/\n/g,'<br>')}${e.p?`<small>Paragrafo ${e.p}</small>`:''}</blockquote>`;
+    else if(e.k==='c'){
+      const nm=i=>esc((e.f[i]||e.f[0]||['Nemico'])[0]);
+      const rounds=e.r.map(r=>`<li>Numero ${r[0]}, rapporto ${sgn(r[1])}: ${nm(r[4])} ${r[2]==='K'?'ucciso':r[2]?'−'+r[2]:'illeso'}, Lupo Solitario ${r[3]==='K'?'ucciso':r[3]?'−'+r[3]:'illeso'}${r[5]?' (fuga)':''}</li>`).join('');
+      h+=`<div class="jcomb">Combattimento con ${e.f.map(f=>`<b>${esc(f[0])}</b> (COMB ${f[1]}, RES ${f[2]})`).join(', ')}${e.p?`<small>Paragrafo ${e.p}</small>`:''}<ol>${rounds}</ol><p class="o">${OUT[e.o]||esc(e.o)} in ${e.r.length} ${e.r.length===1?'scontro':'scontri'}, RESISTENZA ${e.res}.</p></div>`;
+    }
+  }
+  flush();return h;
+}
+function openJournal(){
+  const c=C();if(!c)return;logNotes(c);
+  const L=document.getElementById('layer');
+  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="Diario"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Diario di ${esc(c.name)}</h1><button class="btn" data-a="journal-close">Chiudi</button></div>
+  <div class="journal">${journalHtml(c.journal||[])}</div><div class="row" style="margin-top:18px"><button class="btn wide" data-a="journal-close">Chiudi il diario</button></div></div></div>`;
+  const f=L.querySelector('.full');requestAnimationFrame(()=>{f.scrollTop=f.scrollHeight});
+}
+
+/* ====== ARCHIVIO LOCALE (mappe) ====== */
+const IDB={p:null,
+  open(){if(!this.p)this.p=Promise.race([new Promise((res,rej)=>{try{const r=indexedDB.open('registro-di-guerra',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}),new Promise((_,rej)=>setTimeout(()=>rej(new Error('archivio locale non disponibile')),3000))]);this.p.catch(()=>{this.p=null});return this.p},
+  async run(mode,fn){const d=await this.open();return new Promise((res,rej)=>{const tx=d.transaction('files',mode);const st=tx.objectStore('files');const rq=fn(st);tx.oncomplete=()=>res(rq&&rq.result);tx.onerror=()=>rej(tx.error)})},
+  get(k){return this.run('readonly',s=>s.get(k))},set(k,v){return this.run('readwrite',s=>s.put(v,k))},del(k){return this.run('readwrite',s=>s.delete(k))},keys(){return this.run('readonly',s=>s.getAllKeys())}};
+const AON={1:'01fftd',2:'02fotw',3:'03tcok',4:'04tcod',5:'05sots',6:'06tkot',7:'07cd',8:'08tjoh',9:'09tcof',10:'10tdot',11:'11tpot',12:'12tmod'};
+const MAPURL={};
+const MAP_ALIAS={2:1}; // Traversata Infernale usa la stessa mappa de I Signori delle Tenebre
+const blobToData=b=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(r.error);r.readAsDataURL(b)});
+async function mapRaw(n){try{const v=await IDB.get('map-'+n);if(!v)return null;if(typeof v==='string')return v;const d=await blobToData(v);try{await IDB.set('map-'+n,d)}catch(e){}return d}catch(e){return null}}
+async function mapBlob(n){return (await mapRaw(n))||(MAP_ALIAS[n]?await mapRaw(MAP_ALIAS[n]):null)}
+let ASSETS;
+async function getAssets(){if(ASSETS!==undefined)return ASSETS;if(!window.claude||typeof window.claude.use!=='function'){ASSETS=null;return null}try{ASSETS=await window.claude.use('assets')}catch(e){ASSETS=null}return ASSETS}
+const mapsCloud=()=>S().maps||{};
+function mapAssetId(n){const m=mapsCloud();return m[n]||(MAP_ALIAS[n]?m[MAP_ALIAS[n]]:null)||null}
+function dataToBlob(d){const i=d.indexOf(',');const mime=(d.slice(0,i).match(/data:([^;]+)/)||[,'image/jpeg'])[1];const bin=atob(d.slice(i+1));const u=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)u[k]=bin.charCodeAt(k);return new Blob([u],{type:mime})}
+async function mapUrl(n){const id=mapAssetId(n);if(id)return '/_blob/'+id;if(MAPURL[n])return MAPURL[n];const d=await mapBlob(n);if(d)MAPURL[n]=d;return d}
+function shrinkImage(f){return new Promise((res,rej)=>{const r=new FileReader();r.onerror=()=>rej(r.error);r.onload=()=>{const im=new Image();im.onerror=()=>rej(new Error('immagine non leggibile'));im.onload=()=>{
+  const max=3200,k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight));
+  if(k===1&&f.size<4e6){res(r.result);return}
+  const cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL('image/jpeg',.88))};im.src=r.result};r.readAsDataURL(f)})}
+
+/* ====== MAPPE ====== */
+async function openMaps(){
+  const c=C();const L=document.getElementById('layer');
+  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="Mappe"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Mappe</h1><button class="btn" data-a="layer-close">Chiudi</button></div><p class="lead">Caricamento delle mappe…</p></div></div>`;
+  const as=await getAssets();const cm=mapsCloud();
+  let stored=[];if(!as){try{stored=await IDB.keys()}catch(e){}}
+  const has=n=>!!cm[n]||stored.includes('map-'+n);const alias=MAP_ALIAS;
+  const rows=[];
+  for(let n=1;n<=12;n++){
+    const own=has(n),al=!own&&alias[n]&&has(alias[n]);
+    const u=own||al?await mapUrl(n):null;
+    rows.push(`<li class="${c&&c.book===n?'curbook':''}"><span class="n">${n}</span>${u?`<button class="mthumb" data-a="map-view" data-n="${n}" aria-label="Apri la mappa del libro ${n}"><img src="${u}" alt=""></button>`:''}<span class="t">${BOOKS[n]}<small>${own?'Mappa caricata':al?'Stessa mappa del libro '+alias[n]:alias[n]?'Stessa mappa del libro '+alias[n]+', non ancora caricata':'Nessuna mappa'}</small>
+      <span class="row" style="margin:6px 0 0">${u?`<button class="btn sm pri" data-a="map-view" data-n="${n}">Apri</button>`:''}<button class="btn sm" data-a="map-add" data-n="${n}">${own?'Sostituisci':'Carica dal telefono'}</button>${own?`<button class="btn sm dng" data-a="map-del" data-n="${n}">Rimuovi</button>`:''}<a class="btn sm" href="https://www.projectaon.org/en/xhtml/lw/${AON[n]}/map.htm" target="_blank" rel="noopener">Project Aon (inglese)</a></span></span></li>`);
+  }
+  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="Mappe"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Mappe</h1><button class="btn" data-a="layer-close">Chiudi</button></div>
+  <p class="lead">Carica le mappe che hai scaricato o fotografato: ${as?'restano nello spazio privato di questa app sul tuo account Claude, quindi le ritrovi anche dal Mac':'restano salvate solo su questo dispositivo'}. Per i libri senza mappa trovi il link alla versione inglese di Project Aon.</p>
+  <ul class="ledger maps">${rows.join('')}</ul><div class="row"><button class="btn wide" data-a="layer-close">Chiudi</button></div></div></div>`;
+}
+function pickMap(n){
+  const inp=document.createElement('input');inp.type='file';inp.accept='image/*';
+  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;
+    if(f.size>25e6){toast('Immagine troppo grande (massimo 25 MB)');return}
+    toast('Salvataggio della mappa…');
+    try{const d=await shrinkImage(f);const as=await getAssets();
+      if(as){const r=await as.upload(dataToBlob(d));const m={...mapsCloud()};const old=m[n];m[n]=r.id;APP.settings.maps=m;APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);if(old){try{await as.delete(old)}catch(e){}}}
+      else await IDB.set('map-'+n,d);
+      Object.keys(MAPURL).forEach(k=>delete MAPURL[k]);toast('Mappa del libro '+n+' salvata');openMaps()}catch(e){toast('Non riesco a salvare l’immagine: '+(e&&(e.message||e.code)||'errore sconosciuto'))}};
+  inp.click();
+}
+async function viewMap(n){
+  const u=await mapUrl(n);if(!u){openMaps();return}
+  const v=document.createElement('div');v.className='mv';v.setAttribute('role','dialog');v.setAttribute('aria-label','Mappa del libro '+n);
+  v.innerHTML=`<img alt="Mappa del libro ${n}" draggable="false"><div class="mvbar"><span>${esc(BOOKS[n])}</span><button class="btn sm" data-z="-1" aria-label="Riduci">−</button><button class="btn sm" data-z="1" aria-label="Ingrandisci">+</button><button class="btn sm pri" data-z="x">Chiudi</button></div>`;
+  document.body.appendChild(v);const img=v.querySelector('img');
+  let s=1,x=0,y=0,fit=1;const P=new Map();let g=null,lastTap=0;
+  const W=()=>v.clientWidth,H=()=>v.clientHeight;
+  const clamp=()=>{const iw=img.naturalWidth*s,ih=img.naturalHeight*s;
+    x=iw<=W()?(W()-iw)/2:Math.min(0,Math.max(W()-iw,x));y=ih<=H()?(H()-ih)/2:Math.min(0,Math.max(H()-ih,y));
+    img.style.transform=`translate(${x}px,${y}px) scale(${s})`};
+  const zoomAt=(ns,cx,cy)=>{ns=Math.max(fit,Math.min(fit*6,ns));const px=(cx-x)/s,py=(cy-y)/s;s=ns;x=cx-px*s;y=cy-py*s;clamp()};
+  img.onload=()=>{fit=Math.min(W()/img.naturalWidth,H()/img.naturalHeight);s=fit;clamp()};img.src=u;
+  v.addEventListener('pointerdown',e=>{if(e.target.closest('.mvbar'))return;v.setPointerCapture(e.pointerId);P.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    const pts=[...P.values()];
+    if(pts.length===2){const[a,b]=pts;g={d:Math.hypot(a.x-b.x,a.y-b.y),s,mx:(a.x+b.x)/2,my:(a.y+b.y)/2,x,y}}
+    else if(pts.length===1){g={px:e.clientX,py:e.clientY,x,y};const t=Date.now();if(t-lastTap<300){zoomAt(s>fit*1.5?fit:fit*2.5,e.clientX,e.clientY);g=null}lastTap=t}});
+  v.addEventListener('pointermove',e=>{if(!P.has(e.pointerId)||!g)return;P.set(e.pointerId,{x:e.clientX,y:e.clientY});const pts=[...P.values()];
+    if(pts.length>=2&&g.d){const[a,b]=pts;const d=Math.hypot(a.x-b.x,a.y-b.y);const ns=Math.max(fit,Math.min(fit*6,g.s*d/g.d));const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+      const px=(g.mx-g.x)/g.s,py=(g.my-g.y)/g.s;s=ns;x=mx-px*s;y=my-py*s;clamp()}
+    else if(pts.length===1&&g.px!==undefined){x=g.x+(e.clientX-g.px);y=g.y+(e.clientY-g.py);clamp()}});
+  const up=e=>{P.delete(e.pointerId);const pts=[...P.values()];g=pts.length===1?{px:pts[0].x,py:pts[0].y,x,y}:null};
+  v.addEventListener('pointerup',up);v.addEventListener('pointercancel',up);
+  v.querySelector('.mvbar').addEventListener('click',e=>{const b=e.target.closest('[data-z]');if(!b)return;if(b.dataset.z==='x'){v.remove();return}zoomAt(s*(b.dataset.z==='1'?1.6:1/1.6),W()/2,H()/2)});
+  addEventListener('resize',()=>{if(!document.body.contains(v))return;fit=Math.min(W()/img.naturalWidth,H()/img.naturalHeight);if(s<fit)s=fit;clamp()});
+}
+
+/* ====== REGOLE ====== */
+function rulesHtml(){
+  const sec=(id,t,body)=>`<section class="rsec" id="${id}"><h2>${t}</h2>${body}<p class="rtop"><button class="btn sm" data-a="rules-top">Torna all’indice</button></p></section>`;
+  const lst=a=>`<ul class="rl2">${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  const S1=[
+  ['r-pg','Il personaggio',`<p>Lupo Solitario ha due caratteristiche. La <b>COMBATTIVITÀ</b> misura l’abilità nel combattimento ed è 10 più un numero estratto. La <b>RESISTENZA</b> misura salute e forza vitale ed è 20 più un numero estratto.</p>
+   <p>La RESISTENZA sale e scende durante l’avventura ma non supera mai il valore massimo, che cresce solo con armature, elmi, Cerchi di Sapienza o quando il testo lo dice. Se arriva a zero, Lupo Solitario muore e l’avventura finisce: si ricomincia il libro dall’inizio.</p>`],
+  ['r-tdd','La Tabella del Destino',`<p>Serve a introdurre il caso: in combattimento, nella creazione del personaggio e ogni volta che il testo chiede di estrarre un numero. I numeri vanno da 0 a 9 e lo 0 vale zero. Il manuale ammette anche un dado a dieci facce. In questa app l’estrazione avviene con il rullo, con la stessa probabilità di 1 su 10 per ogni cifra.</p>`],
+  ['r-comb','Il combattimento',`<p>Un <b>combattimento</b> è l’intera battaglia contro un avversario; uno <b>scontro</b> è un singolo round, cioè ogni estrazione di un numero.</p>
+   <ol class="rl2"><li>Somma alla COMBATTIVITÀ di base i bonus di Arti, Oggetti Speciali equipaggiati ed eventuale pozione di Alether.</li><li>Sottrai la COMBATTIVITÀ del nemico: ottieni il <b>Rapporto di Forza</b>.</li><li>Estrai un numero.</li><li>Incrocia Rapporto di Forza e numero nella Tabella dei Risultati: leggi i punti di RESISTENZA persi dal nemico e da Lupo Solitario.</li><li>Aggiorna le RESISTENZE e, se nessuno è a zero e il testo non dice altro, passa allo scontro successivo.</li></ol>
+   <p>Chi arriva a zero muore. Se vince Lupo Solitario, prosegue con la RESISTENZA ridotta e la recupererà più avanti. L’app usa la tabella estesa, con rapporti da −30 a +30: oltre quei valori vale la colonna estrema, e il teschio indica la morte immediata.</p>
+   <p><b>Senza armi</b> perdi 4 punti di COMBATTIVITÀ (meno con i perfezionamenti della Guerra). L’Arco non è un’arma da mischia: combattere solo con l’Arco equivale a combattere disarmati.</p>
+   <p><b>Fuga</b>: è possibile solo se il paragrafo lo prevede e dopo almeno uno scontro. Lo scontro della fuga si calcola normalmente, ma i danni al nemico si ignorano: solo Lupo Solitario può perdere punti.</p>
+   <p><b>Pozioni</b>: la pozione di Alether si beve prima che il combattimento inizi; le pozioni curative mai durante il combattimento.</p>
+   <p><b>Attacchi mentali e immunità</b>: alcuni nemici tolgono RESISTENZA con la mente a ogni scontro, salvo Psicoschermo o Scudo Psichico; altri sono immuni a Psicolaser e Raggio Psichico. Lo dice il testo, caso per caso.</p>`],
+  ['r-ramas','Arti Ramas',`<p>Si inizia il libro 1 con 5 Arti Ramas a scelta e se ne aggiunge una per ogni libro completato, fino alle 10 del Maestro alla fine del libro 5.</p>
+   <dl class="rdl">${RAMAS.map(a=>`<dt>${a.n}</dt><dd>${a.d}</dd>`).join('')}</dl>
+   <p><b>Arma della Scherma</b>, estratta con la Tabella del Destino: ${SCHERMA_DRAW.map((w,i)=>i+' '+w).join(', ')}.</p>
+   <p><b>Gradi</b>, in base al numero di Arti: ${RAMAS_RANKS.map((r,i)=>(i+1)+' '+r).join(', ')}.</p>`],
+  ['r-ramastan','Ciclo Ramastan',`<p>Nel libro 6 il Maestro Ramas prosegue con la stessa COMBATTIVITÀ e RESISTENZA di base, conserva le 10 Arti Ramas e sceglie 3 Arti Ramastan. Ne aggiunge una per ogni libro completato dal 6 all’11. Un personaggio creato da zero nel libro 6 possiede comunque le 10 Arti Ramas.</p>
+   <p>Quando possiedi un’Arte Ramastan, i suoi effetti sostituiscono quelli dell’Arte Ramas corrispondente: i bonus non si sommano.</p>
+   <dl class="rdl">${RAMASTAN.map(a=>`<dt>${a.n}<small> sostituisce ${RAMAS.find(r=>r.id===a.from).n}</small></dt><dd>${a.d}</dd>`).join('')}</dl>
+   <p><b>Guerra</b>: si parte con 3 armi e se ne aggiunge una per ogni libro completato. +3 COMBATTIVITÀ con un’arma della lista; con l’Arco +3 al numero estratto quando tiri. La Scherma (+2) vale solo per un’arma che non è nella lista della Guerra.</p>
+   <p><b>Titoli</b>, in base al numero di Arti Ramastan: ${RAMASTAN_RANKS.map((r,i)=>(i+1)+' '+r).join(', ')}.</p>
+   <h3>Perfezionamenti</h3><p>Salendo di grado, le Arti che possiedi acquistano nuovi poteri.</p>
+   ${[4,5,6,7,8,9].map(lv=>{const e=Object.entries(PERF).filter(([,v])=>v[lv]).map(([k,v])=>`<li><b>${RAMASTAN.find(a=>a.id===k).n}</b>: ${v[lv]}</li>`);return e.length?`<p class="rsub">${PERF_TITLES[lv]} (${lv} Arti)</p><ul class="rl2">${e.join('')}</ul>`:''}).join('')}
+   <h3>Cerchi di Sapienza</h3><p>Chi possiede tutte le Arti di un Cerchio riceve un bonus permanente.</p>
+   <ul class="rl2">${CERCHI.map(k=>`<li><b>${k.n}</b>: ${k.a.map(a=>RAMASTAN.find(x=>x.id===a).n).join(', ')}. ${k.c?'+'+k.c+' COMBATTIVITÀ, ':''}+${k.r} RESISTENZA.</li>`).join('')}</ul>`],
+  ['r-equip','Equipaggiamento',lst([
+   '<b>Armi</b>: al massimo 2. Le armi speciali (come la Spada del Sole) sono Oggetti Speciali e non contano nel limite.',
+   '<b>Zaino</b>: al massimo 8 oggetti, Pasti compresi; ogni Pasto occupa un posto. Gli oggetti che il testo non indica come Speciali vanno nello Zaino.',
+   '<b>Borsa</b>: al massimo 50 monete.',
+   '<b>Oggetti Speciali</b>: non stanno nello Zaino. Dal libro 8 se ne possono portare al massimo 12.',
+   '<b>Armature</b>: se ne possono indossare più tipi insieme e i bonus si sommano, con un’unica eccezione: Cotta di Maglia e Veste di Bronin non sono compatibili. Due armature dello stesso tipo non si indossano.',
+   '<b>Elmo</b>: uno alla volta.',
+   '<b>Scudo</b>: non si usa con un’arma a due mani (Spadone, Asta, Lancia); si usa invece con la Spada del Sole.',
+   '<b>Spada del Sole</b>: +8 COMBATTIVITÀ; conta come Spada, Daga o Spadone per Scherma e Guerra; danni raddoppiati contro i non-morti.',
+   '<b>Arco e Frecce</b>: per tirare servono una Faretra (al massimo 6 Frecce) e almeno una Freccia.'])],
+  ['r-cura','Guarigione e pozioni',lst([
+   '<b>Guarigione</b> e <b>Medicina</b>: +1 RESISTENZA per ogni paragrafo superato senza combattere, solo se hai perso punti e mai oltre il massimo. Non si sommano tra loro.',
+   '<b>Pozioni curative</b>: restituiscono i punti indicati, senza superare il massimo, e non si bevono durante un combattimento.',
+   '<b>Pozione di Alether</b>: aumenta la COMBATTIVITÀ per un intero combattimento; va bevuta prima del primo scontro.',
+   '<b>Medicina da Arcimaestro</b>: +20 RESISTENZA se scendi a 6 o meno, una sola volta per libro.'])],
+  ['r-pasti','Pasti',`<p>Quando il testo ti dice di mangiare devi consumare un Pasto dallo Zaino; se non ne hai, perdi 3 punti di RESISTENZA. Con la <b>Caccia</b> non devi consumare Pasti, tranne nelle zone desertiche; con il <b>Fiuto</b> trovi cibo ovunque, anche nel deserto.</p>`],
+  ['r-dep','Deposito',`<p>Dal libro 5 puoi lasciare in deposito Oggetti dello Zaino e Oggetti Speciali, senza limiti di numero, e recuperarli all’inizio di ogni libro. Nel ciclo Ramastan il deposito si intende presso i Maghi anziani di Dessi, a Elzian.</p>`],
+  ['r-valute','Valute',`<p>La Corona d’oro è la moneta di Sommerlund e di Vassagonia. Il testo indica quando usi un’altra valuta; alla fine del libro si converte in Corone.</p><table class="rt"><tr><th>Valuta</th><th>Per 1 Corona</th></tr>${Object.entries(CURR).filter(([k])=>k!=='Corone d’oro').map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('')}</table>`],
+  ['r-opz','Regole opzionali',`<p>Nell’app ogni regola opzionale si attiva o si disattiva dal Compendio. Stato attuale:</p><ul class="rl2">${OPTS.map(([k,l,d])=>`<li><b>${S()[k]?'Attiva':'Spenta'}</b>: ${l}. ${d}</li>`).join('')}</ul><p>La regola opzionale sulla Spada del Sole non è usata: la spada è sempre utilizzabile come arma.</p>`],
+  ['r-fine','Fine del libro',lst(['Scegli una nuova Arte (Ramas fino al libro 5, Ramastan dal 6 all’11) e, se hai la Guerra, una nuova arma.','La RESISTENZA torna al massimo.','Zaino, armi, Oggetti Speciali e monete passano al libro successivo; le valute straniere si convertono in Corone.'])]];
+  return {toc:`<ol class="rtoc">${S1.map(([id,t])=>`<li><button data-a="rules-go" data-id="${id}">${t}</button></li>`).join('')}</ol>`,body:S1.map(([id,t,b])=>sec(id,t,b)).join('')};
+}
+function openRules(){
+  const L=document.getElementById('layer');const r=rulesHtml();
+  L.innerHTML=`<div class="full rules" id="rulesv" role="dialog" aria-modal="true" aria-label="Regole"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Regole</h1><button class="btn" data-a="layer-close">Chiudi</button></div>
+  <p class="lead">Sintesi del Manuale del Lettore per la consultazione durante il gioco, con la terminologia Ramas e Ramastan.</p><nav id="rtoc" aria-label="Indice">${r.toc}</nav>${r.body}<div class="row"><button class="btn wide" data-a="layer-close">Chiudi</button></div></div></div>`;
+}
+
+/* ====== AZIONI ====== */
+function snapshotBook(c){const o=JSON.parse(JSON.stringify(c));delete o.bookStart;delete o.journal;c.bookStart=JSON.stringify(o)}
+function startCombat(c,foe){c.combat={enemies:[foe],idx:0,rounds:[],weapon:bestWeapon(c),psi:psiInfo(c).laser&&!foe.immune?'laser':'none',alether:0,mod:0,ambush:0};UI.lastRound=null}
+function readFoe(){
+  const name=document.getElementById('fname').value.trim()||'Nemico';const comb=num(document.getElementById('fcomb').value,NaN),res=num(document.getElementById('fres').value,NaN);
+  if(!Number.isFinite(comb)||!Number.isFinite(res)||res<=0){toast('Inserisci Combattività e Resistenza del nemico');return null}
+  return {id:uid(),name,comb,res,res0:res,immune:document.getElementById('fimm').checked,undead:document.getElementById('fund').checked,flee:document.getElementById('fflee').checked,mind:Math.max(0,num(document.getElementById('fmind').value)),roundsHere:0};
+}
+function endCombat(c,out){
+  const cb=c.combat;c.log.push({para:c.para?c.para.n:null,foes:cb.enemies.map(e=>e.name).join(', '),rounds:cb.rounds.length,out,t:Date.now()});
+  if(c.journal)c.journal.push({k:'c',p:c.para?c.para.n:null,f:cb.enemies.map(e=>[e.name,e.comb,e.res0,e.res]),r:cb.rounds.map(r=>[r.d,r.ratio,r.eL,r.lL,r.fi??Math.max(0,cb.enemies.findIndex(e=>e.name===r.foe)),r.flee?1:0]),o:out,res:Math.max(0,c.resCur),t:Date.now()});
+  c.combat=null;c.postCombat=out==='vittoria';
+}
+/* Risoluzione di uno scontro: calcolata identica per l'anteprima nel rullo e per l'applicazione */
+function computeRound(c,d,flee){
+  const cb=c.combat,e=cb.enemies[cb.idx],p=psiInfo(c);let psi=cb.psi,switched=false;
+  if(psi==='raggio'&&c.resCur<=p.min){psi=p.laser?'laser':'none';switched=true}
+  const cc=combatComb(c,{...cb,psi},e);const ratio=cc.total-e.comb;const r=crt(ratio,d);
+  let eL=r.n==='K'?'K':-r.n;const sun=!!(cc.w&&cc.w.sun&&e.undead);if(eL!=='K'&&sun)eL*=2;if(flee)eL=0;
+  const lL=r.l==='K'?'K':-r.l;let extra=0;const why=[];
+  if(!e.immune&&psi==='raggio'&&p.raggio){extra+=p.cost;why.push('Raggio Psichico')}
+  if(e.mind&&!mindShield(c)){extra+=e.mind;why.push('attacco mentale')}
+  const dmg=(lL==='K'?c.resCur:lL)+extra;
+  const eAfter=eL==='K'?0:Math.max(0,e.res-eL),lAfter=Math.max(0,c.resCur-dmg);
+  const nextFoe=cb.enemies.find((x,i)=>i!==cb.idx&&x.res>0);
+  const end=lAfter<=0?'morte':flee?'fuga':eAfter<=0?(nextFoe?'next':'vittoria'):null;
+  return {d,ratio,total:cc.total,eL,lL,extra,why:why.join(' e '),dmg,eAfter,lAfter,psi,switched,e,sun,end,nextFoe};
+}
+function roundHtml(R){
+  const me=R.lL==='K'?'ucciso':R.dmg?`−${R.dmg} RES`:'nessun danno';
+  const foe=R.eL==='K'?'ucciso':R.eL?`−${R.eL} RES`:'nessun danno';
+  const end={morte:'Lupo Solitario cade.',fuga:'Sei fuggito.',vittoria:esc(R.e.name)+' è sconfitto.',next:R.nextFoe?esc(R.e.name)+' è sconfitto: ora affronti '+esc(R.nextFoe.name)+'.':''}[R.end]||'';
+  const notes=[R.extra?`Di cui ${R.extra} per ${R.why}.`:'',R.sun&&R.eL&&R.eL!=='K'?'Danni raddoppiati dalla Spada del Sole.':'',R.switched?'RESISTENZA troppo bassa per il Raggio Psichico: usi lo Psicolaser.':''].filter(Boolean).join(' ');
+  return `<div class="rres"><div class="rl me"><span class="who">Lupo Solitario</span><b class="${R.dmg?'':'zero'}">${me}</b><small>resta ${R.lAfter}</small></div>
+  <div class="rl foe"><span class="who">${esc(R.e.name)}</span><b class="${R.eL?'':'zero'}">${foe}</b><small>resta ${R.eAfter}</small></div></div>
+  ${notes?`<p class="note">${notes}</p>`:''}${end?`<p class="rend">${end}</p>`:''}`;
+}
+async function doRound(flee){
+  const c=C();if(!c||!c.combat)return;const e0=c.combat.enemies[c.combat.idx];
+  const P=computeRound(c,0,flee);
+  const r=await drawReel(flee?'Scontro di fuga':'Scontro con '+e0.name,null,{
+    pre:`Rapporto di Forza <b>${sgn(P.ratio)}</b>: ${P.total} contro ${e0.comb}.${flee?' Nella fuga il nemico non subisce danni.':''}`,
+    describe:k=>roundHtml(computeRound(C(),k,flee)),
+    canAgain:k=>{const R=computeRound(C(),k,flee);return !R.end||R.end==='next'}});
+  if(!r)return;
+  mutate(c=>{
+    const cb=c.combat,e=cb.enemies[cb.idx],R=computeRound(c,r.d,flee);
+    if(R.switched){cb.psi=R.psi;toast('RESISTENZA troppo bassa per il Raggio Psichico: passi allo Psicolaser')}
+    e.res=R.eAfter;c.resCur-=R.dmg;if(c.para){c.para.fought=true;if(R.dmg>0)c.para.lost=true}
+    e.roundsHere++;cb.rounds.push({d:r.d,ratio:R.ratio,eL:R.eL,lL:R.lL==='K'?'K':R.lL+R.extra,extra:R.extra,why:R.why,foe:e.name,fi:cb.idx,flee});
+    UI.lastRound=`Numero ${r.d}, Rapporto ${sgn(R.ratio)}: ${e.name} ${R.eL==='K'?'ucciso':'−'+R.eL}, tu ${R.lL==='K'?'ucciso':'−'+(R.lL+R.extra)}.`;
+    if(c.resCur<=0){c.resCur=0;endCombat(c,'morte');return}
+    if(flee){endCombat(c,'fuga');toast('Sei fuggito');return}
+    if(e.res<=0){
+      const next=cb.enemies.findIndex(x=>x.res>0);
+      if(next>=0){cb.idx=next;cb.enemies[next].roundsHere=0;toast(e.name+' è sconfitto. Ora affronti '+cb.enemies[next].name)}
+      else{endCombat(c,'vittoria');toast('Vittoria: '+e.name+' è sconfitto')}
+    }
+  });
+  const c2=C();if(r.again&&c2&&c2.combat&&c2.status==='alive')doRound(false);
+}
+function addFromSheet(){
+  const g=id=>document.getElementById(id);const kind=g('skind').value;const name=g('sname').value.trim();
+  if(!name){toast('Dai un nome all’oggetto');return}
+  const it={id:uid(),kind,name,comb:num(g('scomb').value),res:num(g('sres').value),eq:false,note:g('snote').value.trim()};
+  if(kind==='arma')it.wtype=g('swtype').value;
+  if(kind==='armatura')it.atype=g('satype').value;
+  if(kind==='faretra'){it.arrows=Math.min(6,Math.max(0,num(g('sarr').value)));it.comb=0;it.res=0}
+  closeSheet();
+  mutate(c=>{if(c.specials.length>=specialLimit(c)){toast('Hai già 12 Oggetti Speciali');return}
+    withMaxDelta(c,()=>{c.specials.push(it);if(['armatura','elmo','scudo','altro'].includes(kind)){const err=eqCheck(c,it);if(!err)it.eq=true;else toast('Aggiunto ma non indossato: '+err)}})});
+}
+function eqCheck(c,it){
+  const on=c.specials.filter(s=>s.eq&&s.id!==it.id);
+  if(it.kind==='elmo'&&on.some(s=>s.kind==='elmo'))return 'puoi indossare un solo elmo';
+  if(it.kind==='scudo'&&on.some(s=>s.kind==='scudo'))return 'puoi usare un solo scudo';
+  if(it.kind==='armatura'){for(const s of on.filter(s=>s.kind==='armatura')){
+    if(s.atype===it.atype&&it.atype!=='Altra armatura')return 'indossi già un’armatura dello stesso tipo';
+    if(ARMOR_CLASH.some(([a,b])=>(a===s.atype&&b===it.atype)||(b===s.atype&&a===it.atype)))return it.atype+' non è compatibile con '+s.atype}}
+  return null;
+}
+function closeSheet(){document.getElementById('layer').innerHTML=''}
+function openSpecialSheet(){
+  const L=document.getElementById('layer');
+  L.innerHTML=`<div class="veil"><div class="sheet" role="dialog" aria-modal="true"><h3>Oggetto Speciale</h3>
+  <label class="f"><span>Nome</span><input id="sname" placeholder="es. Elmo"></label>
+  <label class="f"><span>Tipo</span><select id="skind">${Object.entries(SPECIAL_KINDS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>
+  <div id="sx"></div>
+  <div class="grid2"><label class="f"><span>Bonus COMBATTIVITÀ</span><input id="scomb" type="number" inputmode="numeric" value="0"></label><label class="f"><span>Bonus RESISTENZA</span><input id="sres" type="number" inputmode="numeric" value="0"></label></div>
+  <label class="f"><span>Nota (facoltativa)</span><input id="snote" placeholder="es. apre le porte di Holmgard"></label>
+  <div class="row end"><button class="btn" data-a="sheet-close">Annulla</button><button class="btn pri" data-a="sheet-save">Aggiungi</button></div></div></div>`;
+  const upd=()=>{const k=document.getElementById('skind').value;document.getElementById('sx').innerHTML=
+    k==='arma'?`<label class="f"><span>Tipo di arma (per i bonus di Scherma e Guerra)</span><select id="swtype">${WEAPON_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></label>`:
+    k==='armatura'?`<label class="f"><span>Armatura</span><select id="satype">${ARMORS.map(t=>`<option>${t}</option>`).join('')}</select></label>`:
+    k==='faretra'?`<label class="f"><span>Frecce (massimo 6)</span><input id="sarr" type="number" inputmode="numeric" value="6"></label>`:'';};
+  document.getElementById('skind').addEventListener('change',upd);upd();
+  document.querySelector('#layer .veil').addEventListener('click',e=>{if(e.target.classList.contains('veil'))closeSheet()});
+}
+async function eatMeal(){
+  const c=C();const L=document.getElementById('layer');
+  L.innerHTML=`<div class="veil"><div class="sheet" role="dialog" aria-modal="true"><h3>Devi consumare un Pasto</h3>
+  <p class="lead">Pasti nello Zaino: ${meals(c)}.${c.ramas.includes('caccia')&&!hasR(c,'fiuto')?' La Caccia non funziona nelle zone desertiche.':''}</p>
+  <label class="chip" style="margin:6px 0"><input type="checkbox" id="desert"> Zona desertica o territorio desolato</label>
+  <div class="row end"><button class="btn" data-a="sheet-close">Annulla</button><button class="btn pri" data-a="meal-go">Conferma</button></div></div></div>`;
+}
+
+const A={
+ tab:d=>{APP.tab=d.t;saveLocal();render();window.scrollTo(0,0)},
+ fate:async()=>{const d=await drawFate('Rullo del Destino');if(d!==null&&!S().animateFate)toast('Numero estratto: '+d)},
+ undo,
+ journal:openJournal,
+ 'journal-close':()=>{document.getElementById('layer').innerHTML='';render()},
+ 'layer-close':()=>{document.getElementById('layer').innerHTML='';render()},
+ rules:openRules,
+ 'rules-go':d=>{const el=document.getElementById(d.id),box=document.getElementById('rulesv');if(el&&box)box.scrollTo({top:el.offsetTop-12,behavior:'smooth'})},
+ 'rules-top':()=>{const el=document.getElementById('rtoc'),box=document.getElementById('rulesv');if(el&&box)box.scrollTo({top:el.offsetTop-80,behavior:'smooth'})},
+ maps:async()=>{try{await openMaps()}catch(e){toast('Errore nell’apertura delle mappe: '+(e&&e.message||e))}},
+ 'map-add':d=>pickMap(+d.n),
+ 'map-view':d=>viewMap(+d.n),
+ 'map-del':async d=>{if(!await confirmBox('Rimuovi la mappa','La mappa del libro '+d.n+' viene eliminata da questo telefono.','Rimuovi',true))return;const m={...mapsCloud()};const id=m[d.n];if(id){delete m[d.n];APP.settings.maps=m;APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);try{const as=await getAssets();if(as)await as.delete(id)}catch(e){}}else{try{await IDB.del('map-'+d.n)}catch(e){}}Object.keys(MAPURL).forEach(k=>delete MAPURL[k]);openMaps()},
+ 'map-alias':d=>{const a={...(S().mapAlias||{})};if(d.v)a[d.n]=+d.v;else delete a[d.n];APP.settings.mapAlias=a;APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);openMaps()},
+ 'map-cur':async()=>{const c=C();if(c&&(mapAssetId(c.book)||await mapBlob(c.book)))viewMap(c.book);else openMaps()},
+ 'lose-n':d=>{UI.loseN=Math.max(1,UI.loseN+ +d.d);render()},
+ 'gain-n':d=>{UI.gainN=Math.max(1,UI.gainN+ +d.d);render()},
+ 'lose-cat':d=>{UI.loseCat=d.v;render()},
+ lose:()=>mutate(c=>loseRes(c,UI.loseN,UI.loseCat)),
+ gain:()=>mutate(c=>textHeal(c,UI.gainN)),
+ eat:eatMeal,
+ 'meal-go':()=>{const desert=document.getElementById('desert').checked;closeSheet();mutate(c=>{
+   if(canHunt(c,desert)){toast(hasR(c,'fiuto')?'Fiuto: trovi da mangiare, nessun Pasto consumato':'Caccia: nessun Pasto consumato');return}
+   const i=c.backpack.findIndex(x=>x.kind==='pasto');if(i>=0){c.backpack.splice(i,1);toast('Hai consumato un Pasto')}else{loseRes(c,3,'stenti');toast('Nessun Pasto: perdi 3 RESISTENZA')}})},
+ 'arci-med':()=>mutate(c=>{const ceil=healCeil(c,'arci');const g=Math.max(0,Math.min(20,ceil-c.resCur));c.resCur+=g;c.arciUsed=true;toast('Medicina da Arcimaestro: +'+g+' RESISTENZA')}),
+ goto:()=>{const v=document.getElementById('pn').value.trim();const n=num(v,NaN);if(!Number.isFinite(n)||n<1){toast('Inserisci il numero del paragrafo');return}
+   mutate(c=>{
+     if(c.phase==='prep'){c.phase='play';snapshotBook(c)}
+     else if(c.para&&canHeal(c)&&!c.para.fought&&!c.para.lost){const ceil=healCeil(c,'para');
+       if(c.resCur<ceil&&(!S().healLimit10||c.healed<10)){c.resCur++;c.healed++;toast('+1 RESISTENZA ('+(hasR(c,'medicina')?'Medicina':'Guarigione')+')')}}
+     logNotes(c);c.history.push(n);c.journal.push({k:'p',n});c.para={n,fought:false,lost:false};c.postCombat=false;
+   })},
+ 'add-weapon':()=>{const type=document.getElementById('wtype').value;const name=document.getElementById('wname').value.trim()||type;mutate(c=>{if(c.weapons.length>=2)return;c.weapons.push({id:uid(),name,type})})},
+ 'del-weapon':d=>mutate(c=>{c.weapons=c.weapons.filter(w=>w.id!==d.id)}),
+ 'add-pack':()=>{const kind=document.getElementById('pkind').value;const v=Math.abs(num(document.getElementById('pval').value,kind==='cura'?4:kind==='alether'?2:0));
+   const name=document.getElementById('pname').value.trim()||({pasto:'Pasto',cura:'Pozione curativa',alether:'Pozione di Alether',altro:''}[kind]);
+   if(!name){toast('Dai un nome all’oggetto');return}mutate(c=>{if(c.backpack.length>=8){toast('Lo Zaino è pieno');return}c.backpack.push({id:uid(),name,kind,v})})},
+ 'add-meal':()=>mutate(c=>{if(c.backpack.length>=8){toast('Lo Zaino è pieno: libera un posto');return}c.backpack.push({id:uid(),name:'Pasto',kind:'pasto',v:0})}),
+ 'del-pack':d=>mutate(c=>{c.backpack=c.backpack.filter(i=>i.id!==d.id)}),
+ drink:d=>{const c=C();const it=c.backpack.find(i=>i.id===d.id);if(!it)return;
+   if(S().potionAfterCombat&&!c.postCombat){toast('Regola opzionale attiva: puoi berla solo subito dopo un combattimento vinto');return}
+   const g=Math.min(it.v,healCeil(c,'potion')-c.resCur);if(g<=0){toast(c.debt&&S().potionOnlyWounds?'Non hai ferite da curare: i punti persi per fame o fatica non si recuperano con le pozioni':'Non hai ferite da curare');return}
+   mutate(c=>{c.backpack=c.backpack.filter(i=>i.id!==d.id);c.resCur+=g;toast('+'+g+' RESISTENZA')})},
+ gold:d=>mutate(c=>{const n=c.gold+ +d.d;if(n>50)toast('La Borsa contiene al massimo 50 monete');c.gold=n}),
+ gold5:d=>mutate(c=>{const n=c.gold+ +d.d;if(n>50)toast('La Borsa contiene al massimo 50 monete: le eccedenti vanno perse');c.gold=n}),
+ convert:()=>mutate(c=>{const r=CURR[c.currency];const g=Math.floor(c.gold/r);toast(c.gold+' '+c.currency+' = '+g+' Corone d’oro');c.gold=g;c.currency='Corone d’oro'}),
+ 'special-sheet':openSpecialSheet,'sheet-close':closeSheet,'sheet-save':addFromSheet,
+ 'sun-sword':()=>mutate(c=>{if(c.specials.length>=specialLimit(c))return;c.specials.push({id:uid(),kind:'arma',name:'Spada del Sole',wtype:'Spada',sun:true,comb:8,res:0,eq:false,note:''})}),
+ 'del-special':d=>mutate(c=>withMaxDelta(c,()=>{c.specials=c.specials.filter(s=>s.id!==d.id)})),
+ 'toggle-eq':d=>mutate(c=>{const it=c.specials.find(s=>s.id===d.id);if(!it)return;if(!it.eq){const err=eqCheck(c,it);if(err){toast('Non puoi: '+err);return}}withMaxDelta(c,()=>{it.eq=!it.eq})}),
+ arrows:d=>mutate(c=>{const it=c.specials.find(s=>s.id===d.id);if(it)it.arrows=Math.max(0,Math.min(6,it.arrows+ +d.d))}),
+ 'lose-pack':async()=>{if(await confirmBox('Perdi lo Zaino','Perdi tutti gli Oggetti dello Zaino e i Pasti. Armi, Oggetti Speciali e Borsa restano con te.','Perdi lo Zaino',true))mutate(c=>{c.backpack=[];c.hasBackpack=false})},
+ 'regain-pack':()=>mutate(c=>{c.hasBackpack=true}),
+ seize:()=>mutate(c=>{c.seized={weapons:c.weapons,specials:c.specials.filter(s=>s.kind==='arma')};c.weapons=[];c.specials=c.specials.filter(s=>s.kind!=='arma');toast('Armi e armi speciali sequestrate')}),
+ unseize:()=>mutate(c=>{const s=c.seized;const room=2-c.weapons.length;c.weapons.push(...s.weapons.slice(0,room));const lost=s.weapons.slice(room);
+   const sp=specialLimit(c)-c.specials.length;c.specials.push(...s.specials.slice(0,Math.max(0,sp)));c.seized=null;if(lost.length)toast('Spazio insufficiente: '+lost.map(w=>w.name).join(', ')+' non recuperate')}),
+ dep:d=>mutate(c=>{let it;if(d.src==='pack'){it=c.backpack.find(i=>i.id===d.id);c.backpack=c.backpack.filter(i=>i.id!==d.id)}
+   else if(d.src==='arm'){it=c.weapons.find(i=>i.id===d.id);c.weapons=c.weapons.filter(i=>i.id!==d.id)}
+   else withMaxDelta(c,()=>{it=c.specials.find(i=>i.id===d.id);c.specials=c.specials.filter(i=>i.id!==d.id);if(it)it.eq=false});
+   if(it)c.deposit.push({src:d.src,item:it})}),
+ withdraw:d=>mutate(c=>{const k=c.deposit.findIndex(x=>x.item.id===d.id);if(k<0)return;const x=c.deposit[k];
+   if(x.src==='pack'){if(!c.hasBackpack||c.backpack.length>=8){toast('Non c’è posto nello Zaino');return}c.backpack.push(x.item)}
+   else if(x.src==='arm'){if(c.weapons.length>=2){toast('Porti già 2 armi');return}c.weapons.push(x.item)}
+   else{if(c.specials.length>=specialLimit(c)){toast('Hai già 12 Oggetti Speciali');return}c.specials.push(x.item)}
+   c.deposit.splice(k,1)}),
+ shoot:async d=>{const c=C();let bonus=0,why=[];
+   if(d.k==='arco'){if(hasR(c,'guerra')&&c.guerra.includes('Arco')){bonus+=3;why.push('Guerra +3')}}
+   if(hasR(c,'guerra')&&rsN(c)>=7){bonus+=2;why.push('Mentore +2')}
+   const n=await drawFate(d.k==='arco'?'Tiro con l’Arco':'Arma da lancio');if(n===null)return;
+   if(d.k==='arco')mutate(c=>{const q=c.specials.find(s=>s.kind==='faretra'&&s.arrows>0);if(q)q.arrows--});
+   toast(`Numero ${n}${bonus?' + '+bonus+' ('+why.join(', ')+') = '+(n+bonus):''}`)},
+ // combattimento
+ 'foe-add':()=>{const f=readFoe();if(f)mutate(c=>startCombat(c,f))},
+ 'foe-queue':()=>{const f=readFoe();if(f)mutate(c=>{c.combat.enemies.push(f)})},
+ 'cb-weapon':d=>mutate(c=>{if(!c.combat.rounds.length)c.combat.weapon=d.id||null},false),
+ 'cb-psi':d=>mutate(c=>{c.combat.psi=d.v},false),
+ 'cb-mod':d=>mutate(c=>{c.combat.mod+= +d.d},false),
+ 'cb-amb':d=>mutate(c=>{c.combat.ambush=Math.min(0,c.combat.ambush+ +d.d)},false),
+ 'cb-alether':d=>mutate(c=>{const it=c.backpack.find(i=>i.id===d.id);if(!it||c.combat.rounds.length)return;c.combat.alether=it.v;c.backpack=c.backpack.filter(i=>i.id!==d.id)}),
+ round:()=>doRound(false),
+ flee:()=>doRound(true),
+ 'end-combat':async()=>{if(await confirmBox('Interrompi il combattimento','Usalo quando il testo pone fine allo scontro, per esempio dopo un certo numero di scontri o se il nemico fugge.','Interrompi'))mutate(c=>endCombat(c,'interrotto'))},
+ // diario
+ 'book-done':()=>{UI.wiz={ramas:null,scherma:'',rs:[],g:[]};render();window.scrollTo(0,0)},
+ 'restart-book':async()=>{const c=C();if(!c.bookStart){toast('Nessun punto di partenza salvato per questo libro');return}
+   if(!await confirmBox('Ricomincia il libro '+c.book,'Il personaggio torna com’era all’inizio del libro. Puoi annullare subito dopo.','Ricomincia',true))return;
+   mutate(c2=>{const o=JSON.parse(c2.bookStart);const keep=c2.bookStart,j=c2.journal||[],nt=c2.notes,nl=c2.notesLogged;Object.keys(c2).forEach(k=>delete c2[k]);Object.assign(c2,o);c2.bookStart=keep;c2.status='alive';c2.notes=nt;c2.notesLogged=nl;c2.journal=[...j,{k:'e',txt:'Ricominci il libro '+c2.book,t:Date.now()}];if(c2.para)c2.journal.push({k:'p',n:c2.para.n})})},
+ 'wz-ramas':d=>{UI.wiz.ramas=d.v;render()},
+ 'wz-sch':async()=>{const n=await drawFate('Arma della Scherma');if(n!==null){UI.wiz.scherma=SCHERMA_DRAW[n];toast('Sei maestro di '+SCHERMA_DRAW[n]);render()}},
+ 'wz-rs':d=>{const w=UI.wiz;if(w.rs.includes(d.v))w.rs=w.rs.filter(x=>x!==d.v);else if(w.rs.length<3)w.rs.push(d.v);if(!w.rs.includes('guerra'))w.g=[];render()},
+ 'wz-rs1':d=>{const w=UI.wiz;w.rs=[d.v];w.g=[];render()},
+ 'wz-g':d=>{const w=UI.wiz;if(w.g.includes(d.v))w.g=w.g.filter(x=>x!==d.v);else if(w.g.length<+d.n)w.g.push(d.v);render()},
+ 'wz-cancel':()=>{UI.wiz=null;render()},
+ 'wz-done':()=>{const w=UI.wiz;UI.wiz=null;mutate(c=>{
+   const b=c.book;
+   withMaxDelta(c,()=>{
+     if(b<=4&&w.ramas){c.ramas.push(w.ramas);if(w.ramas==='scherma')c.scherma=w.scherma}
+     if(b===5){RAMAS.forEach(a=>{if(!c.ramas.includes(a.id))c.ramas.push(a.id)});if(w.scherma)c.scherma=w.scherma;c.ramastan=[...w.rs];c.guerra=[...w.g]}
+     if(b>=6&&b<=11){if(w.rs[0])c.ramastan.push(w.rs[0]);c.guerra.push(...w.g)}
+   });
+   if(S().mealsPerish)c.backpack=c.backpack.filter(i=>i.kind!=='pasto');
+   if(c.currency!=='Corone d’oro'){c.gold=Math.floor(c.gold/CURR[c.currency]);c.currency='Corone d’oro'}
+   const got=b<=4?w.ramas&&RAMAS.find(a=>a.id===w.ramas).n:b===5?w.rs.map(id=>RAMASTAN.find(a=>a.id===id).n).join(', '):b<=11&&w.rs[0]?RAMASTAN.find(a=>a.id===w.rs[0]).n:'';
+   logNotes(c);c.journal.push({k:'e',txt:'Libro '+b+' completato'+(got?(b===5?'. Diventi Maestro Ramas, nuove Arti Ramastan: ':'. Nuova Arte: ')+got:''),t:Date.now()},{k:'b',book:b+1});
+   c.book=b+1;c.phase='prep';c.para=null;c.history=[];c.healed=0;c.arciUsed=false;c.debt=0;c.postCombat=false;c.combat=null;c.resCur=maxRes(c);
+   snapshotBook(c);APP.tab='pers';
+ });UNDO=[];toast('Benvenuto nel libro '+C().book+': '+BOOKS[C().book])},
+ // opzioni
+ opt:d=>{APP.settings[d.k]=!APP.settings[d.k];APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);render()},
+ 'slot-load':d=>{APP.current=d.id;UNDO=[];UI.lastRound=null;APP.tab='pers';saveLocal();render()},
+ 'slot-del':async d=>{const s=APP.slots[d.id];if(!await confirmBox('Elimina '+s.name,'Il personaggio viene eliminato da questo dispositivo e dal tuo account Claude. Esportalo prima se vuoi conservarlo.','Elimina',true))return;
+   delete APP.slots[d.id];if(APP.current===d.id){APP.current=Object.keys(APP.slots)[0]||null;UNDO=[]}persist(d.id);render()},
+ rename:()=>{const c=C();const n=prompt('Nome del personaggio',c.name);if(n&&n.trim())mutate(c=>{c.name=n.trim()})},
+ export:()=>exportJSON([C()],'lupo-solitario-'+slug(C().name)+'-libro'+C().book+'.json'),
+ 'export-all':()=>exportJSON(Object.values(APP.slots),'lupo-solitario-tutti.json'),
+ import:importJSON,
+ 'new-char':()=>{UI.create=newCR();render();window.scrollTo(0,0)},
+ // creazione
+ 'cr-book':d=>{const r=UI.create;r.book=+d.v;r.ramas=r.ramas.slice(0,reqRamas(r.book));r.ramastan=r.ramastan.slice(0,reqRamastan(r.book));if(r.book<6){r.ramastan=[];r.guerra=[]}render()},
+ 'cr-draw':async d=>{const n=await drawFate(d.k==='comb'?'Combattività':'Resistenza',d.k==='comb'?'Il numero estratto più 10 è la tua COMBATTIVITÀ.':'Il numero estratto più 20 è la tua RESISTENZA.');if(n===null)return;UI.create[d.k]=String((d.k==='comb'?10:20)+n);render()},
+ 'cr-ramas':d=>{const r=UI.create;if(r.ramas.includes(d.v)){r.ramas=r.ramas.filter(x=>x!==d.v);if(d.v==='scherma')r.scherma=''}else if(r.ramas.length<reqRamas(r.book))r.ramas.push(d.v);else toast('Hai già scelto '+reqRamas(r.book)+' Arti');render()},
+ 'cr-sch':async()=>{const n=await drawFate('Arma della Scherma');if(n===null)return;UI.create.scherma=SCHERMA_DRAW[n];toast(n+': sei maestro di '+SCHERMA_DRAW[n]);render()},
+ 'cr-rs':d=>{const r=UI.create;if(r.ramastan.includes(d.v)){r.ramastan=r.ramastan.filter(x=>x!==d.v);if(d.v==='guerra')r.guerra=[]}else if(r.ramastan.length<reqRamastan(r.book))r.ramastan.push(d.v);else toast('Hai già scelto '+reqRamastan(r.book)+' Arti');render()},
+ 'cr-g':d=>{const r=UI.create;if(r.guerra.includes(d.v))r.guerra=r.guerra.filter(x=>x!==d.v);else if(r.guerra.length<reqGuerra(r.book))r.guerra.push(d.v);render()},
+ 'cr-gold':async()=>{const n=await drawFate('Corone d’oro','Nel libro 1 il numero estratto indica le Corone nella Borsa. Negli altri libri segui il testo.');if(n!==null){UI.create.gold=String(n);render()}},
+ 'cr-cancel':()=>{UI.create=null;render()},
+ 'cr-done':()=>{const r=UI.create;const rs=r.book>=6;
+   const c={id:uid(),name:r.name.trim(),book:r.book,phase:'prep',combBase:num(r.comb),resBase:num(r.res),resCur:0,
+     ramas:rs?RAMAS.map(a=>a.id):[...r.ramas],scherma:r.scherma||null,ramastan:rs?[...r.ramastan]:[],guerra:rs?[...r.guerra]:[],
+     weapons:[],backpack:[],hasBackpack:true,gold:Math.min(50,num(r.gold)),currency:'Corone d’oro',specials:[],deposit:[],seized:null,
+     para:null,history:[],journal:[{k:'b',book:r.book}],notesLogged:'',healed:0,arciUsed:false,debt:0,notes:'',log:[],combat:null,postCombat:false,status:'alive',bookStart:null,created:Date.now(),updated:Date.now()};
+   c.resCur=maxRes(c);snapshotBook(c);APP.slots[c.id]=c;APP.current=c.id;APP.tab='equip';UI.create=null;UNDO=[];persist(c.id);render();window.scrollTo(0,0);
+   toast('Inserisci l’equipaggiamento iniziale indicato dal libro')},
+};
+const slug=s=>s.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'personaggio';
+async function exportJSON(list,filename){
+  const data=JSON.stringify({app:'registro-di-guerra',v:1,exported:new Date().toISOString(),slots:list,settings:APP.settings},null,1);
+  try{const dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null;
+    if(!dl){await shareFile(filename,data);return}
+    await dl.save({filename,data});toast('File esportato: salvalo in File, su iCloud Drive o Google Drive');
+  }catch(e){if(e&&e.code==='declined')return;toast('Esportazione non riuscita')}
+}
+async function shareFile(filename,data){
+  const file=new File([data],filename,{type:'application/json'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:filename});return}catch(e){if(e&&e.name==='AbortError')return}}
+  const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);
+  toast('File esportato: salvalo in File, su iCloud Drive o Google Drive');
+}
+function importJSON(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='application/json,.json';
+  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;try{const o=JSON.parse(await f.text());const list=o.slots||(o.id?[o]:[]);if(!list.length)throw 0;
+    let n=0;for(const s of list){if(!s||!s.id||!s.ramas)continue;const ex=APP.slots[s.id];if(ex&&(ex.updated||0)>(s.updated||0)&&!await confirmBox('Sovrascrivere '+s.name+'?','Sul dispositivo c’è una versione più recente di questo personaggio.','Sovrascrivi',true))continue;s.updated=Date.now();APP.slots[s.id]=s;CLOUD.pending.add(s.id);n++}
+    if(n){APP.current=list[list.length-1].id;UNDO=[];persist(APP.current);render();toast(n===1?'Personaggio importato':n+' personaggi importati')}
+  }catch(e){toast('Il file non è un salvataggio valido del Registro di Guerra')}};
+  inp.click();
+}
+
+/* ====== EVENTI ====== */
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const f=A[el.dataset.a];if(f){e.preventDefault();f(el.dataset,el)}});
+let notesT=null;
+document.addEventListener('input',e=>{const f=e.target.dataset&&e.target.dataset.f;if(!f)return;
+  if(f==='notes'){const c=C();c.notes=e.target.value;clearTimeout(notesT);notesT=setTimeout(()=>{c.updated=Date.now();persist(c.id)},700);return}
+  if(f==='cr-name'){UI.create.name=e.target.value;crBtn();return}
+  if(f==='cr-comb'){UI.create.comb=e.target.value;crBtn();return}
+  if(f==='cr-res'){UI.create.res=e.target.value;crBtn();return}
+  if(f==='cr-gold'){UI.create.gold=e.target.value;return}
+});
+document.addEventListener('change',e=>{const f=e.target.dataset&&e.target.dataset.f;if(!f)return;
+  if(f==='currency')mutate(c=>{c.currency=e.target.value});
+  if(f==='notes'){const c=C();if(!c)return;c.notes=e.target.value;if(logNotes(c)){c.updated=Date.now();persist(c.id);const jp=document.getElementById('jprev');if(jp)jp.innerHTML=journalHtml(journalTail(c.journal))}}
+  if(f==='pkind'){const k=e.target.value,inp=document.getElementById('pval'),lb=document.getElementById('pvl');
+    const m={cura:['Punti RES','4'],alether:['Punti COMB','2']}[k];
+    if(m){lb.textContent=m[0];inp.disabled=false;inp.placeholder='+'+m[1];inp.value=m[1]}else{lb.textContent='Nessun valore';inp.disabled=true;inp.value='';inp.placeholder=''}}
+  if(f==='cr-sch'){UI.create.scherma=e.target.value;render()}
+  if(f==='wz-sch'){UI.wiz.scherma=e.target.value;render()}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pn')A.goto()});
+
+loadLocal();render();initCloud();getAssets();
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+</script>
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)toast('Nuova versione disponibile: chiudi e riapri l’app')})})}).catch(()=>{})})}</script>
+</body>
+</html>

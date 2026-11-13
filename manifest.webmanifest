@@ -1,0 +1,32 @@
+{
+ "name": "Lone Wolf Companion",
+ "short_name": "Lone Wolf",
+ "description": "Unofficial companion app for the Lone Wolf gamebooks, books 1-12",
+ "lang": "it",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "any",
+ "background_color": "#F2EBDC",
+ "theme_color": "#244A36",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}
