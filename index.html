@@ -913,7 +913,7 @@ async function openMaps(){
     const own=has(n),al=!own&&alias[n]&&has(alias[n]);
     const u=own||al?await mapUrl(n):null;
     rows.push(`<li class="${c&&c.book===n?'curbook':''}"><span class="n">${n}</span>${u?`<button class="mthumb" data-a="map-view" data-n="${n}" aria-label="Apri la mappa del libro ${n}"><img src="${u}" alt=""></button>`:''}<span class="t">${BOOKS[n]}<small>${own?'Mappa caricata':al?'Stessa mappa del libro '+alias[n]:alias[n]?'Stessa mappa del libro '+alias[n]+', non ancora caricata':'Nessuna mappa'}</small>
-      <span class="row" style="margin:6px 0 0">${u?`<button class="btn sm pri" data-a="map-view" data-n="${n}">Apri</button>`:''}<button class="btn sm" data-a="map-add" data-n="${n}">${own?'Sostituisci':'Carica dal telefono'}</button>${own?`<button class="btn sm dng" data-a="map-del" data-n="${n}">Rimuovi</button>`:''}<a class="btn sm" href="https://www.projectaon.org/en/xhtml/lw/${AON[n]}/map.htm" target="_blank" rel="noopener">Project Aon (inglese)</a></span></span></li>`);
+      <span class="row" style="margin:6px 0 0">${u?`<button class="btn sm pri" data-a="map-view" data-n="${n}">Apri</button>`:''}<button class="btn sm" data-a="map-add" data-n="${n}">${own?'Sostituisci':'Carica dal telefono'}</button>${own?`<button class="btn sm dng" data-a="map-del" data-n="${n}">Rimuovi</button>`:''}<a class="btn sm" href="https://www.projectaon.org/en/xhtml/lw/${AON[n]}/map.png" target="_blank" rel="noopener">Project Aon (inglese)</a></span></span></li>`);
   }
   L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="Mappe"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Mappe</h1><button class="btn" data-a="layer-close">Chiudi</button></div>
   <p class="lead">Carica le mappe che hai scaricato o fotografato: ${as?'restano nello spazio privato di questa app sul tuo account Claude, quindi le ritrovi anche dal Mac':'restano salvate solo su questo dispositivo'}. Per i libri senza mappa trovi il link alla versione inglese di Project Aon.</p>
@@ -1273,7 +1273,7 @@ async function exportJSON(list,filename){
 }
 async function shareFile(filename,data){
   const file=new File([data],filename,{type:'application/json'});
-  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file],title:filename});return}catch(e){if(e&&e.name==='AbortError')return}}
+  if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file]});return}catch(e){if(e&&e.name==='AbortError')return}}
   const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);
   toast('File esportato: salvalo in File, su iCloud Drive o Google Drive');
 }
