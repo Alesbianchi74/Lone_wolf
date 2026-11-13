@@ -296,6 +296,16 @@ nav.tabs button svg{width:28px;height:28px}
 .wsep{width:1.5px;height:24px;background:#B7AE98}
 .wlang{background:#F2EBDC;border-radius:24px;padding:2px 8px;margin-bottom:6px}
 @media (max-height:720px){.welcome{padding-top:calc(env(safe-area-inset-top,0px) + 4vh)}.wmark{width:96px}.welcome h1{margin-top:12px}.welcome h1 span{font-size:2.6rem}.welcome h1 small{font-size:1.95rem}.wlead{margin-top:3vh;font-size:1.05rem}.wbtns{margin-top:3vh}.wbtns{margin-bottom:20px}}
+/* lingua */
+.langbtn{flex:none;align-self:flex-start;margin-top:2px;border:1px solid var(--line);background:transparent;color:var(--muted);font:600 .78rem var(--fs);letter-spacing:.05em;border-radius:14px;padding:4px 9px;min-height:30px;white-space:nowrap}
+.top .hrow{position:relative}
+.top .langbtn{position:absolute;top:0;right:0;margin:0}
+.top .nm{padding-right:66px}
+.lmv{background:transparent;align-items:flex-start;justify-content:flex-end}
+.lmenu{margin:calc(env(safe-area-inset-top,0px) + 46px) 12px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.18);overflow:hidden;min-width:160px}
+.lmenu button{display:block;width:100%;text-align:left;border:0;background:transparent;padding:13px 16px;font:500 1rem var(--fs);color:var(--ink)}
+.lmenu button[aria-checked="true"]{color:var(--accent);font-weight:700}
+.lmenu button+button{border-top:1px solid var(--line)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -305,7 +315,7 @@ nav.tabs button svg{width:28px;height:28px}
 <script>
 'use strict';
 /* ====== DATI DI REGOLAMENTO (Manuale del Lettore) ====== */
-const BOOKS={1:'I Signori delle Tenebre',2:'Traversata Infernale',3:'Gli Abissi di Kalte',4:'L’Altare del Sacrificio',5:'Ombre sulla Sabbia',6:'Nel Regno del Terrore',7:'Il Castello della Morte',8:'La Giungla degli Orrori',9:'L’Antro della Paura',10:'Le Segrete di Torgar',11:'I Prigionieri del Tempo',12:'Sfida alle Tenebre'};
+const BOOKS_IT={1:'I Signori delle Tenebre',2:'Traversata Infernale',3:'Gli Abissi di Kalte',4:'L’Altare del Sacrificio',5:'Ombre sulla Sabbia',6:'Nel Regno del Terrore',7:'Il Castello della Morte',8:'La Giungla degli Orrori',9:'L’Antro della Paura',10:'Le Segrete di Torgar',11:'I Prigionieri del Tempo',12:'Sfida alle Tenebre'};
 const RAMAS=[
  {id:'mimetismo',n:'Mimetismo',d:'Ti confondi con l’ambiente: all’aperto ti nascondi, in città parli e ti comporti come un nativo.'},
  {id:'caccia',n:'Caccia',d:'Nessun obbligo di consumare un Pasto quando devi mangiare, tranne nelle zone desertiche.'},
@@ -328,7 +338,7 @@ const RAMASTAN=[
  {id:'scudo',n:'Scudo Psichico',from:'psicoschermo',d:'Nessuna perdita di RESISTENZA dagli attacchi mentali; difese contro illusioni e ipnosi.'},
  {id:'difesa',n:'Difesa',from:'telecinesi',d:'Sopporti caldo e freddo estremi senza perdere RESISTENZA; sposti oggetti col pensiero.'},
  {id:'divinazione',n:'Divinazione',from:'sestosenso',d:'Avverti pericoli e nemici occulti, intuisci intenzioni e proprietà nascoste, comunichi telepaticamente.'}];
-const PERF={
+const PERF_IT={
  controllo:{4:'Blocchi i sensi di un animale che ti attacca',6:'Richiami e comandi un animale nelle vicinanze',9:'Sottometti quasi ogni animale'},
  sparizione:{5:'Sposti l’attenzione del nemico dal tuo nascondiglio',6:'Mascheri i rumori dei tuoi movimenti',8:'Alteri il tuo aspetto fisico'},
  medicina:{4:'Ritardi gli effetti di veleni e tossine',7:'Neutralizzi veleni e tossine',9:'+20 RESISTENZA se scendi a 6 o meno, una volta per libro'},
@@ -339,10 +349,10 @@ const PERF={
  divinazione:{5:'Individui oggetti e persone con poteri magici',7:'Percepisci tracce psichiche e rivedi eventi passati',8:'Cammini in spirito'},
  interpretazione:{5:'Scopri imboscate entro 500 m',7:'Non lasci tracce quando ti muovi',8:'Conversi con ogni creatura senziente; non sei individuabile da incantesimi'},
  guerra:{5:'Disarmato: -2 COMBATTIVITÀ invece di -4',7:'+2 alla Tabella del Destino con armi a distanza',8:'+4 COMBATTIVITÀ con le armi in cui sei maestro; disarmato -1'}};
-const PERF_TITLES={4:'Priore',5:'Precettore',6:'Protettore',7:'Mentore',8:'Illuminato',9:'Arcimaestro'};
+const PERF_TITLES_IT={4:'Priore',5:'Precettore',6:'Protettore',7:'Mentore',8:'Illuminato',9:'Arcimaestro'};
 const CERCHI=[{n:'Cerchio del Fuoco',a:['guerra','fiuto'],c:1,r:2},{n:'Cerchio della Luce',a:['controllo','medicina'],c:0,r:3},{n:'Cerchio del Sole',a:['sparizione','fiuto','interpretazione'],c:1,r:3},{n:'Cerchio dello Spirito',a:['raggio','scudo','difesa','divinazione'],c:3,r:3}];
-const RAMAS_RANKS=['Novizio','Allievo','Diacono','Accolito','Iniziato','Aspirante','Guardiano','Tutore','Sapiente','Maestro'];
-const RAMASTAN_RANKS=['Maestro Ramas','Maestro Ramas anziano','Maestro Ramas superiore','Priore','Precettore','Protettore','Mentore','Illuminato','Arcimaestro','Grande Maestro Ramas'];
+const RAMAS_RANKS_IT=['Novizio','Allievo','Diacono','Accolito','Iniziato','Aspirante','Guardiano','Tutore','Sapiente','Maestro'];
+const RAMASTAN_RANKS_IT=['Maestro Ramas','Maestro Ramas anziano','Maestro Ramas superiore','Priore','Precettore','Protettore','Mentore','Illuminato','Arcimaestro','Grande Maestro Ramas'];
 const SCHERMA_DRAW=['Pugnale','Lancia','Mazza','Daga','Martello','Spada','Ascia','Spada','Asta','Spadone'];
 const MELEE=['Spada','Spadone','Daga','Pugnale','Ascia','Mazza','Martello','Lancia','Asta'];
 const WEAPON_TYPES=[...MELEE,'Arco','Altro'];
@@ -352,8 +362,8 @@ const SWORDS=['Spada','Daga','Spadone'];
 const ARMORS=['Corpetto di Cuoio','Cotta di Maglia','Veste di Bronin','Cotta di Kagonite','Bracciali d’Argento','Altra armatura'];
 const ARMOR_CLASH=[['Cotta di Maglia','Veste di Bronin']];
 const CURR={'Corone d’oro':1,'Lune':4,'Kika':10,'Ren':10,'Nobili':1,'Ain':1,'Orla':2,'Torq':4};
-const SPECIAL_KINDS={arma:'Arma speciale',armatura:'Armatura',elmo:'Elmo',scudo:'Scudo',faretra:'Faretra',altro:'Altro oggetto'};
-const OPTS=[
+const SPECIAL_KINDS_IT={arma:'Arma speciale',armatura:'Armatura',elmo:'Elmo',scudo:'Scudo',faretra:'Faretra',altro:'Altro oggetto'};
+const OPTS_IT=[
  ['healLimit10','Guarigione e Medicina: al massimo 10 punti recuperati per libro','Regola del ciclo Nuovo Ordine applicata a tutti i libri.'],
  ['healOnlyWounds','Guarigione e Medicina curano solo le ferite','I punti persi per fame o fatica non si recuperano con le Arti.'],
  ['potionOnlyWounds','Pozioni curative: curano solo le ferite','Come sopra, applicato alle pozioni.'],
@@ -363,6 +373,66 @@ const OPTS=[
  ['depositLocked','Deposito inaccessibile dal libro 9 al 12','Lupo Solitario non può raggiungere il deposito in quell’arco narrativo.'],
  ['arciMedCombatOnly','Medicina da Arcimaestro solo durante un combattimento','Spento: attivabile in qualsiasi momento con RESISTENZA 6 o meno.']];
 const DEFAULT_SETTINGS={healLimit10:true,healOnlyWounds:true,potionOnlyWounds:true,potionAfterCombat:true,mealsPerish:true,specialLimitRetro:true,depositLocked:true,arciMedCombatOnly:true,animateFate:true,mapAlias:{2:1}};
+/* ====== LINGUA ====== */
+let LANG='it';
+const T=(it,en)=>LANG==='en'?en:it;
+const LP=(it,en)=>new Proxy(it,{get:(t,k)=>LANG==='en'&&Object.prototype.hasOwnProperty.call(en,k)?en[k]:t[k]});
+const BOOKS=LP(BOOKS_IT,{1:'Flight from the Dark',2:'Fire on the Water',3:'The Caverns of Kalte',4:'The Chasm of Doom',5:'Shadow on the Sand',6:'The Kingdoms of Terror',7:'Castle Death',8:'The Jungle of Horrors',9:'The Cauldron of Fear',10:'The Dungeons of Torgar',11:'The Prisoners of Time',12:'The Masters of Darkness'});
+const ARTS_EN={
+ mimetismo:['Camouflage','You blend into your surroundings: you hide in the countryside and pass as a local in towns and cities.'],
+ caccia:['Hunting','You never need to eat a Meal when instructed to, except in wastelands and deserts.'],
+ sestosenso:['Sixth Sense','You sense imminent danger and perceive the true purpose of strangers and strange objects.'],
+ orientamento:['Tracking','You find the right path, locate people and objects, and read tracks and footprints.'],
+ guarigione:['Healing','+1 ENDURANCE point for each section you pass through without combat.'],
+ scherma:['Weaponskill','+2 COMBAT SKILL when fighting with the weapon you have mastered.'],
+ psicoschermo:['Mindshield','You lose no ENDURANCE points when attacked by Mindforce.'],
+ psicolaser:['Mindblast','+2 COMBAT SKILL for the whole combat, unless the enemy is immune.'],
+ affinita:['Animal Kinship','You communicate with some animals and guess the intentions of others.'],
+ telecinesi:['Mind Over Matter','You move small objects by concentration alone.'],
+ guerra:['Weaponmastery','+3 COMBAT SKILL with the weapons you have mastered; with the Bow, +3 to the Random Number Table.'],
+ medicina:['Curing','+1 ENDURANCE point for each section without combat; you cure disease and wounds and recognise herbs and potions.'],
+ interpretazione:['Pathsmanship','You read languages and symbols, follow even disguised tracks, spot traps and always know where north is.'],
+ sparizione:['Invisibility','You hide even in the open, mask your scent and body heat, and mimic local dialects and customs.'],
+ fiuto:['Huntmastery','You always find food, even in the desert, and ignore extra penalties for surprise attacks and ambushes.'],
+ controllo:['Animal Control','You communicate with almost every animal and gain advantages when fighting on horseback.'],
+ raggio:['Psi-surge','+4 COMBAT SKILL and −2 ENDURANCE per round; not usable at 6 ENDURANCE or less. You can always use Mindblast (+2).'],
+ scudo:['Psi-screen','No ENDURANCE loss from psychic attacks; protection against illusions and hypnosis.'],
+ difesa:['Nexus','You withstand extreme heat and cold without losing ENDURANCE and move objects with your mind.'],
+ divinazione:['Divination','You sense danger and hidden enemies, perceive intentions and hidden properties, and communicate telepathically.']};
+for(const a of [...RAMAS,...RAMASTAN]){const it={n:a.n,d:a.d};Object.defineProperty(a,'itn',{value:it.n});Object.defineProperty(a,'n',{get:()=>LANG==='en'?ARTS_EN[a.id][0]:it.n});Object.defineProperty(a,'d',{get:()=>LANG==='en'?ARTS_EN[a.id][1]:it.d})}
+const PERF=LP(PERF_IT,{
+ controllo:{4:'You block the senses of an attacking animal',6:'You summon and command a nearby animal',9:'You can subdue almost any animal'},
+ sparizione:{5:'You draw enemy attention away from your hiding place',6:'You muffle the sound of your movements',8:'You alter your physical appearance'},
+ medicina:{4:'You delay the effects of poisons and toxins',7:'You neutralise poisons and toxins',9:'+20 ENDURANCE if you drop to 6 or less, once per book'},
+ fiuto:{4:'You climb without equipment',6:'Telescopic vision',9:'Heightened senses, you see in the dark'},
+ difesa:{4:'You resist toxic gases and fumes for longer',6:'You put out fires by willpower',9:'You withstand extreme temperatures, with limited immunity to fire, gas and corrosives'},
+ raggio:{4:'You make objects vibrate until they shatter',6:'You confuse enemies in combat',9:'+6 COMBAT SKILL and −1 ENDURANCE per round (not at 4 or less); Mindblast +3'},
+ scudo:{5:'You resist mental influence and telepathy',7:'You are protected from evil spirits and incorporeal beings',8:'You absorb and control part of enemy psychic energy'},
+ divinazione:{5:'You detect magical objects and people',7:'You sense psychic traces and see past events',8:'Spirit walking'},
+ interpretazione:{5:'You detect ambushes within 500 metres',7:'You leave no tracks',8:'You converse with any sentient creature and cannot be detected by spells'},
+ guerra:{5:'Unarmed: −2 COMBAT SKILL instead of −4',7:'+2 to the Random Number Table with missile weapons',8:'+4 COMBAT SKILL with mastered weapons; unarmed −1'}});
+const PERF_TITLES=LP(PERF_TITLES_IT,{4:'Primate',5:'Tutelary',6:'Principalin',7:'Mentora',8:'Scion-kai',9:'Archmaster'});
+const CERCHI_EN=['Circle of Fire','Circle of Light','Circle of Solaris','Circle of the Spirit'];
+CERCHI.forEach((k,i)=>{const it=k.n;Object.defineProperty(k,'n',{get:()=>LANG==='en'?CERCHI_EN[i]:it})});
+const RAMAS_RANKS=LP(RAMAS_RANKS_IT,['Novice','Intuite','Doan','Acolyte','Initiate','Aspirant','Guardian','Warmarn','Savant','Master']);
+const RAMASTAN_RANKS=LP(RAMASTAN_RANKS_IT,['Kai Master','Kai Master Senior','Kai Master Superior','Primate','Tutelary','Principalin','Mentora','Scion-kai','Archmaster','Kai Grand Master']);
+const SPECIAL_KINDS=LP(SPECIAL_KINDS_IT,{arma:'Special weapon',armatura:'Armour',elmo:'Helmet',scudo:'Shield',faretra:'Quiver',altro:'Other item'});
+const OPTS=LP(OPTS_IT,[
+ ['healLimit10','Healing and Curing: at most 10 points recovered per book','New Order rule applied to every book.'],
+ ['healOnlyWounds','Healing and Curing only restore wounds','Points lost to hunger or fatigue cannot be recovered with Disciplines.'],
+ ['potionOnlyWounds','Healing potions only restore wounds','As above, applied to potions.'],
+ ['potionAfterCombat','Healing potions: only at the end of a combat','You can drink them only right after a won combat, before moving to the next section.'],
+ ['mealsPerish','Perishable Meals','Leftover Meals are removed from the Backpack at the end of each book.'],
+ ['specialLimitRetro','12 Special Items limit in books 1-7 too','From book 8 the limit always applies.'],
+ ['depositLocked','No access to the safekeeping from book 9 to 12','Lone Wolf cannot reach his stored items in that story arc.'],
+ ['arciMedCombatOnly','Archmaster Curing only during combat','Off: usable at any time with 6 ENDURANCE or less.']]);
+const WL_EN={Pugnale:'Dagger',Lancia:'Spear',Mazza:'Mace',Daga:'Short Sword',Martello:'Warhammer',Spada:'Sword',Ascia:'Axe',Asta:'Quarterstaff',Spadone:'Broadsword',Arco:'Bow',Altro:'Other','Corpetto di Cuoio':'Padded Leather Waistcoat','Cotta di Maglia':'Chainmail Waistcoat','Veste di Bronin':'Bronin Vest','Cotta di Kagonite':'Kagonite Chainmail','Bracciali d’Argento':'Silver Bracers','Altra armatura':'Other armour','Corone d’oro':'Gold Crowns','Nobili':'Nobles'};
+const wl=v=>(LANG==='en'&&WL_EN[v])||v;
+const NAME_EN={'Pasto':'Meal','Pozione curativa':'Healing potion','Pozione di Alether':'Alether potion','Spada del Sole':'Sommerswerd','Lupo Solitario':'Lone Wolf','Faretra':'Quiver','Elmo':'Helmet','Scudo':'Shield',...WL_EN};
+const NAME_IT=Object.fromEntries(Object.entries(NAME_EN).map(([a,b])=>[b,a]));
+const iname=v=>LANG==='en'?(NAME_EN[v]||v):(NAME_IT[v]||v);
+const outName=o=>({vittoria:T('vittoria','victory'),fuga:T('fuga','evasion'),morte:T('sconfitta','defeat'),interrotto:T('interrotto','interrupted')}[o]||o);
+const wlist=a=>a.map(wl).join(', ');
 
 /* Tabella dei Risultati di Combattimento estesa. Ogni cella: [perdita Nemico, perdita Lupo Solitario]; 'K' = ucciso. Righe 1..9,0 */
 const rep=(v,n)=>Array(n).fill(v);
@@ -407,7 +477,7 @@ function mutate(fn,undo=true){
   if(undo){UNDO.push(JSON.stringify(c));if(UNDO.length>40)UNDO.shift()}
   migrate(c);fn(c);normalize(c);c.updated=Date.now();persist(c.id);render();
 }
-function undo(){const s=UNDO.pop();if(!s)return;const o=JSON.parse(s);o.updated=Date.now();APP.slots[o.id]=o;APP.current=o.id;persist(o.id);render();toast('Ultima azione annullata')}
+function undo(){const s=UNDO.pop();if(!s)return;const o=JSON.parse(s);o.updated=Date.now();APP.slots[o.id]=o;APP.current=o.id;persist(o.id);render();toast(T('Ultima azione annullata','Last action undone'))}
 const esc=s=>String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const uid=()=>Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-5);
 const sum=(a,f)=>a.reduce((t,x)=>t+(f(x)||0),0);
@@ -439,7 +509,7 @@ function normalize(c){
   migrate(c);
   const m=maxRes(c);
   if(c.resCur>m)c.resCur=m;
-  if(c.resCur<=0){c.resCur=0;if(c.status==='alive'){if(c.combat)endCombat(c,'morte');c.status='dead';c.combat=null;c.journal.push({k:'e',txt:'Lupo Solitario cade'+(c.para?' al paragrafo '+c.para.n:''),t:Date.now()})}}
+  if(c.resCur<=0){c.resCur=0;if(c.status==='alive'){if(c.combat)endCombat(c,'morte');c.status='dead';c.combat=null;c.journal.push({k:'e',ev:'fall',p:c.para?c.para.n:null,t:Date.now()})}}
   c.debt=Math.max(0,Math.min(c.debt,m-c.resCur));
   if(c.gold>50)c.gold=50;if(c.gold<0)c.gold=0;
   if(c.log.length>120)c.log=c.log.slice(-120);
@@ -451,11 +521,11 @@ function textHeal(c,n){c.resCur=Math.min(maxRes(c),c.resCur+n);c.debt=Math.max(0
 
 /* armi e bonus */
 function weaponTypes(w){return w.sun?SWORDS:[w.type]}
-function allWeapons(c){return [...c.weapons.map(w=>({...w,src:'arm'})),...c.specials.filter(s=>s.kind==='arma').map(s=>({id:s.id,name:s.name,type:s.wtype||'Altro',comb:s.comb||0,sun:!!s.sun,src:'spec'}))]}
+function allWeapons(c){return [...c.weapons.map(w=>({...w,name:iname(w.name),src:'arm'})),...c.specials.filter(s=>s.kind==='arma').map(s=>({id:s.id,name:iname(s.name),type:s.wtype||'Altro',comb:s.comb||0,sun:!!s.sun,src:'spec'}))]}
 function mastery(c,w){
   const t=weaponTypes(w);
-  if(hasR(c,'guerra')&&t.some(x=>c.guerra.includes(x)))return ['Guerra ('+t.find(x=>c.guerra.includes(x))+')',rsN(c)>=8?4:3];
-  if(c.ramas.includes('scherma')&&c.scherma&&t.includes(c.scherma))return ['Scherma ('+c.scherma+')',2];
+  if(hasR(c,'guerra')&&t.some(x=>c.guerra.includes(x)))return [T('Guerra','Weaponmastery')+' ('+wl(t.find(x=>c.guerra.includes(x)))+')',rsN(c)>=8?4:3];
+  if(c.ramas.includes('scherma')&&c.scherma&&t.includes(c.scherma))return [T('Scherma','Weaponskill')+' ('+wl(c.scherma)+')',2];
   return null;
 }
 function unarmedMalus(c){if(hasR(c,'guerra')){if(rsN(c)>=8)return -1;if(rsN(c)>=5)return -2}return -4}
@@ -466,18 +536,18 @@ function psiInfo(c){
 }
 function combatComb(c,cb,e){
   const parts=[];const w=cb.weapon?allWeapons(c).find(x=>x.id===cb.weapon):null;
-  parts.push(['COMBATTIVITÀ di base',c.combBase]);
-  const k=circ(c);if(k.c)parts.push(['Cerchi di Sapienza',k.c]);
+  parts.push([T('COMBATTIVITÀ di base','Base COMBAT SKILL'),c.combBase]);
+  const k=circ(c);if(k.c)parts.push([T('Cerchi di Sapienza','Lore-circles'),k.c]);
   const realW=w&&w.type!=='Arco'?w:null;
-  if(!realW)parts.push([w?'Solo arco: combatti disarmato':'Senza armi',unarmedMalus(c)]);
+  if(!realW)parts.push([w?T('Solo arco: combatti disarmato','Bow only: you fight unarmed'):T('Senza armi','Unarmed'),unarmedMalus(c)]);
   else{if(w.comb)parts.push([w.name,w.comb]);const m=mastery(c,realW);if(m)parts.push(m)}
   const twoH=realW&&!realW.sun&&TWO_HANDED.includes(realW.type);
-  for(const s of equippedSpecials(c)){if(!s.comb)continue;if(s.kind==='scudo'&&twoH){parts.push([s.name+' (non usabile con arma a due mani)',0]);continue}parts.push([s.name,s.comb])}
+  for(const s of equippedSpecials(c)){if(!s.comb)continue;if(s.kind==='scudo'&&twoH){parts.push([iname(s.name)+T(' (non usabile con arma a due mani)',' (not usable with a two-handed weapon)'),0]);continue}parts.push([iname(s.name),s.comb])}
   const p=psiInfo(c);
-  if(e&&!e.immune){if(cb.psi==='laser'&&p.laser)parts.push(['Psicolaser',p.laserV]);if(cb.psi==='raggio'&&p.raggio)parts.push(['Raggio Psichico',p.raggioV])}
-  if(cb.alether)parts.push(['Pozione di Alether',cb.alether]);
-  if(cb.mod)parts.push(['Modificatore dal testo',cb.mod]);
-  if(cb.ambush){if(hasR(c,'fiuto'))parts.push(['Sorpresa o imboscata (ignorata: Fiuto)',0]);else parts.push(['Sorpresa o imboscata',cb.ambush])}
+  if(e&&!e.immune){if(cb.psi==='laser'&&p.laser)parts.push([T('Psicolaser','Mindblast'),p.laserV]);if(cb.psi==='raggio'&&p.raggio)parts.push([T('Raggio Psichico','Psi-surge'),p.raggioV])}
+  if(cb.alether)parts.push([T('Pozione di Alether','Alether potion'),cb.alether]);
+  if(cb.mod)parts.push([T('Modificatore dal testo','Modifier from the text'),cb.mod]);
+  if(cb.ambush){if(hasR(c,'fiuto'))parts.push([T('Sorpresa o imboscata (ignorata: Fiuto)','Surprise or ambush (ignored: Huntmastery)'),0]);else parts.push([T('Sorpresa o imboscata','Surprise or ambush'),cb.ambush])}
   return {total:sum(parts,x=>x[1]),parts,w:realW};
 }
 function bestWeapon(c){
@@ -486,16 +556,16 @@ function bestWeapon(c){
 }
 
 /* ====== CLOUD (account Claude) ====== */
-const CLOUD={db:null,uid:null,status:'Connessione in corso…',pending:new Set(),settingsDirty:false,timer:null,busy:false};
+const CLOUD={db:null,uid:null,status:'…',pending:new Set(),settingsDirty:false,timer:null,busy:false};
 const col=()=>CLOUD.db.collection('data/users/'+CLOUD.uid);
 async function initCloud(){
-  if(!window.claude||typeof window.claude.use!=='function'){CLOUD.status='Salvataggio su questo dispositivo. Esporta ogni tanto un backup su iCloud Drive';refreshCloud();return}
+  if(!window.claude||typeof window.claude.use!=='function'){CLOUD.status=T('Salvataggio su questo dispositivo. Esporta ogni tanto un backup su iCloud Drive','Saved on this device. Export a backup to iCloud Drive from time to time');refreshCloud();return}
   try{
     const [db,user]=await Promise.all([window.claude.use('db'),window.claude.use('user')]);
-    if(!db||!user){CLOUD.status='Non disponibile: salvataggio solo sul dispositivo';refreshCloud();return}
-    const id=await user.id();if(!id){CLOUD.status='Accedi a Claude per sincronizzare: salvataggio solo sul dispositivo';refreshCloud();return}
+    if(!db||!user){CLOUD.status=T('Non disponibile: salvataggio solo sul dispositivo','Not available: saved on this device only');refreshCloud();return}
+    const id=await user.id();if(!id){CLOUD.status=T('Accedi a Claude per sincronizzare: salvataggio solo sul dispositivo','Sign in to Claude to sync: saved on this device only');refreshCloud();return}
     CLOUD.db=db;CLOUD.uid=id;await cloudPull();
-  }catch(e){CLOUD.status='Connessione non riuscita: salvataggio solo sul dispositivo';refreshCloud()}
+  }catch(e){CLOUD.status=T('Connessione non riuscita: salvataggio solo sul dispositivo','Connection failed: saved on this device only');refreshCloud()}
 }
 async function cloudPull(){
   const snap=await col().get();const seen=new Set();let changed=false;
@@ -510,7 +580,7 @@ async function cloudPull(){
   }
   for(const id in APP.slots)if(!seen.has(id))CLOUD.pending.add(id);
   if(!APP.slots[APP.current]){APP.current=Object.keys(APP.slots).sort((a,b)=>(APP.slots[b].updated||0)-(APP.slots[a].updated||0))[0]||null;changed=true}
-  CLOUD.status='Sincronizzato con il tuo account Claude';
+  CLOUD.status=T('Sincronizzato con il tuo account Claude','Synced with your Claude account');
   saveLocal();if(changed){UNDO=[];render()}else refreshCloud();
   if(CLOUD.pending.size||CLOUD.settingsDirty)queueCloud();
 }
@@ -524,8 +594,8 @@ async function flushCloud(){
       else await ref.set({deleted:true,updated:Date.now()});
     }
     if(CLOUD.settingsDirty){CLOUD.settingsDirty=false;await col().doc('settings').set({json:JSON.stringify(APP.settings),updated:APP.settingsUpdated||Date.now()})}
-    const t=new Date();CLOUD.status='Sincronizzato alle '+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');
-  }catch(e){CLOUD.status='Sincronizzazione non riuscita: riprovo alla prossima modifica'}
+    const t=new Date();CLOUD.status=T('Sincronizzato alle ','Synced at ')+String(t.getHours()).padStart(2,'0')+':'+String(t.getMinutes()).padStart(2,'0');
+  }catch(e){CLOUD.status=T('Sincronizzazione non riuscita: riprovo alla prossima modifica','Sync failed: will retry on the next change')}
   CLOUD.busy=false;refreshCloud();if(CLOUD.pending.size)queueCloud();
 }
 function refreshCloud(){const el=document.getElementById('cloudst');if(el)el.textContent=CLOUD.status}
@@ -535,10 +605,10 @@ let toastT=null;
 function toast(msg){const old=document.querySelector('.toast');if(old)old.remove();const t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.appendChild(t);clearTimeout(toastT);toastT=setTimeout(()=>t.remove(),2600)}
 function confirmBox(title,text,okLabel,danger){return new Promise(res=>{
   const L=document.getElementById('layer');const v=document.createElement('div');v.className='veil';
-  v.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><p class="lead">${esc(text)}</p><div class="row end"><button class="btn" data-k="0">Annulla</button><button class="btn ${danger?'dng':'pri'}" data-k="1">${esc(okLabel)}</button></div></div>`;
+  v.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><p class="lead">${esc(text)}</p><div class="row end"><button class="btn" data-k="0">${T('Annulla','Cancel')}</button><button class="btn ${danger?'dng':'pri'}" data-k="1">${esc(okLabel)}</button></div></div>`;
   v.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b||e.target===v){v.remove();res(!!(b&&b.dataset.k==='1'))}});L.appendChild(v);
 })}
-const step=(a,v,extra='')=>`<div class="step"><button data-a="${a}" data-d="-1" ${extra} aria-label="Diminuisci">−</button><span>${v}</span><button data-a="${a}" data-d="1" ${extra} aria-label="Aumenta">+</button></div>`;
+const step=(a,v,extra='')=>`<div class="step"><button data-a="${a}" data-d="-1" ${extra} aria-label="${T('Diminuisci','Decrease')}">−</button><span>${v}</span><button data-a="${a}" data-d="1" ${extra} aria-label="${T('Aumenta','Increase')}">+</button></div>`;
 const chip=(a,label,on,attrs='')=>`<button class="chip" data-a="${a}" aria-pressed="${on?'true':'false'}" ${attrs}>${label}</button>`;
 const sgn=v=>v>0?'+'+v:String(v);
 
@@ -550,19 +620,19 @@ function drawReel(title,sub,o={}){
     const L=document.getElementById('layer');const v=document.createElement('div');v.className='veil';
     const H=64,RZ=(H/2)/Math.tan(Math.PI/10);
     const faces=Array.from({length:10},(_,i)=>`<div class="face" data-i="${i}" style="transform:rotateX(${-i*36}deg) translateZ(${RZ.toFixed(1)}px)">${i}</div>`).join('');
-    v.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><p class="lead">${o.pre||esc(sub||'Fai scorrere il rullo con il dito, oppure tocca Gira.')}</p>
-      <div class="reel" id="reel" role="img" aria-label="Rullo del Destino"><div class="drum" id="drum">${faces}</div><div class="win"></div></div>
-      <div class="rout" id="rout" aria-live="polite">${o.pre?'<p class="note" style="text-align:center">Fai scorrere il rullo con il dito, oppure tocca Gira.</p>':''}</div>
-      <div class="row end" id="rbtn"><button class="btn" id="fx">Annulla</button><button class="btn pri" id="fspin">Gira</button></div></div>`;
+    v.innerHTML=`<div class="sheet" role="dialog" aria-modal="true"><h3>${esc(title)}</h3><p class="lead">${o.pre||esc(sub||T('Fai scorrere il rullo con il dito, oppure tocca Gira.','Flick the reel with your finger, or tap Spin.'))}</p>
+      <div class="reel" id="reel" role="img" aria-label="${T('Rullo del Destino','Reel of Fate')}"><div class="drum" id="drum">${faces}</div><div class="win"></div></div>
+      <div class="rout" id="rout" aria-live="polite">${o.pre?'<p class="note" style="text-align:center">'+T('Fai scorrere il rullo con il dito, oppure tocca Gira.','Flick the reel with your finger, or tap Spin.')+'</p>':''}</div>
+      <div class="row end" id="rbtn"><button class="btn" id="fx">${T('Annulla','Cancel')}</button><button class="btn pri" id="fspin">${T('Gira','Spin')}</button></div></div>`;
     L.appendChild(v);
     const drum=v.querySelector('#drum'),reel=v.querySelector('#reel');let A=rnd(10)*36,state='idle',drag=null;
     const setA=x=>{A=x;drum.style.transform=`rotateX(${A.toFixed(2)}deg)`};setA(A);
     const close=r=>{v.remove();res(r)};
     const land=k=>{
       state='done';reel.classList.add('hit');const f=reel.querySelector(`.face[data-i="${k}"]`);if(f)f.classList.add('cur');
-      v.querySelector('#rout').innerHTML=o.describe?o.describe(k):`<p class="rnum">È uscito il <b>${k}</b></p>`;
+      v.querySelector('#rout').innerHTML=o.describe?o.describe(k):`<p class="rnum">${T('È uscito il','You rolled')} <b>${k}</b></p>`;
       const b=v.querySelector('#rbtn');
-      b.innerHTML=o.describe&&o.canAgain&&o.canAgain(k)?`<button class="btn" data-r="0">Applica</button><button class="btn pri" data-r="1">Applica e nuovo scontro</button>`:`<button class="btn pri" data-r="0">${o.describe?'Applica':'Usa questo numero'}</button>`;
+      b.innerHTML=o.describe&&o.canAgain&&o.canAgain(k)?`<button class="btn" data-r="0">${T('Applica','Apply')}</button><button class="btn pri" data-r="1">${T('Applica e nuovo scontro','Apply and next round')}</button>`:`<button class="btn pri" data-r="0">${o.describe?T('Applica','Apply'):T('Usa questo numero','Use this number')}</button>`;
       b.querySelectorAll('[data-r]').forEach(x=>x.onclick=()=>close({d:k,again:x.dataset.r==='1'}));
       b.querySelector('.pri').focus();
     };
@@ -612,14 +682,14 @@ function renderInner(){
 }
 function header(c){
   const m=maxRes(c),p=Math.max(0,Math.min(100,c.resCur/m*100));
-  return `<header class="top"><div class="hrow"><span class="wolf" aria-hidden="true">${I.wolf}</span><div class="who"><div class="nm">${esc(c.name)}</div><div class="bk">Libro ${c.book}, ${BOOKS[c.book]}</div></div>
-</div>
-  <div class="hstats"><div class="hs"><span class="l">Combattività</span><span class="v">${idleComb(c)}</span></div>
-  <div class="hs"><span class="l">Resistenza</span><span class="v">${c.resCur}<small> / ${m}</small></span></div>
-  <div class="hs"><span class="l">Paragrafo</span><span class="v">${c.para?c.para.n:'—'}</span></div><div class="hacts"><button class="ib" data-a="undo" ${UNDO.length?'':'disabled'} aria-label="Annulla l’ultima azione">${I.undo}</button><button class="ib fate" data-a="fate" aria-label="Estrai un numero">${I.fate}</button></div></div><div class="hbar ${p<30?'low':''}" role="meter" aria-label="Resistenza" aria-valuemin="0" aria-valuemax="${m}" aria-valuenow="${c.resCur}"><i style="width:${p}%"></i></div></header>`;
+  return `<header class="top"><div class="hrow"><span class="wolf" aria-hidden="true">${I.wolf}</span><div class="who"><div class="nm">${esc(iname(c.name))}</div><div class="bk">${T('Libro','Book')} ${c.book}, ${BOOKS[c.book]}</div></div>
+<button class="langbtn" data-a="lang-menu" aria-label="${T('Lingua','Language')}">${LANG==='en'?'ENG':'ITA'} <span aria-hidden="true">▾</span></button></div>
+  <div class="hstats"><div class="hs"><span class="l">${T('Combattività','Combat Skill')}</span><span class="v">${idleComb(c)}</span></div>
+  <div class="hs"><span class="l">${T('Resistenza','Endurance')}</span><span class="v">${c.resCur}<small> / ${m}</small></span></div>
+  <div class="hs"><span class="l">${T('Paragrafo','Section')}</span><span class="v">${c.para?c.para.n:'—'}</span></div><div class="hacts"><button class="ib" data-a="undo" ${UNDO.length?'':'disabled'} aria-label="${T('Annulla l’ultima azione','Undo last action')}">${I.undo}</button><button class="ib fate" data-a="fate" aria-label="${T('Estrai un numero','Pick a number')}">${I.fate}</button></div></div><div class="hbar ${p<30?'low':''}" role="meter" aria-label="${T('Resistenza','Endurance')}" aria-valuemin="0" aria-valuemax="${m}" aria-valuenow="${c.resCur}"><i style="width:${p}%"></i></div></header>`;
 }
 function nav(c){
-  const t=[['pers','Personaggio',I.pers],['equip','Zaino',I.equip],['comb','Battaglia',I.comb],['diario','Diario',I.diario],['opz','Compendio',I.opz]];
+  const t=[['pers',T('Personaggio','Character'),I.pers],['equip',T('Zaino','Backpack'),I.equip],['comb',T('Battaglia','Battle'),I.comb],['diario',T('Diario','Journal'),I.diario],['opz',T('Compendio','Compendium'),I.opz]];
   return `<nav class="tabs">${t.map(([k,l,ic])=>`<button data-a="tab" data-t="${k}" ${APP.tab===k?'aria-current="page"':''} class="${k==='comb'&&c.combat?'alert':''}">${ic}<span>${l}</span></button>`).join('')}</nav>`;
 }
 const FLAG_IT='<svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M10 4H22V28H10z"/><path d="M5,4h6V28H5c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" fill="#41914d"/><path d="M25,4h6V28h-6c-2.208,0-4-1.792-4-4V8c0-2.208,1.792-4,4-4Z" transform="rotate(180 26 16)" fill="#bf393b"/><path d="M27,4H5c-2.209,0-4,1.791-4,4V24c0,2.209,1.791,4,4,4H27c2.209,0,4-1.791,4-4V8c0-2.209-1.791-4-4-4Zm3,20c0,1.654-1.346,3-3,3H5c-1.654,0-3-1.346-3-3V8c0-1.654,1.346-3,3-3H27c1.654,0,3,1.346,3,3V24Z" opacity=".15"/><path d="M27,5H5c-1.657,0-3,1.343-3,3v1c0-1.657,1.343-3,3-3H27c1.657,0,3,1.343,3,3v-1c0-1.657-1.343-3-3-3Z" fill="#fff" opacity=".2"/></svg>';
@@ -627,92 +697,92 @@ const FLAG_EN='<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="1" y="4" wid
 function renderWelcome(){
   const onClaude=!!(window.claude&&typeof window.claude.use==='function');
   return `<div class="welcome"><div class="wtop"><span class="wmark">${I.wolf}</span><h1><span>Lone Wolf</span><small>Companion</small></h1></div>
-  <p class="wlead">Il compagno di gioco per i libri 1-12 di Lupo Solitario: scheda del personaggio con Arti Ramas e Ramastan, equipaggiamento, combattimenti con la Tabella del Destino, diario e mappe.${onClaude?'':' I salvataggi restano su questo dispositivo.'}</p>
-  <div class="wbtns"><button class="btn wbig" data-a="new-char">Crea un nuovo personaggio</button><button class="btn wsec" data-a="import">Importa un salvataggio (.json)</button></div>
-  <div class="wlang" role="group" aria-label="Lingua"><button class="wflag" aria-pressed="true" aria-label="Italiano">${FLAG_IT}</button><span class="wsep"></span><button class="wflag" aria-pressed="false" aria-label="English, in arrivo" disabled>${FLAG_EN}</button></div>
+  <p class="wlead">${T('Il compagno di gioco per i libri 1-12 di Lupo Solitario: scheda del personaggio con Arti Ramas e Ramastan, equipaggiamento, combattimenti con la Tabella del Destino, diario e mappe.','The game companion for Lone Wolf books 1-12: Action Chart with Kai and Magnakai Disciplines, equipment, combat with the Random Number Table, journal and maps.')}${onClaude?'':T(' I salvataggi restano su questo dispositivo.',' Your saves stay on this device.')}</p>
+  <div class="wbtns"><button class="btn wbig" data-a="new-char">${T('Crea un nuovo personaggio','Create a new character')}</button><button class="btn wsec" data-a="import">${T('Importa un salvataggio (.json)','Import a save (.json)')}</button></div>
+  <div class="wlang" role="group" aria-label="${T('Lingua','Language')}"><button class="wflag" data-a="set-lang" data-v="it" aria-pressed="${LANG==='it'}" aria-label="Italiano">${FLAG_IT}</button><span class="wsep"></span><button class="wflag" data-a="set-lang" data-v="en" aria-pressed="${LANG==='en'}" aria-label="English">${FLAG_EN}</button></div>
   <p class="sr" id="cloudst">${esc(CLOUD.status)}</p></div>`;
 }
 function renderDead(c){
-  return `<div class="dead"><h2>La tua missione finisce qui</h2><p class="lead">La RESISTENZA di ${esc(c.name)} è scesa a zero${c.para?' al paragrafo '+c.para.n:''}.</p>
-  <div class="row" style="justify-content:center"><button class="btn pri" data-a="restart-book">Ricomincia il libro ${c.book}</button><button class="btn" data-a="undo" ${UNDO.length?'':'disabled'}>Annulla l’ultima azione</button></div>
-  <p class="note">Ricominciando ritrovi il personaggio com’era all’inizio del libro.</p></div>`;
+  return `<div class="dead"><h2>${T('La tua missione finisce qui','Your mission ends here')}</h2><p class="lead">${T('La RESISTENZA di '+esc(c.name)+' è scesa a zero'+(c.para?' al paragrafo '+c.para.n:''),esc(c.name)+'’s ENDURANCE has dropped to zero'+(c.para?' in section '+c.para.n:''))}.</p>
+  <div class="row" style="justify-content:center"><button class="btn pri" data-a="restart-book">${T('Ricomincia il libro','Restart book')} ${c.book}</button><button class="btn" data-a="undo" ${UNDO.length?'':'disabled'}>${T('Annulla l’ultima azione','Undo last action')}</button></div>
+  <p class="note">${T('Ricominciando ritrovi il personaggio com’era all’inizio del libro.','Restarting brings the character back to how it was at the start of the book.')}</p></div>`;
 }
 
 /* --- Personaggio --- */
 function renderPers(c){
   const m=maxRes(c),k=circ(c),eqS=equippedSpecials(c);
-  const prep=c.phase==='prep'?`<div class="banner"><b>Preparazione del libro ${c.book}.</b> Sistema l’equipaggiamento iniziale, poi apri il Diario e inserisci il primo paragrafo.</div>`:'';
-  let h=prep+`<section class="sec"><h2>${esc(rankName(c))}<span class="cnt">${isRamastan(c)?rsN(c)+' Arti Ramastan':c.ramas.length+' Arti Ramas'}</span></h2>
-  <div class="stats"><div class="stat"><div class="l">Combattività</div><div class="v">${idleComb(c)}</div>
-  <ul class="brk"><li><span>Base</span><span>${c.combBase}</span></li>${k.c?`<li><span>Cerchi di Sapienza</span><span>${sgn(k.c)}</span></li>`:''}${eqS.filter(s=>s.comb).map(s=>`<li><span>${esc(s.name)}</span><span>${sgn(s.comb)}</span></li>`).join('')}</ul></div>
-  <div class="stat"><div class="l">Resistenza</div><div class="v">${c.resCur}<small> / ${m}</small></div>
-  <ul class="brk"><li><span>Base</span><span>${c.resBase}</span></li>${k.r?`<li><span>Cerchi di Sapienza</span><span>${sgn(k.r)}</span></li>`:''}${c.specials.filter(s=>s.eq&&s.kind!=='arma'&&s.res).map(s=>`<li><span>${esc(s.name)}</span><span>${sgn(s.res)}</span></li>`).join('')}</ul></div></div>
-  <p class="note">L’arma, le Arti psichiche e i modificatori del momento si sommano nella schermata Battaglia.</p></section>`;
-  const healInfo=canHeal(c)?`${hasR(c,'medicina')?'Medicina':'Guarigione'}: ${S().healLimit10?`${c.healed} su 10 punti recuperati in questo libro.`:`${c.healed} punti recuperati in questo libro.`}`:'';
-  h+=`<section class="sec"><h2>Resistenza</h2><p class="lead">Registra perdite e recuperi indicati dal testo. La Guarigione si applica da sola quando cambi paragrafo.</p>
-  <div class="row">${step('lose-n',UI.loseN)}${chip('lose-cat','Ferita',UI.loseCat==='ferita','data-v="ferita"')}${chip('lose-cat','Fame o fatica',UI.loseCat==='stenti','data-v="stenti"')}</div>
-  <div class="row"><button class="btn dng" data-a="lose">Perdi ${UI.loseN} RESISTENZA</button></div>
-  <div class="row">${step('gain-n',UI.gainN)}<button class="btn" data-a="gain">Recupera ${UI.gainN} (indicato dal testo)</button></div>
-  <div class="row"><button class="btn" data-a="eat" ${c.phase==='prep'?'disabled':''}>Devi consumare un Pasto</button>${arciMedReady(c,false)?`<button class="btn pri" data-a="arci-med">Medicina da Arcimaestro: +20</button>`:''}</div>
-  ${healInfo?`<p class="note">${healInfo}</p>`:''}${c.debt?`<p class="note">${c.debt} punti persi per fame o fatica non sono recuperabili ${S().healOnlyWounds&&S().potionOnlyWounds?'con Arti o pozioni':S().healOnlyWounds?'con le Arti':'con le pozioni'}.</p>`:''}</section>`;
+  const prep=c.phase==='prep'?`<div class="banner"><b>${T('Preparazione del libro','Preparing book')} ${c.book}.</b> ${T('Sistema l’equipaggiamento iniziale, poi apri il Diario e inserisci il primo paragrafo.','Set up your starting equipment, then open the Journal and enter the first section.')}</div>`:'';
+  let h=prep+`<section class="sec"><h2>${esc(rankName(c))}<span class="cnt">${isRamastan(c)?rsN(c)+T(' Arti Ramastan',' Magnakai Disciplines'):c.ramas.length+T(' Arti Ramas',' Kai Disciplines')}</span></h2>
+  <div class="stats"><div class="stat"><div class="l">${T('Combattività','Combat Skill')}</div><div class="v">${idleComb(c)}</div>
+  <ul class="brk"><li><span>Base</span><span>${c.combBase}</span></li>${k.c?`<li><span>${T('Cerchi di Sapienza','Lore-circles')}</span><span>${sgn(k.c)}</span></li>`:''}${eqS.filter(s=>s.comb).map(s=>`<li><span>${esc(iname(s.name))}</span><span>${sgn(s.comb)}</span></li>`).join('')}</ul></div>
+  <div class="stat"><div class="l">${T('Resistenza','Endurance')}</div><div class="v">${c.resCur}<small> / ${m}</small></div>
+  <ul class="brk"><li><span>Base</span><span>${c.resBase}</span></li>${k.r?`<li><span>${T('Cerchi di Sapienza','Lore-circles')}</span><span>${sgn(k.r)}</span></li>`:''}${c.specials.filter(s=>s.eq&&s.kind!=='arma'&&s.res).map(s=>`<li><span>${esc(iname(s.name))}</span><span>${sgn(s.res)}</span></li>`).join('')}</ul></div></div>
+  <p class="note">${T('L’arma, le Arti psichiche e i modificatori del momento si sommano nella schermata Battaglia.','Weapon, psychic Disciplines and situational modifiers are added on the Battle screen.')}</p></section>`;
+  const healInfo=canHeal(c)?`${hasR(c,'medicina')?T('Medicina','Curing'):T('Guarigione','Healing')}: ${S().healLimit10?T(`${c.healed} su 10 punti recuperati in questo libro.`,`${c.healed} of 10 points recovered in this book.`):T(`${c.healed} punti recuperati in questo libro.`,`${c.healed} points recovered in this book.`)}`:'';
+  h+=`<section class="sec"><h2>${T('Resistenza','Endurance')}</h2><p class="lead">${T('Registra perdite e recuperi indicati dal testo. La Guarigione si applica da sola quando cambi paragrafo.','Record losses and gains stated by the text. Healing is applied automatically when you change section.')}</p>
+  <div class="row">${step('lose-n',UI.loseN)}${chip('lose-cat',T('Ferita','Wound'),UI.loseCat==='ferita','data-v="ferita"')}${chip('lose-cat',T('Fame o fatica','Hunger or fatigue'),UI.loseCat==='stenti','data-v="stenti"')}</div>
+  <div class="row"><button class="btn dng" data-a="lose">${T('Perdi '+UI.loseN+' RESISTENZA','Lose '+UI.loseN+' ENDURANCE')}</button></div>
+  <div class="row">${step('gain-n',UI.gainN)}<button class="btn" data-a="gain">${T('Recupera '+UI.gainN+' (indicato dal testo)','Restore '+UI.gainN+' (stated by the text)')}</button></div>
+  <div class="row"><button class="btn" data-a="eat" ${c.phase==='prep'?'disabled':''}>${T('Devi consumare un Pasto','You must eat a Meal')}</button>${arciMedReady(c,false)?`<button class="btn pri" data-a="arci-med">${T('Medicina da Arcimaestro: +20','Archmaster Curing: +20')}</button>`:''}</div>
+  ${healInfo?`<p class="note">${healInfo}</p>`:''}${c.debt?`<p class="note">${T(c.debt+' punti persi per fame o fatica non sono recuperabili '+(S().healOnlyWounds&&S().potionOnlyWounds?'con Arti o pozioni':S().healOnlyWounds?'con le Arti':'con le pozioni'),c.debt+' points lost to hunger or fatigue cannot be recovered '+(S().healOnlyWounds&&S().potionOnlyWounds?'with Disciplines or potions':S().healOnlyWounds?'with Disciplines':'with potions'))}.</p>`:''}</section>`;
   if(isRamastan(c)){
-    h+=`<section class="sec"><h2>Arti Ramastan</h2><ul class="arts">${RAMASTAN.filter(a=>c.ramastan.includes(a.id)).map(a=>{
+    h+=`<section class="sec"><h2>${T('Arti Ramastan','Magnakai Disciplines')}</h2><ul class="arts">${RAMASTAN.filter(a=>c.ramastan.includes(a.id)).map(a=>{
       const perf=Object.entries(PERF[a.id]||{}).filter(([lv])=>rsN(c)>=+lv).map(([lv,t])=>`<div class="perf"><em>${PERF_TITLES[lv]}</em> ${esc(t)}</div>`).join('');
-      return `<li><b>${a.n}</b>${a.id==='guerra'?`<span class="tag on">${c.guerra.join(', ')||'nessuna arma'}</span>`:''}<p>${a.d}</p>${perf}</li>`}).join('')}</ul></section>`;
-    h+=`<section class="sec"><h2>Cerchi di Sapienza</h2><ul class="arts">${CERCHI.map(k=>{const done=k.a.every(a=>c.ramastan.includes(a));
-      return `<li><b>${k.n}</b><span class="tag ${done?'on':''}">${done?'completato':k.a.filter(a=>c.ramastan.includes(a)).length+' su '+k.a.length}</span><p>${k.a.map(a=>RAMASTAN.find(x=>x.id===a).n).join(', ')}: ${k.c?sgn(k.c)+' COMBATTIVITÀ, ':''}${sgn(k.r)} RESISTENZA</p></li>`}).join('')}</ul></section>`;
+      return `<li><b>${a.n}</b>${a.id==='guerra'?`<span class="tag on">${wlist(c.guerra)||T('nessuna arma','no weapon')}</span>`:''}<p>${a.d}</p>${perf}</li>`}).join('')}</ul></section>`;
+    h+=`<section class="sec"><h2>${T('Cerchi di Sapienza','Lore-circles')}</h2><ul class="arts">${CERCHI.map(k=>{const done=k.a.every(a=>c.ramastan.includes(a));
+      return `<li><b>${k.n}</b><span class="tag ${done?'on':''}">${done?T('completato','complete'):k.a.filter(a=>c.ramastan.includes(a)).length+T(' su ',' of ')+k.a.length}</span><p>${k.a.map(a=>RAMASTAN.find(x=>x.id===a).n).join(', ')}: ${k.c?sgn(k.c)+T(' COMBATTIVITÀ, ',' COMBAT SKILL, '):''}${sgn(k.r)} ${T('RESISTENZA','ENDURANCE')}</p></li>`}).join('')}</ul></section>`;
   }
-  h+=`<section class="sec"><h2>Arti Ramas</h2>${isRamastan(c)?'<p class="lead">Importate dal ciclo precedente. Quando possiedi l’Arte Ramastan corrispondente, i suoi effetti sostituiscono quelli dell’Arte Ramas.</p>':''}
+  h+=`<section class="sec"><h2>${T('Arti Ramas','Kai Disciplines')}</h2>${isRamastan(c)?'<p class="lead">'+T('Importate dal ciclo precedente. Quando possiedi l’Arte Ramastan corrispondente, i suoi effetti sostituiscono quelli dell’Arte Ramas.','Carried over from the previous series. When you have the corresponding Magnakai Discipline, its effects replace those of the Kai Discipline.')+'</p>':''}
   <ul class="arts">${RAMAS.filter(a=>c.ramas.includes(a.id)).map(a=>{
     const sup=RAMASTAN.find(x=>x.from===a.id&&c.ramastan.includes(x.id));
-    return `<li><b>${a.n}</b>${a.id==='scherma'?`<span class="tag on">${esc(c.scherma||'arma da scegliere')}</span>`:''}${sup?`<span class="tag">sostituita da ${sup.n}</span>`:''}<p>${a.d}</p></li>`}).join('')}</ul></section>`;
+    return `<li><b>${a.n}</b>${a.id==='scherma'?`<span class="tag on">${esc(c.scherma?wl(c.scherma):T('arma da scegliere','weapon to choose'))}</span>`:''}${sup?`<span class="tag">${T('sostituita da','replaced by')} ${sup.n}</span>`:''}<p>${a.d}</p></li>`}).join('')}</ul></section>`;
   return h;
 }
 
 /* --- Equipaggiamento --- */
 function renderEquip(c){
   const lim=specialLimit(c);const busy=!!c.combat;
-  let h=busy?`<div class="banner">Sei in combattimento: puoi modificare l’equipaggiamento solo a scontro finito.</div>`:'';
-  h+=`<section class="sec"><h2>Armamento<span class="cnt">${c.weapons.length} su 2</span></h2>
-  <ul class="ledger">${[0,1].map(i=>{const w=c.weapons[i];return `<li><span class="n">${i+1}</span><span class="t">${w?`${esc(w.name)}<small>${esc(w.type)}${(()=>{const m=w.type==='Arco'?null:mastery(c,w);return m?', '+m[0]+' '+sgn(m[1]):''})()}${w.type==='Arco'&&hasR(c,'guerra')&&c.guerra.includes('Arco')?', Guerra: +3 alla Tabella del Destino':''}</small>`:'<span class="empty">libero</span>'}</span>${w?`<span class="acts">${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="arm" data-id="${w.id}">Deposita</button>`:''}<button class="x" data-a="del-weapon" data-id="${w.id}" aria-label="Elimina ${esc(w.name)}" ${busy?'disabled':''}>×</button></span>`:''}</li>`}).join('')}</ul>
-  ${c.weapons.length<2&&!busy?`<div class="grid3"><label class="f"><span>Nome</span><input id="wname" placeholder="es. Spada"></label><label class="f"><span>Tipo</span><select id="wtype">${WEAPON_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></label><label class="f"><span>&nbsp;</span><button class="btn pri wide" data-a="add-weapon">Aggiungi</button></label></div>`:''}
-  <p class="note">Senza armi: ${unarmedMalus(c)} COMBATTIVITÀ. Le armi non vanno nello Zaino.${c.seized?' ':''}</p>
-  <div class="row">${c.seized?`<button class="btn" data-a="unseize">Recupera le armi sequestrate (${c.seized.weapons.length+c.seized.specials.length})</button>`:`<button class="btn sm" data-a="seize" ${busy||!(c.weapons.length||c.specials.some(s=>s.kind==='arma'))?'disabled':''}>Il testo ti sequestra le armi</button>`}</div></section>`;
+  let h=busy?`<div class="banner">${T('Sei in combattimento: puoi modificare l’equipaggiamento solo a scontro finito.','You are in combat: you can change equipment only when the fight is over.')}</div>`:'';
+  h+=`<section class="sec"><h2>${T('Armamento','Weapons')}<span class="cnt">${c.weapons.length} ${T('su','of')} 2</span></h2>
+  <ul class="ledger">${[0,1].map(i=>{const w=c.weapons[i];return `<li><span class="n">${i+1}</span><span class="t">${w?`${esc(iname(w.name))}<small>${esc(wl(w.type))}${(()=>{const m=w.type==='Arco'?null:mastery(c,w);return m?', '+m[0]+' '+sgn(m[1]):''})()}${w.type==='Arco'&&hasR(c,'guerra')&&c.guerra.includes('Arco')?T(', Guerra: +3 alla Tabella del Destino',', Weaponmastery: +3 to the Random Number Table'):''}</small>`:'<span class="empty">'+T('libero','empty')+'</span>'}</span>${w?`<span class="acts">${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="arm" data-id="${w.id}">${T('Deposita','Store')}</button>`:''}<button class="x" data-a="del-weapon" data-id="${w.id}" aria-label="${T('Elimina','Delete')} ${esc(w.name)}" ${busy?'disabled':''}>×</button></span>`:''}</li>`}).join('')}</ul>
+  ${c.weapons.length<2&&!busy?`<div class="grid3"><label class="f"><span>${T('Nome','Name')}</span><input id="wname" placeholder="${T('es. Spada','e.g. Sword')}"></label><label class="f"><span>${T('Tipo','Type')}</span><select id="wtype">${WEAPON_TYPES.map(t=>`<option value="${t}">${wl(t)}</option>`).join('')}</select></label><label class="f"><span>&nbsp;</span><button class="btn pri wide" data-a="add-weapon">${T('Aggiungi','Add')}</button></label></div>`:''}
+  <p class="note">${T('Senza armi','Unarmed')}: ${unarmedMalus(c)} ${T('COMBATTIVITÀ. Le armi non vanno nello Zaino.','COMBAT SKILL. Weapons are not carried in the Backpack.')}</p>
+  <div class="row">${c.seized?`<button class="btn" data-a="unseize">${T('Recupera le armi sequestrate','Recover confiscated weapons')} (${c.seized.weapons.length+c.seized.specials.length})</button>`:`<button class="btn sm" data-a="seize" ${busy||!(c.weapons.length||c.specials.some(s=>s.kind==='arma'))?'disabled':''}>${T('Il testo ti sequestra le armi','The text confiscates your weapons')}</button>`}</div></section>`;
   // Zaino
-  h+=`<section class="sec"><h2>Zaino<span class="cnt">${c.hasBackpack?c.backpack.length+' su 8':'perso'}</span></h2>`;
-  if(!c.hasBackpack)h+=`<p class="lead">Hai perso lo Zaino e il suo contenuto.</p><button class="btn" data-a="regain-pack">Hai trovato uno Zaino</button>`;
+  h+=`<section class="sec"><h2>${T('Zaino','Backpack')}<span class="cnt">${c.hasBackpack?c.backpack.length+T(' su 8',' of 8'):T('perso','lost')}</span></h2>`;
+  if(!c.hasBackpack)h+=`<p class="lead">${T('Hai perso lo Zaino e il suo contenuto.','You have lost your Backpack and its contents.')}</p><button class="btn" data-a="regain-pack">${T('Hai trovato uno Zaino','You found a Backpack')}</button>`;
   else{
-    h+=`<ul class="ledger">${Array.from({length:8},(_,i)=>{const it=c.backpack[i];if(!it)return `<li><span class="n">${i+1}</span><span class="t"><span class="empty">libero</span></span></li>`;
-      const desc=it.kind==='pasto'?'Pasto':it.kind==='cura'?`Pozione curativa, +${it.v} RESISTENZA`:it.kind==='alether'?`Pozione di Alether, +${it.v} COMBATTIVITÀ in combattimento`:'';
-      return `<li><span class="n">${i+1}</span><span class="t">${esc(it.name)}${desc&&desc!==it.name?`<small>${desc}</small>`:''}</span><span class="acts">${it.kind==='cura'?`<button class="btn sm" data-a="drink" data-id="${it.id}" ${busy?'disabled':''}>Bevi</button>`:''}${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="pack" data-id="${it.id}">Deposita</button>`:''}<button class="x" data-a="del-pack" data-id="${it.id}" aria-label="Elimina ${esc(it.name)}" ${busy?'disabled':''}>×</button></span></li>`}).join('')}</ul>`;
-    if(c.backpack.length<8&&!busy)h+=`<div class="grid3"><label class="f"><span>Oggetto</span><input id="pname" placeholder="es. Corda"></label><label class="f"><span>Tipo</span><select id="pkind" data-f="pkind"><option value="altro">Oggetto</option><option value="pasto">Pasto</option><option value="cura">Pozione curativa</option><option value="alether">Alether</option></select></label><label class="f"><span id="pvl">Nessun valore</span><input id="pval" type="number" inputmode="numeric" disabled></label></div>
-    <div class="row"><button class="btn pri" data-a="add-pack">Metti nello Zaino</button><button class="btn" data-a="add-meal">+1 Pasto</button></div>`;
-    h+=`<p class="note">Pasti nello Zaino: ${meals(c)}. Senza cibo, quando devi mangiare perdi 3 RESISTENZA. Per le pozioni indica i punti: RESISTENZA recuperata per quelle curative, COMBATTIVITÀ in più per l’Alether.</p>
-    <div class="row"><button class="btn sm dng" data-a="lose-pack" ${busy?'disabled':''}>Il testo ti fa perdere lo Zaino</button></div>`;
+    h+=`<ul class="ledger">${Array.from({length:8},(_,i)=>{const it=c.backpack[i];if(!it)return `<li><span class="n">${i+1}</span><span class="t"><span class="empty">${T('libero','empty')}</span></span></li>`;
+      const desc=it.kind==='pasto'?T('Pasto','Meal'):it.kind==='cura'?T(`Pozione curativa, +${it.v} RESISTENZA`,`Healing potion, +${it.v} ENDURANCE`):it.kind==='alether'?T(`Pozione di Alether, +${it.v} COMBATTIVITÀ in combattimento`,`Alether potion, +${it.v} COMBAT SKILL in combat`):'';
+      return `<li><span class="n">${i+1}</span><span class="t">${esc(iname(it.name))}${desc&&desc!==iname(it.name)?`<small>${desc}</small>`:''}</span><span class="acts">${it.kind==='cura'?`<button class="btn sm" data-a="drink" data-id="${it.id}" ${busy?'disabled':''}>${T('Bevi','Drink')}</button>`:''}${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="pack" data-id="${it.id}">${T('Deposita','Store')}</button>`:''}<button class="x" data-a="del-pack" data-id="${it.id}" aria-label="${T('Elimina','Delete')} ${esc(iname(it.name))}" ${busy?'disabled':''}>×</button></span></li>`}).join('')}</ul>`;
+    if(c.backpack.length<8&&!busy)h+=`<div class="grid3"><label class="f"><span>${T('Oggetto','Item')}</span><input id="pname" placeholder="${T('es. Corda','e.g. Rope')}"></label><label class="f"><span>${T('Tipo','Type')}</span><select id="pkind" data-f="pkind"><option value="altro">${T('Oggetto','Item')}</option><option value="pasto">${T('Pasto','Meal')}</option><option value="cura">${T('Pozione curativa','Healing potion')}</option><option value="alether">Alether</option></select></label><label class="f"><span id="pvl">${T('Nessun valore','No value')}</span><input id="pval" type="number" inputmode="numeric" disabled></label></div>
+    <div class="row"><button class="btn pri" data-a="add-pack">${T('Metti nello Zaino','Put in Backpack')}</button><button class="btn" data-a="add-meal">${T('+1 Pasto','+1 Meal')}</button></div>`;
+    h+=`<p class="note">${T('Pasti nello Zaino','Meals in Backpack')}: ${meals(c)}. ${T('Senza cibo, quando devi mangiare perdi 3 RESISTENZA. Per le pozioni indica i punti: RESISTENZA recuperata per quelle curative, COMBATTIVITÀ in più per l’Alether.','Without food, you lose 3 ENDURANCE when you must eat. For potions enter the points: ENDURANCE restored for healing potions, extra COMBAT SKILL for Alether.')}</p>
+    <div class="row"><button class="btn sm dng" data-a="lose-pack" ${busy?'disabled':''}>${T('Il testo ti fa perdere lo Zaino','The text makes you lose your Backpack')}</button></div>`;
   }
   h+=`</section>`;
   // Borsa
-  h+=`<section class="sec"><h2>Borsa<span class="cnt">massimo 50 monete</span></h2><div class="row">${step('gold',c.gold)}<select id="curr" data-f="currency" style="width:auto;flex:1">${Object.keys(CURR).map(k=>`<option ${c.currency===k?'selected':''}>${k}</option>`).join('')}</select></div>
-  <div class="row"><button class="btn sm" data-a="gold5" data-d="-5">−5</button><button class="btn sm" data-a="gold5" data-d="5">+5</button><button class="btn sm" data-a="gold5" data-d="10">+10</button>${c.currency!=='Corone d’oro'?`<button class="btn sm" data-a="convert">Converti in Corone d’oro (1 Corona = ${CURR[c.currency]} ${esc(c.currency)})</button>`:''}</div></section>`;
+  h+=`<section class="sec"><h2>${T('Borsa','Belt Pouch')}<span class="cnt">${T('massimo 50 monete','up to 50 coins')}</span></h2><div class="row">${step('gold',c.gold)}<select id="curr" data-f="currency" style="width:auto;flex:1">${Object.keys(CURR).map(k=>`<option value="${k}" ${c.currency===k?'selected':''}>${wl(k)}</option>`).join('')}</select></div>
+  <div class="row"><button class="btn sm" data-a="gold5" data-d="-5">−5</button><button class="btn sm" data-a="gold5" data-d="5">+5</button><button class="btn sm" data-a="gold5" data-d="10">+10</button>${c.currency!=='Corone d’oro'?`<button class="btn sm" data-a="convert">${T('Converti in Corone d’oro (1 Corona = '+CURR[c.currency]+' '+esc(c.currency)+')','Convert to Gold Crowns (1 Crown = '+CURR[c.currency]+' '+esc(wl(c.currency))+')')}</button>`:''}</div></section>`;
   // Speciali
-  h+=`<section class="sec"><h2>Oggetti Speciali<span class="cnt">${c.specials.length}${lim<99?' su '+lim:''}</span></h2><p class="lead">Non vanno nello Zaino. Le armi speciali non contano nel limite delle 2 armi. Tocca un’armatura, un elmo o uno scudo per indossarlo o toglierlo.</p>
-  <ul class="ledger">${c.specials.map((s,i)=>`<li><span class="n">${i+1}</span><span class="t">${esc(s.name)}<small>${specialDesc(c,s)}</small></span><span class="acts">${s.kind==='faretra'?step('arrows',s.arrows,`data-id="${s.id}"`):''}${['armatura','elmo','scudo','altro'].includes(s.kind)?chip('toggle-eq',s.eq?'Indossato':'Riposto',s.eq,`data-id="${s.id}" ${busy?'disabled':''}`):''}${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="spec" data-id="${s.id}">Deposita</button>`:''}<button class="x" data-a="del-special" data-id="${s.id}" aria-label="Elimina ${esc(s.name)}" ${busy?'disabled':''}>×</button></span></li>`).join('')||'<li><span class="t"><span class="empty">Nessun Oggetto Speciale</span></span></li>'}</ul>
-  <div class="row"><button class="btn pri" data-a="special-sheet" ${busy||c.specials.length>=lim?'disabled':''}>Aggiungi Oggetto Speciale</button>${c.specials.some(s=>s.sun)?'':`<button class="btn" data-a="sun-sword" ${busy||c.specials.length>=lim?'disabled':''}>Spada del Sole</button>`}</div></section>`;
+  h+=`<section class="sec"><h2>${T('Oggetti Speciali','Special Items')}<span class="cnt">${c.specials.length}${lim<99?T(' su ',' of ')+lim:''}</span></h2><p class="lead">${T('Non vanno nello Zaino. Le armi speciali non contano nel limite delle 2 armi. Tocca un’armatura, un elmo o uno scudo per indossarlo o toglierlo.','Not carried in the Backpack. Special weapons do not count towards the 2-weapon limit. Tap armour, a helmet or a shield to wear or remove it.')}</p>
+  <ul class="ledger">${c.specials.map((s,i)=>`<li><span class="n">${i+1}</span><span class="t">${esc(iname(s.name))}<small>${specialDesc(c,s)}</small></span><span class="acts">${s.kind==='faretra'?step('arrows',s.arrows,`data-id="${s.id}"`):''}${['armatura','elmo','scudo','altro'].includes(s.kind)?chip('toggle-eq',s.eq?T('Indossato','Worn'):T('Riposto','Stowed'),s.eq,`data-id="${s.id}" ${busy?'disabled':''}`):''}${depositOpen(c)&&c.phase==='prep'?`<button class="btn sm" data-a="dep" data-src="spec" data-id="${s.id}">${T('Deposita','Store')}</button>`:''}<button class="x" data-a="del-special" data-id="${s.id}" aria-label="${T('Elimina','Delete')} ${esc(iname(s.name))}" ${busy?'disabled':''}>×</button></span></li>`).join('')||'<li><span class="t"><span class="empty">'+T('Nessun Oggetto Speciale','No Special Items')+'</span></span></li>'}</ul>
+  <div class="row"><button class="btn pri" data-a="special-sheet" ${busy||c.specials.length>=lim?'disabled':''}>${T('Aggiungi Oggetto Speciale','Add Special Item')}</button>${c.specials.some(s=>s.sun)?'':`<button class="btn" data-a="sun-sword" ${busy||c.specials.length>=lim?'disabled':''}>${T('Spada del Sole','Sommerswerd')}</button>`}</div></section>`;
   // Tiro
   const bow=c.weapons.some(w=>w.type==='Arco');const arrows=sum(c.specials.filter(s=>s.kind==='faretra'),s=>s.arrows);
-  if(bow||c.specials.some(s=>s.kind==='faretra')||rsN(c)>=7)h+=`<section class="sec"><h2>Armi a distanza</h2><p class="lead">Usale solo quando il testo lo consente. Il numero estratto riceve i bonus delle Arti.</p>
-  <div class="row"><button class="btn pri" data-a="shoot" data-k="arco" ${bow&&arrows>0?'':'disabled'}>Tira con l’Arco (${arrows} Frecce)</button><button class="btn" data-a="shoot" data-k="lancio">Arma da lancio</button></div>
-  ${bow&&!c.specials.some(s=>s.kind==='faretra')?'<p class="note">Per usare l’Arco ti servono una Faretra e almeno una Freccia.</p>':''}</section>`;
+  if(bow||c.specials.some(s=>s.kind==='faretra')||rsN(c)>=7)h+=`<section class="sec"><h2>${T('Armi a distanza','Missile weapons')}</h2><p class="lead">${T('Usale solo quando il testo lo consente. Il numero estratto riceve i bonus delle Arti.','Use them only when the text allows it. The number you pick receives your Discipline bonuses.')}</p>
+  <div class="row"><button class="btn pri" data-a="shoot" data-k="arco" ${bow&&arrows>0?'':'disabled'}>${T('Tira con l’Arco','Shoot the Bow')} (${arrows} ${T('Frecce','Arrows')})</button><button class="btn" data-a="shoot" data-k="lancio">${T('Arma da lancio','Thrown weapon')}</button></div>
+  ${bow&&!c.specials.some(s=>s.kind==='faretra')?'<p class="note">'+T('Per usare l’Arco ti servono una Faretra e almeno una Freccia.','To use the Bow you need a Quiver and at least one Arrow.')+'</p>':''}</section>`;
   // Deposito
   if(c.book>=5){const open=depositOpen(c);
-    h+=`<section class="sec"><h2>Deposito<span class="cnt">${c.deposit.length} oggetti</span></h2><p class="lead">${!open?'Inaccessibile dal libro 9 al 12 (regola opzionale attiva).':c.phase==='prep'?'Puoi depositare e ritirare oggetti all’inizio del libro.':'Puoi usarlo solo all’inizio di un libro.'}</p>
-    <ul class="ledger">${c.deposit.map(d=>`<li><span class="t">${esc(d.item.name)}<small>${d.src==='pack'?'Oggetto dello Zaino':d.src==='arm'?'Arma':'Oggetto Speciale'}</small></span>${open&&c.phase==='prep'?`<span class="acts"><button class="btn sm" data-a="withdraw" data-id="${d.item.id}">Ritira</button></span>`:''}</li>`).join('')||'<li><span class="t"><span class="empty">Vuoto</span></span></li>'}</ul></section>`;}
+    h+=`<section class="sec"><h2>${T('Deposito','Safekeeping')}<span class="cnt">${c.deposit.length} ${T('oggetti','items')}</span></h2><p class="lead">${!open?T('Inaccessibile dal libro 9 al 12 (regola opzionale attiva).','Not accessible from book 9 to 12 (optional rule active).'):c.phase==='prep'?T('Puoi depositare e ritirare oggetti all’inizio del libro.','You can store and collect items at the start of the book.'):T('Puoi usarlo solo all’inizio di un libro.','You can only use it at the start of a book.')}</p>
+    <ul class="ledger">${c.deposit.map(d=>`<li><span class="t">${esc(iname(d.item.name))}<small>${d.src==='pack'?T('Oggetto dello Zaino','Backpack Item'):d.src==='arm'?T('Arma','Weapon'):T('Oggetto Speciale','Special Item')}</small></span>${open&&c.phase==='prep'?`<span class="acts"><button class="btn sm" data-a="withdraw" data-id="${d.item.id}">${T('Ritira','Collect')}</button></span>`:''}</li>`).join('')||'<li><span class="t"><span class="empty">'+T('Vuoto','Empty')+'</span></span></li>'}</ul></section>`;}
   return h;
 }
 function specialDesc(c,s){
-  const b=[];if(s.kind==='arma'){b.push(s.sun?'Arma unica, conta come Spada, Daga o Spadone':'Arma speciale, '+(s.wtype||'Altro'));const m=mastery(c,{type:s.wtype,sun:s.sun});if(m)b.push(m[0]+' '+sgn(m[1]))}
-  else if(s.kind==='armatura')b.push(s.atype||'Armatura');else if(s.kind==='faretra')b.push('Faretra, massimo 6 Frecce');else b.push(SPECIAL_KINDS[s.kind]);
-  if(s.comb)b.push(sgn(s.comb)+' COMBATTIVITÀ');if(s.res)b.push(sgn(s.res)+' RESISTENZA');if(s.sun)b.push('danni doppi ai non-morti');if(s.note)b.push(esc(s.note));
+  const b=[];if(s.kind==='arma'){b.push(s.sun?T('Arma unica, conta come Spada, Daga o Spadone','Unique weapon, counts as Sword, Short Sword or Broadsword'):T('Arma speciale, ','Special weapon, ')+wl(s.wtype||'Altro'));const m=mastery(c,{type:s.wtype,sun:s.sun});if(m)b.push(m[0]+' '+sgn(m[1]))}
+  else if(s.kind==='armatura')b.push(s.atype?wl(s.atype):T('Armatura','Armour'));else if(s.kind==='faretra')b.push(T('Faretra, massimo 6 Frecce','Quiver, up to 6 Arrows'));else b.push(SPECIAL_KINDS[s.kind]);
+  if(s.comb)b.push(sgn(s.comb)+T(' COMBATTIVITÀ',' COMBAT SKILL'));if(s.res)b.push(sgn(s.res)+T(' RESISTENZA',' ENDURANCE'));if(s.sun)b.push(T('danni doppi ai non-morti','double damage to undead'));if(s.note)b.push(esc(s.note));
   return b.join(', ');
 }
 
@@ -720,74 +790,74 @@ function specialDesc(c,s){
 function renderComb(c){
   const cb=c.combat;
   if(!cb){
-    return `<section class="sec"><h2>Nuovo combattimento</h2><p class="lead">Inserisci il nemico come indicato nel paragrafo. Puoi aggiungerne altri in coda.</p>${foeForm()}
-    <div class="row"><button class="btn pri big wide" data-a="foe-add" ${c.phase==='prep'?'disabled':''}>Inizia il combattimento</button></div>${c.phase==='prep'?'<p class="note">Prima inserisci il paragrafo di partenza nel Diario.</p>':''}</section>
-    ${c.postCombat&&c.backpack.some(i=>i.kind==='cura')?`<div class="banner">Combattimento concluso: se vuoi, ora puoi bere una pozione curativa dallo Zaino.</div>`:''}
-    <section class="sec"><h2>Diario di combattimento</h2>${c.log.length?`<ul class="ledger">${c.log.slice().reverse().slice(0,15).map(l=>`<li><span class="t">${esc(l.foes)}<small>Paragrafo ${l.para??'—'}, ${l.rounds} scontri, ${esc(l.out)}</small></span></li>`).join('')}</ul>`:'<p class="lead">Nessun combattimento ancora.</p>'}</section>`;
+    return `<section class="sec"><h2>${T('Nuovo combattimento','New combat')}</h2><p class="lead">${T('Inserisci il nemico come indicato nel paragrafo. Puoi aggiungerne altri in coda.','Enter the enemy as given in the section. You can queue more enemies.')}</p>${foeForm()}
+    <div class="row"><button class="btn pri big wide" data-a="foe-add" ${c.phase==='prep'?'disabled':''}>${T('Inizia il combattimento','Start the combat')}</button></div>${c.phase==='prep'?'<p class="note">'+T('Prima inserisci il paragrafo di partenza nel Diario.','First enter the starting section in the Journal.')+'</p>':''}</section>
+    ${c.postCombat&&c.backpack.some(i=>i.kind==='cura')?`<div class="banner">${T('Combattimento concluso: se vuoi, ora puoi bere una pozione curativa dallo Zaino.','Combat over: if you wish, you can now drink a healing potion from your Backpack.')}</div>`:''}
+    <section class="sec"><h2>${T('Diario di combattimento','Combat record')}</h2>${c.log.length?`<ul class="ledger">${c.log.slice().reverse().slice(0,15).map(l=>`<li><span class="t">${esc(l.foes)}<small>${T('Paragrafo','Section')} ${l.para??'—'}, ${l.rounds} ${T('scontri','rounds')}, ${esc(outName(l.out))}</small></span></li>`).join('')}</ul>`:'<p class="lead">'+T('Nessun combattimento ancora.','No combats yet.')+'</p>'}</section>`;
   }
   const e=cb.enemies[cb.idx];const cc=combatComb(c,cb,e);const ratio=cc.total-e.comb;const p=psiInfo(c);
   const allW=allWeapons(c).filter(w=>w.type!=='Arco');
-  let h=`<section class="sec"><h2>${esc(e.name)}<span class="cnt">${cb.enemies.length>1?`nemico ${cb.idx+1} di ${cb.enemies.length}`:`paragrafo ${c.para?c.para.n:'—'}`}</span></h2>
-  <div class="vs"><div class="side"><div class="l">Lupo Solitario</div><div class="v">${cc.total}</div></div><div class="ratio">Rapporto di Forza<b>${sgn(ratio)}</b></div><div class="side"><div class="l">${esc(e.name)}</div><div class="v">${e.comb}</div></div></div>
-  <div class="resbars"><div><div class="note">Tua RESISTENZA: <b>${c.resCur}</b></div><div class="bar ${c.resCur<=6?'low':''}"><i style="width:${Math.min(100,c.resCur/maxRes(c)*100)}%"></i></div></div>
-  <div><div class="note">Nemico: <b>${e.res}</b> / ${e.res0}</div><div class="bar low"><i style="width:${Math.min(100,e.res/e.res0*100)}%"></i></div></div></div>
-  <div class="row"><button class="btn pri big wide" data-a="round">${cb.rounds.length?'Nuovo scontro':'Primo scontro'}</button></div>
-  <div class="row">${e.flee&&e.roundsHere>0?`<button class="btn" data-a="flee">Fuggi (scontro di fuga)</button>`:''}${arciMedReady(c,true)?`<button class="btn pri" data-a="arci-med">Medicina da Arcimaestro: +20</button>`:''}<button class="btn sm" data-a="end-combat">Il testo interrompe il combattimento</button></div>
+  let h=`<section class="sec"><h2>${esc(e.name)}<span class="cnt">${cb.enemies.length>1?T(`nemico ${cb.idx+1} di ${cb.enemies.length}`,`enemy ${cb.idx+1} of ${cb.enemies.length}`):T('paragrafo','section')+' '+(c.para?c.para.n:'—')}</span></h2>
+  <div class="vs"><div class="side"><div class="l">${T('Lupo Solitario','Lone Wolf')}</div><div class="v">${cc.total}</div></div><div class="ratio">${T('Rapporto di Forza','Combat Ratio')}<b>${sgn(ratio)}</b></div><div class="side"><div class="l">${esc(e.name)}</div><div class="v">${e.comb}</div></div></div>
+  <div class="resbars"><div><div class="note">${T('Tua RESISTENZA','Your ENDURANCE')}: <b>${c.resCur}</b></div><div class="bar ${c.resCur<=6?'low':''}"><i style="width:${Math.min(100,c.resCur/maxRes(c)*100)}%"></i></div></div>
+  <div><div class="note">${T('Nemico','Enemy')}: <b>${e.res}</b> / ${e.res0}</div><div class="bar low"><i style="width:${Math.min(100,e.res/e.res0*100)}%"></i></div></div></div>
+  <div class="row"><button class="btn pri big wide" data-a="round">${cb.rounds.length?T('Nuovo scontro','Next round'):T('Primo scontro','First round')}</button></div>
+  <div class="row">${e.flee&&e.roundsHere>0?`<button class="btn" data-a="flee">${T('Fuggi (scontro di fuga)','Evade (evasion round)')}</button>`:''}${arciMedReady(c,true)?`<button class="btn pri" data-a="arci-med">${T('Medicina da Arcimaestro: +20','Archmaster Curing: +20')}</button>`:''}<button class="btn sm" data-a="end-combat">${T('Il testo interrompe il combattimento','The text ends the combat')}</button></div>
   ${UI.lastRound?`<p class="note" aria-live="polite">${UI.lastRound}</p>`:''}</section>`;
   // Impostazioni dello scontro
   const locked=cb.rounds.length>0;
-  h+=`<section class="sec"><h2>Modificatori</h2>
-  <p class="note">Arma${locked?' (non puoi cambiarla durante il combattimento)':''}</p><div class="chips">${chip('cb-weapon','Senza armi',!cb.weapon,`data-id="" ${locked?'disabled':''}`)}${allW.map(w=>chip('cb-weapon',esc(w.name),cb.weapon===w.id,`data-id="${w.id}" ${locked?'disabled':''}`)).join('')}</div>
-  ${p.laser||p.raggio?`<p class="note">Attacco psichico${e.immune?': il nemico è immune':''}</p><div class="chips">${chip('cb-psi','Nessuno',cb.psi==='none','data-v="none"')}${p.laser?chip('cb-psi','Psicolaser '+sgn(p.laserV),cb.psi==='laser',`data-v="laser" ${e.immune?'disabled':''}`):''}${p.raggio?chip('cb-psi',`Raggio Psichico ${sgn(p.raggioV)}, −${p.cost} RES a scontro`,cb.psi==='raggio',`data-v="raggio" ${e.immune||c.resCur<=p.min?'disabled':''}`):''}</div>`:''}
-  ${!locked?alForm(c,cb):cb.alether?`<p class="note">Pozione di Alether bevuta: +${cb.alether}.</p>`:''}
-  <div class="row"><span style="flex:1">Modificatore dal testo</span>${step('cb-mod',sgn(cb.mod))}</div>
-  <div class="row"><span style="flex:1">Sorpresa o imboscata${hasR(c,'fiuto')?' (Fiuto la annulla)':''}</span>${step('cb-amb',sgn(cb.ambush))}</div>
-  <ul class="brk">${cc.parts.map(([l,v])=>`<li><span>${esc(l)}</span><span>${sgn(v)}</span></li>`).join('')}<li><span><b>Totale</b></span><span><b>${cc.total}</b></span></li></ul>
-  <p class="note">${[e.immune?'Immune agli attacchi psichici':'',e.undead?'Non-morto'+(cc.w&&cc.w.sun?': danni raddoppiati dalla Spada del Sole':''):'',e.mind?`Attacco mentale: −${e.mind} RES a scontro${mindShield(c)?' (annullato dalla tua difesa psichica)':''}`:'',e.flee?'Fuga consentita dal testo':''].filter(Boolean).join('. ')}</p></section>`;
-  if(cb.rounds.length)h+=`<section class="sec"><h2>Scontri</h2><ul class="log">${cb.rounds.slice().reverse().map(r=>`<li><span class="d">${r.d}</span><span>${esc(r.foe)}: ${r.eL==='K'?'<span class="k">ucciso</span>':'−'+r.eL}. Lupo Solitario: ${r.lL==='K'?'<span class="k">ucciso</span>':'−'+r.lL}${r.extra?` (di cui ${r.extra} per ${esc(r.why)})`:''}. Rapporto ${sgn(r.ratio)}.${r.flee?' Fuga.':''}</span></li>`).join('')}</ul></section>`;
-  if(cb.enemies.length>1||true)h+=`<section class="sec"><h2>Nemici</h2>${cb.enemies.map((x,i)=>`<div class="foe ${i===cb.idx?'cur':''}"><span class="t"><b>${esc(x.name)}</b><br><small class="note">COMBATTIVITÀ ${x.comb}, RESISTENZA ${x.res}/${x.res0}${x.res<=0?', sconfitto':''}</small></span></div>`).join('')}
-  <details><summary class="note" style="padding:10px 0">Aggiungi un nemico in coda</summary>${foeForm()}<button class="btn" data-a="foe-queue">Aggiungi in coda</button></details></section>`;
+  h+=`<section class="sec"><h2>${T('Modificatori','Modifiers')}</h2>
+  <p class="note">${T('Arma','Weapon')}${locked?T(' (non puoi cambiarla durante il combattimento)',' (cannot be changed during combat)'):''}</p><div class="chips">${chip('cb-weapon',T('Senza armi','Unarmed'),!cb.weapon,`data-id="" ${locked?'disabled':''}`)}${allW.map(w=>chip('cb-weapon',esc(w.name),cb.weapon===w.id,`data-id="${w.id}" ${locked?'disabled':''}`)).join('')}</div>
+  ${p.laser||p.raggio?`<p class="note">${T('Attacco psichico','Psychic attack')}${e.immune?T(': il nemico è immune',': the enemy is immune'):''}</p><div class="chips">${chip('cb-psi',T('Nessuno','None'),cb.psi==='none','data-v="none"')}${p.laser?chip('cb-psi',T('Psicolaser ','Mindblast ')+sgn(p.laserV),cb.psi==='laser',`data-v="laser" ${e.immune?'disabled':''}`):''}${p.raggio?chip('cb-psi',T(`Raggio Psichico ${sgn(p.raggioV)}, −${p.cost} RES a scontro`,`Psi-surge ${sgn(p.raggioV)}, −${p.cost} EP per round`),cb.psi==='raggio',`data-v="raggio" ${e.immune||c.resCur<=p.min?'disabled':''}`):''}</div>`:''}
+  ${!locked?alForm(c,cb):cb.alether?`<p class="note">${T('Pozione di Alether bevuta','Alether potion drunk')}: +${cb.alether}.</p>`:''}
+  <div class="row"><span style="flex:1">${T('Modificatore dal testo','Modifier from the text')}</span>${step('cb-mod',sgn(cb.mod))}</div>
+  <div class="row"><span style="flex:1">${T('Sorpresa o imboscata','Surprise or ambush')}${hasR(c,'fiuto')?T(' (Fiuto la annulla)',' (cancelled by Huntmastery)'):''}</span>${step('cb-amb',sgn(cb.ambush))}</div>
+  <ul class="brk">${cc.parts.map(([l,v])=>`<li><span>${esc(l)}</span><span>${sgn(v)}</span></li>`).join('')}<li><span><b>${T('Totale','Total')}</b></span><span><b>${cc.total}</b></span></li></ul>
+  <p class="note">${[e.immune?T('Immune agli attacchi psichici','Immune to psychic attacks'):'',e.undead?T('Non-morto','Undead')+(cc.w&&cc.w.sun?T(': danni raddoppiati dalla Spada del Sole',': damage doubled by the Sommerswerd'):''):'',e.mind?T(`Attacco mentale: −${e.mind} RES a scontro`,`Mindforce attack: −${e.mind} EP per round`)+(mindShield(c)?T(' (annullato dalla tua difesa psichica)',' (blocked by your psychic defence)'):''):'',e.flee?T('Fuga consentita dal testo','Evasion allowed by the text'):''].filter(Boolean).join('. ')}</p></section>`;
+  if(cb.rounds.length)h+=`<section class="sec"><h2>${T('Scontri','Rounds')}</h2><ul class="log">${cb.rounds.slice().reverse().map(r=>`<li><span class="d">${r.d}</span><span>${esc(r.foe)}: ${r.eL==='K'?'<span class="k">'+T('ucciso','killed')+'</span>':'−'+r.eL}. ${T('Lupo Solitario','Lone Wolf')}: ${r.lL==='K'?'<span class="k">'+T('ucciso','killed')+'</span>':'−'+r.lL}${r.extra?T(` (di cui ${r.extra} per ${esc(r.why)})`,` (of which ${r.extra} from ${esc(r.why)})`):''}. ${T('Rapporto','Ratio')} ${sgn(r.ratio)}.${r.flee?T(' Fuga.',' Evasion.'):''}</span></li>`).join('')}</ul></section>`;
+  if(cb.enemies.length>1||true)h+=`<section class="sec"><h2>${T('Nemici','Enemies')}</h2>${cb.enemies.map((x,i)=>`<div class="foe ${i===cb.idx?'cur':''}"><span class="t"><b>${esc(x.name)}</b><br><small class="note">${T('COMBATTIVITÀ','COMBAT SKILL')} ${x.comb}, ${T('RESISTENZA','ENDURANCE')} ${x.res}/${x.res0}${x.res<=0?T(', sconfitto',', defeated'):''}</small></span></div>`).join('')}
+  <details><summary class="note" style="padding:10px 0">${T('Aggiungi un nemico in coda','Queue another enemy')}</summary>${foeForm()}<button class="btn" data-a="foe-queue">${T('Aggiungi in coda','Add to queue')}</button></details></section>`;
   return h;
 }
-function foeForm(){return `<label class="f"><span>Nome</span><input id="fname" placeholder="es. Giak"></label>
-  <div class="grid2"><label class="f"><span>Combattività</span><input id="fcomb" type="number" inputmode="numeric"></label><label class="f"><span>Resistenza</span><input id="fres" type="number" inputmode="numeric"></label></div>
-  <div class="chips"><label class="chip"><input type="checkbox" id="fimm"> Immune agli attacchi psichici</label><label class="chip"><input type="checkbox" id="fund"> Non-morto</label><label class="chip"><input type="checkbox" id="fflee"> Fuga consentita</label></div>
-  <label class="f"><span>Attacco mentale del nemico (RESISTENZA persa a ogni scontro, 0 se assente)</span><input id="fmind" type="number" inputmode="numeric" value="0"></label>`}
+function foeForm(){return `<label class="f"><span>${T('Nome','Name')}</span><input id="fname" placeholder="${T('es. Giak','e.g. Giak')}"></label>
+  <div class="grid2"><label class="f"><span>${T('Combattività','Combat Skill')}</span><input id="fcomb" type="number" inputmode="numeric"></label><label class="f"><span>${T('Resistenza','Endurance')}</span><input id="fres" type="number" inputmode="numeric"></label></div>
+  <div class="chips"><label class="chip"><input type="checkbox" id="fimm"> ${T('Immune agli attacchi psichici','Immune to psychic attacks')}</label><label class="chip"><input type="checkbox" id="fund"> ${T('Non-morto','Undead')}</label><label class="chip"><input type="checkbox" id="fflee"> ${T('Fuga consentita','Evasion allowed')}</label></div>
+  <label class="f"><span>${T('Attacco mentale del nemico (RESISTENZA persa a ogni scontro, 0 se assente)','Enemy Mindforce attack (ENDURANCE lost each round, 0 if none)')}</span><input id="fmind" type="number" inputmode="numeric" value="0"></label>`}
 function alForm(c,cb){const al=c.backpack.filter(i=>i.kind==='alether');if(!al.length)return '';
-  return `<div class="row"><span style="flex:1">Pozione di Alether (da bere prima del primo scontro)</span>${al.map(i=>`<button class="btn sm" data-a="cb-alether" data-id="${i.id}" ${cb.alether?'disabled':''}>Bevi ${esc(i.name)} +${i.v}</button>`).join('')}</div>`}
+  return `<div class="row"><span style="flex:1">${T('Pozione di Alether (da bere prima del primo scontro)','Alether potion (drink before the first round)')}</span>${al.map(i=>`<button class="btn sm" data-a="cb-alether" data-id="${i.id}" ${cb.alether?'disabled':''}>${T('Bevi','Drink')} ${esc(iname(i.name))} +${i.v}</button>`).join('')}</div>`}
 
 /* --- Diario --- */
 function renderDiario(c){
-  let h=`<section class="sec"><h2>Paragrafo</h2><p class="lead">${c.phase==='prep'?'Inserisci il primo paragrafo per iniziare il libro.':'Inserisci il numero del paragrafo in cui ti sposti.'}${canHeal(c)?' Se nel paragrafo che lasci non hai combattuto né perso RESISTENZA, recuperi 1 punto.':''}</p>
-  <div class="row" style="margin-top:0"><button class="btn sm" data-a="map-cur">Mappa del libro ${c.book}</button></div><div class="grid2"><input id="pn" type="number" inputmode="numeric" placeholder="${c.phase==='prep'?'1':'numero'}" aria-label="Numero del paragrafo"><button class="btn pri" data-a="goto" ${c.combat?'disabled':''}>Vai al paragrafo</button></div>
-  ${c.combat?'<p class="note warn">Concludi prima il combattimento in corso.</p>':''}
+  let h=`<section class="sec"><h2>${T('Paragrafo','Section')}</h2><p class="lead">${c.phase==='prep'?T('Inserisci il primo paragrafo per iniziare il libro.','Enter the first section to start the book.'):T('Inserisci il numero del paragrafo in cui ti sposti.','Enter the number of the section you move to.')}${canHeal(c)?T(' Se nel paragrafo che lasci non hai combattuto né perso RESISTENZA, recuperi 1 punto.',' If you did not fight or lose ENDURANCE in the section you leave, you recover 1 point.'):''}</p>
+  <div class="row" style="margin-top:0"><button class="btn sm" data-a="map-cur">${T('Mappa del libro','Map of book')} ${c.book}</button></div><div class="grid2"><input id="pn" type="number" inputmode="numeric" placeholder="${c.phase==='prep'?'1':T('numero','number')}" aria-label="${T('Numero del paragrafo','Section number')}"><button class="btn pri" data-a="goto" ${c.combat?'disabled':''}>${T('Vai al paragrafo','Go to section')}</button></div>
+  ${c.combat?'<p class="note warn">'+T('Concludi prima il combattimento in corso.','Finish the current combat first.')+'</p>':''}
 </section>
-  <section class="sec"><h2>Note</h2><p class="lead">Le righe nuove finiscono anche nel diario quando esci dal campo.</p><textarea id="notes" data-f="notes" placeholder="Indizi, codici, parole chiave, incontri…">${esc(c.notes)}</textarea></section>
-  <section class="sec"><h2>Diario<span class="cnt">ultime pagine</span></h2><div class="journal" id="jprev">${journalHtml(journalTail(c.journal||[]))}</div>
-  <div class="row"><button class="btn pri" data-a="journal" ${(c.journal||[]).length>1?'':'disabled'}>Leggi il diario</button></div></section>
-  <section class="sec"><h2>Fine del libro</h2>
-  <div class="row"><button class="btn pri" data-a="book-done" ${c.phase==='prep'||c.combat||c.book>12?'disabled':''}>Libro ${c.book} completato</button><button class="btn dng" data-a="restart-book">Ricomincia il libro</button></div>
-  <p class="note">Al completamento scegli la nuova Arte, la RESISTENZA torna al massimo${S().mealsPerish?' e i Pasti avanzati vengono eliminati':''}.</p></section>`;
+  <section class="sec"><h2>${T('Note','Notes')}</h2><p class="lead">${T('Le righe nuove finiscono anche nel diario quando esci dal campo.','New lines are also added to the journal when you leave the field.')}</p><textarea id="notes" data-f="notes" placeholder="${T('Indizi, codici, parole chiave, incontri…','Clues, codes, keywords, encounters…')}">${esc(c.notes)}</textarea></section>
+  <section class="sec"><h2>${T('Diario','Journal')}<span class="cnt">${T('ultime pagine','latest pages')}</span></h2><div class="journal" id="jprev">${journalHtml(journalTail(c.journal||[]))}</div>
+  <div class="row"><button class="btn pri" data-a="journal" ${(c.journal||[]).length>1?'':'disabled'}>${T('Leggi il diario','Read the journal')}</button></div></section>
+  <section class="sec"><h2>${T('Fine del libro','End of book')}</h2>
+  <div class="row"><button class="btn pri" data-a="book-done" ${c.phase==='prep'||c.combat||c.book>12?'disabled':''}>${T('Libro '+c.book+' completato','Book '+c.book+' completed')}</button><button class="btn dng" data-a="restart-book">${T('Ricomincia il libro','Restart book')}</button></div>
+  <p class="note">${T('Al completamento scegli la nuova Arte, la RESISTENZA torna al massimo','On completion you choose a new Discipline and ENDURANCE returns to its maximum')}${S().mealsPerish?T(' e i Pasti avanzati vengono eliminati',', and leftover Meals are removed'):''}.</p></section>`;
   return h;
 }
 
 /* --- Opzioni --- */
 function renderOpz(c){
   const slots=Object.values(APP.slots).sort((a,b)=>(b.updated||0)-(a.updated||0));
-  return `<section class="sec"><ul class="ledger big3"><li><button class="bigrow" data-a="rules"><b>Regole</b><small>Il regolamento completo, con indice per argomenti</small></button></li><li><button class="bigrow" data-a="maps"><b>Mappe</b><small>Le mappe dei libri, da caricare e consultare con lo zoom</small></button></li></ul></section>
-  <section class="sec"><h2>Regole opzionali</h2><p class="lead">Dal Manuale del Lettore. La Spada del Sole resta sempre utilizzabile come arma.</p>
-  <ul class="ledger">${OPTS.map(([k,l,d])=>`<li><span class="t">${l}<small>${d}</small></span>${chip('opt',S()[k]?'Attiva':'Spenta',S()[k],`data-k="${k}"`)}</li>`).join('')}</ul></section>
-  <section class="sec"><h2>Rullo del Destino</h2><ul class="ledger"><li><span class="t">Animazione del rullo<small>Spenta: il numero viene estratto subito, senza far girare il rullo.</small></span>${chip('opt',S().animateFate?'Attiva':'Spenta',S().animateFate,'data-k="animateFate"')}</li></ul></section>
-  <section class="sec"><h2>Personaggi</h2><ul class="ledger">${slots.map(s=>`<li><span class="t">${esc(s.name)}<small>Libro ${s.book}, ${s.status==='dead'?'caduto':'paragrafo '+(s.para?s.para.n:'—')}</small></span><span class="acts">${s.id===APP.current?'<span class="tag on">in gioco</span>':`<button class="btn sm" data-a="slot-load" data-id="${s.id}">Riprendi</button>`}<button class="x" data-a="slot-del" data-id="${s.id}" aria-label="Elimina ${esc(s.name)}">×</button></span></li>`).join('')}</ul>
-  <div class="row"><button class="btn" data-a="new-char">Nuovo personaggio</button><button class="btn" data-a="rename">Rinomina</button></div></section>
-  <section class="sec"><h2>Salvataggi</h2><p class="lead">Ogni modifica viene salvata sul dispositivo e, quando disponibile, sul tuo account Claude. Per un backup su iCloud Drive o Google Drive esporta il file e salvalo dall’app File.</p>
-  <p class="note">Account Claude: <span id="cloudst">${esc(CLOUD.status)}</span></p>
-  <div class="row"><button class="btn pri" data-a="export">Esporta questo personaggio</button><button class="btn" data-a="export-all">Esporta tutto</button><button class="btn" data-a="import">Importa</button></div>
-  <div class="row" style="margin-top:18px"><button class="btn dng" data-a="reset-app">Reimposta l’app</button></div><p class="note">Elimina tutti i personaggi, il diario, le mappe e le impostazioni, e riporta l’app alla schermata iniziale.</p></section>`;
+  return `<section class="sec"><ul class="ledger big3"><li><button class="bigrow" data-a="rules"><b>${T('Regole','Rules')}</b><small>${T('Il regolamento completo, con indice per argomenti','The full rules, with a topic index')}</small></button></li><li><button class="bigrow" data-a="maps"><b>${T('Mappe','Maps')}</b><small>${T('Le mappe dei libri, da caricare e consultare con lo zoom','Book maps, to load and view with zoom')}</small></button></li></ul></section>
+  <section class="sec"><h2>${T('Regole opzionali','Optional rules')}</h2><p class="lead">${T('Dal Manuale del Lettore. La Spada del Sole resta sempre utilizzabile come arma.','From the Reader’s Handbook. The Sommerswerd can always be used as a weapon.')}</p>
+  <ul class="ledger">${OPTS.map(([k,l,d])=>`<li><span class="t">${l}<small>${d}</small></span>${chip('opt',S()[k]?T('Attiva','On'):T('Spenta','Off'),S()[k],`data-k="${k}"`)}</li>`).join('')}</ul></section>
+  <section class="sec"><h2>${T('Rullo del Destino','Reel of Fate')}</h2><ul class="ledger"><li><span class="t">${T('Animazione del rullo','Reel animation')}<small>${T('Spenta: il numero viene estratto subito, senza far girare il rullo.','Off: the number is picked instantly, without spinning the reel.')}</small></span>${chip('opt',S().animateFate?T('Attiva','On'):T('Spenta','Off'),S().animateFate,'data-k="animateFate"')}</li></ul></section>
+  <section class="sec"><h2>${T('Personaggi','Characters')}</h2><ul class="ledger">${slots.map(s=>`<li><span class="t">${esc(iname(s.name))}<small>${T('Libro','Book')} ${s.book}, ${s.status==='dead'?T('caduto','fallen'):T('paragrafo ','section ')+(s.para?s.para.n:'—')}</small></span><span class="acts">${s.id===APP.current?'<span class="tag on">'+T('in gioco','in play')+'</span>':`<button class="btn sm" data-a="slot-load" data-id="${s.id}">${T('Riprendi','Resume')}</button>`}<button class="x" data-a="slot-del" data-id="${s.id}" aria-label="${T('Elimina','Delete')} ${esc(iname(s.name))}">×</button></span></li>`).join('')}</ul>
+  <div class="row"><button class="btn" data-a="new-char">${T('Nuovo personaggio','New character')}</button><button class="btn" data-a="rename">${T('Rinomina','Rename')}</button></div></section>
+  <section class="sec"><h2>${T('Salvataggi','Saves')}</h2><p class="lead">${T('Ogni modifica viene salvata sul dispositivo e, quando disponibile, sul tuo account Claude. Per un backup su iCloud Drive o Google Drive esporta il file e salvalo dall’app File.','Every change is saved on the device and, when available, on your Claude account. For a backup on iCloud Drive or Google Drive, export the file and save it from the Files app.')}</p>
+  <p class="note">${T('Stato','Status')}: <span id="cloudst">${esc(CLOUD.status)}</span></p>
+  <div class="row"><button class="btn pri" data-a="export">${T('Esporta questo personaggio','Export this character')}</button><button class="btn" data-a="export-all">${T('Esporta tutto','Export all')}</button><button class="btn" data-a="import">${T('Importa','Import')}</button></div>
+  <div class="row" style="margin-top:18px"><button class="btn dng" data-a="reset-app">${T('Reimposta l’app','Reset the app')}</button></div><p class="note">${T('Elimina tutti i personaggi, il diario, le mappe e le impostazioni, e riporta l’app alla schermata iniziale.','Deletes all characters, journal, maps and settings and returns the app to the start screen.')}</p></section>`;
 }
 
 /* --- Creazione --- */
-function newCR(){return {name:'Lupo Solitario',book:1,comb:'',res:'',ramas:[],scherma:'',ramastan:[],guerra:[],gold:''}}
+function newCR(){return {name:T('Lupo Solitario','Lone Wolf'),book:1,comb:'',res:'',ramas:[],scherma:'',ramastan:[],guerra:[],gold:''}}
 function reqRamas(b){return b<=5?4+b:10}
 function reqRamastan(b){return b>=6?b-3:0}
 function reqGuerra(b){return 3+Math.max(0,b-6)}
@@ -798,44 +868,44 @@ function crBtn(){const b=document.querySelector('[data-a="cr-done"]');if(b)b.dis
 function renderCreate(){
   const r=UI.create,b=r.book,rs=b>=6;
   const needSch=(rs||r.ramas.includes('scherma'));const needG=rs&&r.ramastan.includes('guerra');const ok=crOk();
-  let h=`<div class="full"><div class="in"><h1>Nuovo personaggio</h1><p class="lead">Segui la procedura del libro. Puoi anche trascrivere un personaggio già in gioco su carta.</p>
-  <label class="f"><span>Nome</span><input id="cr-name" data-f="cr-name" value="${esc(r.name)}"></label>
-  <p class="note">Libro di partenza</p><div class="chips">${Object.keys(BOOKS).map(k=>chip('cr-book',k,+k===b,`data-v="${k}"`)).join('')}</div><p class="note"><i>${BOOKS[b]}</i>, ciclo ${rs?'Ramastan':'Ramas'}</p>
-  <section class="sec"><h2>Combattività e Resistenza</h2><p class="lead">Combattività: 10 + numero estratto. Resistenza: 20 + numero estratto. Valori base, senza Cerchi né oggetti.</p>
-  <div class="grid2"><label class="f"><span>Combattività</span><input type="number" inputmode="numeric" data-f="cr-comb" value="${esc(r.comb)}"></label><label class="f"><span>Resistenza</span><input type="number" inputmode="numeric" data-f="cr-res" value="${esc(r.res)}"></label></div>
-  <div class="row"><button class="btn" data-a="cr-draw" data-k="comb">Estrai la Combattività</button><button class="btn" data-a="cr-draw" data-k="res">Estrai la Resistenza</button></div></section>`;
-  if(rs)h+=`<section class="sec"><h2>Arti Ramas</h2><p class="lead">Come Maestro Ramas possiedi tutte e dieci le Arti Ramas.</p></section>`;
-  else h+=`<section class="sec"><h2>Arti Ramas<span class="cnt">${r.ramas.length} su ${reqRamas(b)}</span></h2><div class="chips">${RAMAS.map(a=>chip('cr-ramas',a.n,r.ramas.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;
-  if(needSch)h+=`<section class="sec"><h2>Arma della Scherma</h2><p class="lead">Estrai un numero: 0 Pugnale, 1 Lancia, 2 Mazza, 3 Daga, 4 Martello, 5 e 7 Spada, 6 Ascia, 8 Asta, 9 Spadone.</p><div class="row"><button class="btn" data-a="cr-sch">Estrai l’arma</button><select data-f="cr-sch" style="flex:1"><option value="">scegli…</option>${[...new Set(SCHERMA_DRAW)].map(w=>`<option ${r.scherma===w?'selected':''}>${w}</option>`).join('')}</select></div></section>`;
-  if(rs){h+=`<section class="sec"><h2>Arti Ramastan<span class="cnt">${r.ramastan.length} su ${reqRamastan(b)}</span></h2><div class="chips">${RAMASTAN.map(a=>chip('cr-rs',a.n,r.ramastan.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;
-    if(needG)h+=`<section class="sec"><h2>Armi della Guerra<span class="cnt">${r.guerra.length} su ${reqGuerra(b)}</span></h2><div class="chips">${GUERRA_LIST.map(w=>chip('cr-g',w,r.guerra.includes(w),`data-v="${w}"`)).join('')}</div></section>`;}
-  h+=`<section class="sec"><h2>Corone d’oro</h2><div class="row"><input type="number" inputmode="numeric" data-f="cr-gold" value="${esc(r.gold)}" style="flex:1" placeholder="0"><button class="btn" data-a="cr-gold">Estrai</button></div><p class="note">L’equipaggiamento iniziale lo inserisci dopo, nella schermata Equipaggio.</p></section>
-  <div class="row"><button class="btn" data-a="cr-cancel">Annulla</button><button class="btn pri" data-a="cr-done" ${ok?'':'disabled'} style="flex:1">Inizia l’avventura</button></div></div></div>`;
+  let h=`<div class="full"><div class="in"><h1>${T('Nuovo personaggio','New character')}</h1><p class="lead">${T('Segui la procedura del libro. Puoi anche trascrivere un personaggio già in gioco su carta.','Follow the procedure in the book. You can also copy a character you are already playing on paper.')}</p>
+  <label class="f"><span>${T('Nome','Name')}</span><input id="cr-name" data-f="cr-name" value="${esc(r.name)}"></label>
+  <p class="note">${T('Libro di partenza','Starting book')}</p><div class="chips">${Object.keys(BOOKS).map(k=>chip('cr-book',k,+k===b,`data-v="${k}"`)).join('')}</div><p class="note"><i>${BOOKS[b]}</i>, ${rs?T('ciclo Ramastan','Magnakai series'):T('ciclo Ramas','Kai series')}</p>
+  <section class="sec"><h2>${T('Combattività e Resistenza','Combat Skill and Endurance')}</h2><p class="lead">${T('Combattività: 10 + numero estratto. Resistenza: 20 + numero estratto. Valori base, senza Cerchi né oggetti.','Combat Skill: 10 + number picked. Endurance: 20 + number picked. Base values, without Lore-circles or items.')}</p>
+  <div class="grid2"><label class="f"><span>${T('Combattività','Combat Skill')}</span><input type="number" inputmode="numeric" data-f="cr-comb" value="${esc(r.comb)}"></label><label class="f"><span>${T('Resistenza','Endurance')}</span><input type="number" inputmode="numeric" data-f="cr-res" value="${esc(r.res)}"></label></div>
+  <div class="row"><button class="btn" data-a="cr-draw" data-k="comb">${T('Estrai la Combattività','Pick Combat Skill')}</button><button class="btn" data-a="cr-draw" data-k="res">${T('Estrai la Resistenza','Pick Endurance')}</button></div></section>`;
+  if(rs)h+=`<section class="sec"><h2>${T('Arti Ramas','Kai Disciplines')}</h2><p class="lead">${T('Come Maestro Ramas possiedi tutte e dieci le Arti Ramas.','As a Kai Master you possess all ten Kai Disciplines.')}</p></section>`;
+  else h+=`<section class="sec"><h2>${T('Arti Ramas','Kai Disciplines')}<span class="cnt">${r.ramas.length} ${T('su','of')} ${reqRamas(b)}</span></h2><div class="chips">${RAMAS.map(a=>chip('cr-ramas',a.n,r.ramas.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;
+  if(needSch)h+=`<section class="sec"><h2>${T('Arma della Scherma','Weaponskill weapon')}</h2><p class="lead">${T('Estrai un numero','Pick a number')}: ${SCHERMA_DRAW.map((w,i)=>i+' '+wl(w)).join(', ')}.</p><div class="row"><button class="btn" data-a="cr-sch">${T('Estrai l’arma','Pick the weapon')}</button><select data-f="cr-sch" style="flex:1"><option value="">${T('scegli…','choose…')}</option>${[...new Set(SCHERMA_DRAW)].map(w=>`<option value="${w}" ${r.scherma===w?'selected':''}>${wl(w)}</option>`).join('')}</select></div></section>`;
+  if(rs){h+=`<section class="sec"><h2>${T('Arti Ramastan','Magnakai Disciplines')}<span class="cnt">${r.ramastan.length} ${T('su','of')} ${reqRamastan(b)}</span></h2><div class="chips">${RAMASTAN.map(a=>chip('cr-rs',a.n,r.ramastan.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;
+    if(needG)h+=`<section class="sec"><h2>${T('Armi della Guerra','Weaponmastery weapons')}<span class="cnt">${r.guerra.length} ${T('su','of')} ${reqGuerra(b)}</span></h2><div class="chips">${GUERRA_LIST.map(w=>chip('cr-g',wl(w),r.guerra.includes(w),`data-v="${w}"`)).join('')}</div></section>`;}
+  h+=`<section class="sec"><h2>${T('Corone d’oro','Gold Crowns')}</h2><div class="row"><input type="number" inputmode="numeric" data-f="cr-gold" value="${esc(r.gold)}" style="flex:1" placeholder="0"><button class="btn" data-a="cr-gold">${T('Estrai','Pick')}</button></div><p class="note">${T('L’equipaggiamento iniziale lo inserisci dopo, nella schermata Zaino.','You enter the starting equipment afterwards, on the Backpack screen.')}</p></section>
+  <div class="row"><button class="btn" data-a="cr-cancel">${T('Annulla','Cancel')}</button><button class="btn pri" data-a="cr-done" ${ok?'':'disabled'} style="flex:1">${T('Inizia l’avventura','Start the adventure')}</button></div></div></div>`;
   return h;
 }
 
 /* --- Libro completato --- */
 function renderWizard(c){
-  const w=UI.wiz,b=c.book;let h=`<div class="full"><div class="in"><h1>Libro ${b} completato</h1><p class="lead">${BOOKS[b]}</p>`;
+  const w=UI.wiz,b=c.book;let h=`<div class="full"><div class="in"><h1>${T('Libro '+b+' completato','Book '+b+' completed')}</h1><p class="lead">${BOOKS[b]}</p>`;
   let ok=true;
   if(b<=4){const miss=RAMAS.filter(a=>!c.ramas.includes(a.id));
-    h+=`<section class="sec"><h2>Nuova Arte Ramas</h2><div class="chips">${miss.map(a=>chip('wz-ramas',a.n,w.ramas===a.id,`data-v="${a.id}"`)).join('')}</div></section>`;ok=!miss.length||!!w.ramas;
+    h+=`<section class="sec"><h2>${T('Nuova Arte Ramas','New Kai Discipline')}</h2><div class="chips">${miss.map(a=>chip('wz-ramas',a.n,w.ramas===a.id,`data-v="${a.id}"`)).join('')}</div></section>`;ok=!miss.length||!!w.ramas;
     if(w.ramas==='scherma'){h+=schSel(w);ok=ok&&!!w.scherma}}
   else if(b===5){const miss=RAMAS.filter(a=>!c.ramas.includes(a.id));
-    h+=`<section class="sec"><h2>Maestro Ramas</h2><p class="lead">${miss.length?'Acquisisci le Arti Ramas mancanti: '+miss.map(a=>a.n).join(', ')+'.':'Possiedi tutte e dieci le Arti Ramas.'} Nel libro 6 prosegui con lo stesso personaggio, COMBATTIVITÀ e RESISTENZA di base.</p></section>`;
+    h+=`<section class="sec"><h2>${T('Maestro Ramas','Kai Master')}</h2><p class="lead">${miss.length?T('Acquisisci le Arti Ramas mancanti: ','You gain the missing Kai Disciplines: ')+miss.map(a=>a.n).join(', ')+'.':T('Possiedi tutte e dieci le Arti Ramas.','You possess all ten Kai Disciplines.')} ${T('Nel libro 6 prosegui con lo stesso personaggio, COMBATTIVITÀ e RESISTENZA di base.','In book 6 you continue with the same character, base COMBAT SKILL and ENDURANCE.')}</p></section>`;
     if(miss.some(a=>a.id==='scherma')){h+=schSel(w);ok=!!w.scherma}
-    h+=`<section class="sec"><h2>Scegli 3 Arti Ramastan<span class="cnt">${w.rs.length} su 3</span></h2><div class="chips">${RAMASTAN.map(a=>chip('wz-rs',a.n,w.rs.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;ok=ok&&w.rs.length===3;
+    h+=`<section class="sec"><h2>${T('Scegli 3 Arti Ramastan','Choose 3 Magnakai Disciplines')}<span class="cnt">${w.rs.length} ${T('su','of')} 3</span></h2><div class="chips">${RAMASTAN.map(a=>chip('wz-rs',a.n,w.rs.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;ok=ok&&w.rs.length===3;
     if(w.rs.includes('guerra')){h+=gSel(c,w,3);ok=ok&&w.g.length===3}}
   else if(b<=11){const miss=RAMASTAN.filter(a=>!c.ramastan.includes(a.id));
-    h+=`<section class="sec"><h2>Nuova Arte Ramastan</h2><div class="chips">${miss.map(a=>chip('wz-rs1',a.n,w.rs.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;ok=!miss.length||w.rs.length===1;
+    h+=`<section class="sec"><h2>${T('Nuova Arte Ramastan','New Magnakai Discipline')}</h2><div class="chips">${miss.map(a=>chip('wz-rs1',a.n,w.rs.includes(a.id),`data-v="${a.id}"`)).join('')}</div></section>`;ok=!miss.length||w.rs.length===1;
     const newG=w.rs.includes('guerra');if(hasR(c,'guerra')||newG){const n=newG?3:1;h+=gSel(c,w,n);ok=ok&&(w.g.length===n||GUERRA_LIST.filter(x=>!c.guerra.includes(x)).length<n)}}
-  else h+=`<section class="sec"><h2>Ciclo Ramastan concluso</h2><p class="lead">Hai completato i libri coperti da questo registro. Il personaggio resta salvato e puoi esportarlo.</p></section>`;
-  h+=`<section class="sec"><h2>Passaggio al libro ${Math.min(12,b+1)}</h2><ul class="arts"><li><p>La RESISTENZA torna al massimo e azzeri i contatori di Guarigione.</p></li>${S().mealsPerish&&meals(c)?`<li><p>${meals(c)} Pasti avanzati vengono eliminati (pasti deperibili).</p></li>`:''}${c.currency!=='Corone d’oro'?`<li><p>Le monete vengono convertite in Corone d’oro.</p></li>`:''}<li><p>Zaino, armi, Oggetti Speciali e Corone restano con te.</p></li></ul></section>
-  <div class="row"><button class="btn" data-a="wz-cancel">Annulla</button>${b<12?`<button class="btn pri" data-a="wz-done" ${ok?'':'disabled'} style="flex:1">Inizia il libro ${b+1}</button>`:`<button class="btn pri" data-a="wz-cancel" style="flex:1">Chiudi</button>`}</div></div></div>`;
+  else h+=`<section class="sec"><h2>${T('Ciclo Ramastan concluso','Magnakai series completed')}</h2><p class="lead">${T('Hai completato i libri coperti da questo registro. Il personaggio resta salvato e puoi esportarlo.','You have completed the books covered by this app. The character stays saved and you can export it.')}</p></section>`;
+  h+=`<section class="sec"><h2>${T('Passaggio al libro','On to book')} ${Math.min(12,b+1)}</h2><ul class="arts"><li><p>${T('La RESISTENZA torna al massimo e azzeri i contatori di Guarigione.','ENDURANCE returns to its maximum and the Healing counters are reset.')}</p></li>${S().mealsPerish&&meals(c)?`<li><p>${T(meals(c)+' Pasti avanzati vengono eliminati (pasti deperibili).',meals(c)+' leftover Meals are removed (perishable Meals).')}</p></li>`:''}${c.currency!=='Corone d’oro'?`<li><p>${T('Le monete vengono convertite in Corone d’oro.','Coins are converted into Gold Crowns.')}</p></li>`:''}<li><p>${T('Zaino, armi, Oggetti Speciali e Corone restano con te.','Backpack, weapons, Special Items and Crowns stay with you.')}</p></li></ul></section>
+  <div class="row"><button class="btn" data-a="wz-cancel">${T('Annulla','Cancel')}</button>${b<12?`<button class="btn pri" data-a="wz-done" ${ok?'':'disabled'} style="flex:1">${T('Inizia il libro','Start book')} ${b+1}</button>`:`<button class="btn pri" data-a="wz-cancel" style="flex:1">${T('Chiudi','Close')}</button>`}</div></div></div>`;
   return h;
 }
-const schSel=w=>`<section class="sec"><h2>Arma della Scherma</h2><div class="row"><button class="btn" data-a="wz-sch">Estrai l’arma</button><select data-f="wz-sch" style="flex:1"><option value="">scegli…</option>${[...new Set(SCHERMA_DRAW)].map(x=>`<option ${w.scherma===x?'selected':''}>${x}</option>`).join('')}</select></div></section>`;
-const gSel=(c,w,n)=>`<section class="sec"><h2>${n===1?'Nuova arma della Guerra':'Armi della Guerra'}<span class="cnt">${w.g.length} su ${n}</span></h2><div class="chips">${GUERRA_LIST.filter(x=>!c.guerra.includes(x)).map(x=>chip('wz-g',x,w.g.includes(x),`data-v="${x}" data-n="${n}"`)).join('')}</div></section>`;
+const schSel=w=>`<section class="sec"><h2>${T('Arma della Scherma','Weaponskill weapon')}</h2><div class="row"><button class="btn" data-a="wz-sch">${T('Estrai l’arma','Pick the weapon')}</button><select data-f="wz-sch" style="flex:1"><option value="">${T('scegli…','choose…')}</option>${[...new Set(SCHERMA_DRAW)].map(x=>`<option value="${x}" ${w.scherma===x?'selected':''}>${wl(x)}</option>`).join('')}</select></div></section>`;
+const gSel=(c,w,n)=>`<section class="sec"><h2>${n===1?T('Nuova arma della Guerra','New Weaponmastery weapon'):T('Armi della Guerra','Weaponmastery weapons')}<span class="cnt">${w.g.length} ${T('su','of')} ${n}</span></h2><div class="chips">${GUERRA_LIST.filter(x=>!c.guerra.includes(x)).map(x=>chip('wz-g',wl(x),w.g.includes(x),`data-v="${x}" data-n="${n}"`)).join('')}</div></section>`;
 
 /* ====== DIARIO ====== */
 function logNotes(c){
@@ -852,21 +922,32 @@ function journalTail(j){
   let i=j.length,ev=0,pp=0;while(i>0&&ev<6&&pp<14){i--;if(j[i].k==='p')pp++;else ev++}
   return j.slice(i);
 }
+function evText(e){
+  const AN=id=>([...RAMAS,...RAMASTAN].find(a=>a.id===id)||{n:id}).n;
+  if(e.ev==='fall')return T('Lupo Solitario cade','Lone Wolf falls')+(e.p?T(' al paragrafo ',' in section ')+e.p:'');
+  if(e.ev==='restart')return T('Ricominci il libro ','You restart book ')+e.book;
+  if(e.ev==='done'){const names=(e.arts||[]).map(AN).join(', ');return T('Libro '+e.book+' completato','Book '+e.book+' completed')+(names?(e.master?T('. Diventi Maestro Ramas, nuove Arti Ramastan: ','. You become a Kai Master; new Magnakai Disciplines: '):T('. Nuova Arte: ','. New Discipline: '))+names:'')}
+  const t=e.txt||'';if(LANG!=='en')return t;let m;
+  if((m=t.match(/^Lupo Solitario cade(?: al paragrafo (\d+))?$/)))return 'Lone Wolf falls'+(m[1]?' in section '+m[1]:'');
+  if((m=t.match(/^Ricominci il libro (\d+)$/)))return 'You restart book '+m[1];
+  if((m=t.match(/^Libro (\d+) completato(?:\. (Diventi Maestro Ramas, nuove Arti Ramastan|Nuova Arte): (.+))?$/))){const nm=m[3]?m[3].split(', ').map(x=>{const a=[...RAMAS,...RAMASTAN].find(a=>a.itn===x);return a?a.n:x}).join(', '):'';return 'Book '+m[1]+' completed'+(m[2]?(m[2].startsWith('Diventi')?'. You become a Kai Master; new Magnakai Disciplines: ':'. New Discipline: ')+nm:'')}
+  return t;
+}
 function journalHtml(list){
-  if(!list.length)return '<p class="lead">Il diario si riempie mentre giochi: paragrafi, combattimenti e note.</p>';
+  if(!list.length)return '<p class="lead">'+T('Il diario si riempie mentre giochi: paragrafi, combattimenti e note.','The journal fills up as you play: sections, combats and notes.')+'</p>';
   let h='',run=[];
   const flush=()=>{if(run.length){h+=`<p class="jpath">§ ${run.join('<i>›</i>')}</p>`;run=[]}};
-  const OUT={vittoria:'Vittoria',fuga:'Fuga',morte:'Sconfitta',interrotto:'Combattimento interrotto dal testo'};
+  const OUT={vittoria:T('Vittoria','Victory'),fuga:T('Fuga','Evasion'),morte:T('Sconfitta','Defeat'),interrotto:T('Combattimento interrotto dal testo','Combat ended by the text')};
   for(const e of list){
     if(e.k==='p'){run.push(esc(e.n));continue}
     flush();
-    if(e.k==='b')h+=`<h4 class="jbook">Libro ${e.book}<small>${BOOKS[e.book]||''}</small></h4>`;
-    else if(e.k==='e')h+=`<p class="jev">${esc(e.txt)}</p>`;
-    else if(e.k==='n')h+=`<blockquote class="jnote">${esc(e.txt).replace(/\n/g,'<br>')}${e.p?`<small>Paragrafo ${e.p}</small>`:''}</blockquote>`;
+    if(e.k==='b')h+=`<h4 class="jbook">${T('Libro','Book')} ${e.book}<small>${BOOKS[e.book]||''}</small></h4>`;
+    else if(e.k==='e')h+=`<p class="jev">${esc(evText(e))}</p>`;
+    else if(e.k==='n')h+=`<blockquote class="jnote">${esc(e.txt).replace(/\n/g,'<br>')}${e.p?`<small>${T('Paragrafo','Section')} ${e.p}</small>`:''}</blockquote>`;
     else if(e.k==='c'){
-      const nm=i=>esc((e.f[i]||e.f[0]||['Nemico'])[0]);
-      const rounds=e.r.map(r=>`<li>Numero ${r[0]}, rapporto ${sgn(r[1])}: ${nm(r[4])} ${r[2]==='K'?'ucciso':r[2]?'−'+r[2]:'illeso'}, Lupo Solitario ${r[3]==='K'?'ucciso':r[3]?'−'+r[3]:'illeso'}${r[5]?' (fuga)':''}</li>`).join('');
-      h+=`<div class="jcomb">Combattimento con ${e.f.map(f=>`<b>${esc(f[0])}</b> (COMB ${f[1]}, RES ${f[2]})`).join(', ')}${e.p?`<small>Paragrafo ${e.p}</small>`:''}<ol>${rounds}</ol><p class="o">${OUT[e.o]||esc(e.o)} in ${e.r.length} ${e.r.length===1?'scontro':'scontri'}, RESISTENZA ${e.res}.</p></div>`;
+      const nm=i=>esc((e.f[i]||e.f[0]||[T('Nemico','Enemy')])[0]);
+      const KD=T('ucciso','killed'),UN=T('illeso','unharmed');const rounds=e.r.map(r=>`<li>${T('Numero','Number')} ${r[0]}, ${T('rapporto','ratio')} ${sgn(r[1])}: ${nm(r[4])} ${r[2]==='K'?KD:r[2]?'−'+r[2]:UN}, ${T('Lupo Solitario','Lone Wolf')} ${r[3]==='K'?KD:r[3]?'−'+r[3]:UN}${r[5]?T(' (fuga)',' (evasion)'):''}</li>`).join('');
+      h+=`<div class="jcomb">${T('Combattimento con','Combat with')} ${e.f.map(f=>`<b>${esc(f[0])}</b> (${T('COMB','CS')} ${f[1]}, ${T('RES','EP')} ${f[2]})`).join(', ')}${e.p?`<small>${T('Paragrafo','Section')} ${e.p}</small>`:''}<ol>${rounds}</ol><p class="o">${OUT[e.o]||esc(e.o)} ${T('in','in')} ${e.r.length} ${e.r.length===1?T('scontro','round'):T('scontri','rounds')}, ${T('RESISTENZA','ENDURANCE')} ${e.res}.</p></div>`;
     }
   }
   flush();return h;
@@ -874,14 +955,14 @@ function journalHtml(list){
 function openJournal(){
   const c=C();if(!c)return;logNotes(c);
   const L=document.getElementById('layer');
-  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="Diario"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Diario di ${esc(c.name)}</h1><button class="btn" data-a="journal-close">Chiudi</button></div>
-  <div class="journal">${journalHtml(c.journal||[])}</div><div class="row" style="margin-top:18px"><button class="btn wide" data-a="journal-close">Chiudi il diario</button></div></div></div>`;
+  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="${T('Diario','Journal')}"><div class="in"><div class="row"><h1 style="flex:1;margin:0">${T('Diario di '+esc(c.name),esc(c.name)+'’s journal')}</h1><button class="btn" data-a="journal-close">${T('Chiudi','Close')}</button></div>
+  <div class="journal">${journalHtml(c.journal||[])}</div><div class="row" style="margin-top:18px"><button class="btn wide" data-a="journal-close">${T('Chiudi il diario','Close the journal')}</button></div></div></div>`;
   const f=L.querySelector('.full');requestAnimationFrame(()=>{f.scrollTop=f.scrollHeight});
 }
 
 /* ====== ARCHIVIO LOCALE (mappe) ====== */
 const IDB={p:null,
-  open(){if(!this.p)this.p=Promise.race([new Promise((res,rej)=>{try{const r=indexedDB.open('registro-di-guerra',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}),new Promise((_,rej)=>setTimeout(()=>rej(new Error('archivio locale non disponibile')),3000))]);this.p.catch(()=>{this.p=null});return this.p},
+  open(){if(!this.p)this.p=Promise.race([new Promise((res,rej)=>{try{const r=indexedDB.open('registro-di-guerra',1);r.onupgradeneeded=()=>r.result.createObjectStore('files');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}}),new Promise((_,rej)=>setTimeout(()=>rej(new Error(T('archivio locale non disponibile','local storage unavailable'))),3000))]);this.p.catch(()=>{this.p=null});return this.p},
   async run(mode,fn){const d=await this.open();return new Promise((res,rej)=>{const tx=d.transaction('files',mode);const st=tx.objectStore('files');const rq=fn(st);tx.oncomplete=()=>res(rq&&rq.result);tx.onerror=()=>rej(tx.error)})},
   get(k){return this.run('readonly',s=>s.get(k))},set(k,v){return this.run('readwrite',s=>s.put(v,k))},del(k){return this.run('readwrite',s=>s.delete(k))},keys(){return this.run('readonly',s=>s.getAllKeys())}};
 const AON={1:'01fftd',2:'02fotw',3:'03tcok',4:'04tcod',5:'05sots',6:'06tkot',7:'07cd',8:'08tjoh',9:'09tcof',10:'10tdot',11:'11tpot',12:'12tmod'};
@@ -896,7 +977,7 @@ const mapsCloud=()=>S().maps||{};
 function mapAssetId(n){const m=mapsCloud();return m[n]||(MAP_ALIAS[n]?m[MAP_ALIAS[n]]:null)||null}
 function dataToBlob(d){const i=d.indexOf(',');const mime=(d.slice(0,i).match(/data:([^;]+)/)||[,'image/jpeg'])[1];const bin=atob(d.slice(i+1));const u=new Uint8Array(bin.length);for(let k=0;k<bin.length;k++)u[k]=bin.charCodeAt(k);return new Blob([u],{type:mime})}
 async function mapUrl(n){const id=mapAssetId(n);if(id)return '/_blob/'+id;if(MAPURL[n])return MAPURL[n];const d=await mapBlob(n);if(d)MAPURL[n]=d;return d}
-function shrinkImage(f){return new Promise((res,rej)=>{const r=new FileReader();r.onerror=()=>rej(r.error);r.onload=()=>{const im=new Image();im.onerror=()=>rej(new Error('immagine non leggibile'));im.onload=()=>{
+function shrinkImage(f){return new Promise((res,rej)=>{const r=new FileReader();r.onerror=()=>rej(r.error);r.onload=()=>{const im=new Image();im.onerror=()=>rej(new Error(T('immagine non leggibile','unreadable image')));im.onload=()=>{
   const max=3200,k=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight));
   if(k===1&&f.size<4e6){res(r.result);return}
   const cv=document.createElement('canvas');cv.width=Math.round(im.naturalWidth*k);cv.height=Math.round(im.naturalHeight*k);cv.getContext('2d').drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL('image/jpeg',.88))};im.src=r.result};r.readAsDataURL(f)})}
@@ -904,7 +985,7 @@ function shrinkImage(f){return new Promise((res,rej)=>{const r=new FileReader();
 /* ====== MAPPE ====== */
 async function openMaps(){
   const c=C();const L=document.getElementById('layer');
-  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="Mappe"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Mappe</h1><button class="btn" data-a="layer-close">Chiudi</button></div><p class="lead">Caricamento delle mappe…</p></div></div>`;
+  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="${T('Mappe','Maps')}"><div class="in"><div class="row"><h1 style="flex:1;margin:0">${T('Mappe','Maps')}</h1><button class="btn" data-a="layer-close">${T('Chiudi','Close')}</button></div><p class="lead">${T('Caricamento delle mappe…','Loading maps…')}</p></div></div>`;
   const as=await getAssets();const cm=mapsCloud();
   let stored=[];if(!as){try{stored=await IDB.keys()}catch(e){}}
   const has=n=>!!cm[n]||stored.includes('map-'+n);const alias=MAP_ALIAS;
@@ -912,28 +993,28 @@ async function openMaps(){
   for(let n=1;n<=12;n++){
     const own=has(n),al=!own&&alias[n]&&has(alias[n]);
     const u=own||al?await mapUrl(n):null;
-    rows.push(`<li class="${c&&c.book===n?'curbook':''}"><span class="n">${n}</span>${u?`<button class="mthumb" data-a="map-view" data-n="${n}" aria-label="Apri la mappa del libro ${n}"><img src="${u}" alt=""></button>`:''}<span class="t">${BOOKS[n]}<small>${own?'Mappa caricata':al?'Stessa mappa del libro '+alias[n]:alias[n]?'Stessa mappa del libro '+alias[n]+', non ancora caricata':'Nessuna mappa'}</small>
-      <span class="row" style="margin:6px 0 0">${u?`<button class="btn sm pri" data-a="map-view" data-n="${n}">Apri</button>`:''}<button class="btn sm" data-a="map-add" data-n="${n}">${own?'Sostituisci':'Carica dal telefono'}</button>${own?`<button class="btn sm dng" data-a="map-del" data-n="${n}">Rimuovi</button>`:''}<a class="btn sm" href="https://www.projectaon.org/en/xhtml/lw/${AON[n]}/map.png" target="_blank" rel="noopener">Project Aon (inglese)</a></span></span></li>`);
+    rows.push(`<li class="${c&&c.book===n?'curbook':''}"><span class="n">${n}</span>${u?`<button class="mthumb" data-a="map-view" data-n="${n}" aria-label="${T('Apri la mappa del libro','Open the map of book')} ${n}"><img src="${u}" alt=""></button>`:''}<span class="t">${BOOKS[n]}<small>${own?T('Mappa caricata','Map loaded'):al?T('Stessa mappa del libro ','Same map as book ')+alias[n]:alias[n]?T('Stessa mappa del libro ','Same map as book ')+alias[n]+T(', non ancora caricata',', not loaded yet'):T('Nessuna mappa','No map')}</small>
+      <span class="row" style="margin:6px 0 0">${u?`<button class="btn sm pri" data-a="map-view" data-n="${n}">${T('Apri','Open')}</button>`:''}<button class="btn sm" data-a="map-add" data-n="${n}">${own?T('Sostituisci','Replace'):T('Carica dal telefono','Load from phone')}</button>${own?`<button class="btn sm dng" data-a="map-del" data-n="${n}">${T('Rimuovi','Remove')}</button>`:''}<a class="btn sm" href="https://www.projectaon.org/en/xhtml/lw/${AON[n]}/map.png" target="_blank" rel="noopener">${T('Project Aon (inglese)','Project Aon')}</a></span></span></li>`);
   }
-  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="Mappe"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Mappe</h1><button class="btn" data-a="layer-close">Chiudi</button></div>
-  <p class="lead">Carica le mappe che hai scaricato o fotografato: ${as?'restano nello spazio privato di questa app sul tuo account Claude, quindi le ritrovi anche dal Mac':'restano salvate solo su questo dispositivo'}. Per i libri senza mappa trovi il link alla versione inglese di Project Aon.</p>
-  <ul class="ledger maps">${rows.join('')}</ul><div class="row"><button class="btn wide" data-a="layer-close">Chiudi</button></div></div></div>`;
+  L.innerHTML=`<div class="full" role="dialog" aria-modal="true" aria-label="${T('Mappe','Maps')}"><div class="in"><div class="row"><h1 style="flex:1;margin:0">${T('Mappe','Maps')}</h1><button class="btn" data-a="layer-close">${T('Chiudi','Close')}</button></div>
+  <p class="lead">${T('Carica le mappe che hai scaricato o fotografato: ','Load the maps you have downloaded or photographed: ')}${as?T('restano nello spazio privato di questa app sul tuo account Claude, quindi le ritrovi anche dal Mac','they stay in this app’s private space on your Claude account, so you can also find them on your Mac'):T('restano salvate solo su questo dispositivo','they are saved on this device only')}. ${T('Per i libri senza mappa trovi il link alla versione inglese di Project Aon.','For every book there is also a link to the Project Aon map.')}</p>
+  <ul class="ledger maps">${rows.join('')}</ul><div class="row"><button class="btn wide" data-a="layer-close">${T('Chiudi','Close')}</button></div></div></div>`;
 }
 function pickMap(n){
   const inp=document.createElement('input');inp.type='file';inp.accept='image/*';
   inp.onchange=async()=>{const f=inp.files[0];if(!f)return;
-    if(f.size>25e6){toast('Immagine troppo grande (massimo 25 MB)');return}
-    toast('Salvataggio della mappa…');
+    if(f.size>25e6){toast(T('Immagine troppo grande (massimo 25 MB)','Image too large (25 MB maximum)'));return}
+    toast(T('Salvataggio della mappa…','Saving the map…'));
     try{const d=await shrinkImage(f);const as=await getAssets();
       if(as){const r=await as.upload(dataToBlob(d));const m={...mapsCloud()};const old=m[n];m[n]=r.id;APP.settings.maps=m;APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);if(old){try{await as.delete(old)}catch(e){}}}
       else await IDB.set('map-'+n,d);
-      Object.keys(MAPURL).forEach(k=>delete MAPURL[k]);toast('Mappa del libro '+n+' salvata');openMaps()}catch(e){toast('Non riesco a salvare l’immagine: '+(e&&(e.message||e.code)||'errore sconosciuto'))}};
+      Object.keys(MAPURL).forEach(k=>delete MAPURL[k]);toast(T('Mappa del libro '+n+' salvata','Map of book '+n+' saved'));openMaps()}catch(e){toast(T('Non riesco a salvare l’immagine: ','Could not save the image: ')+(e&&(e.message||e.code)||T('errore sconosciuto','unknown error')))}};
   inp.click();
 }
 async function viewMap(n){
   const u=await mapUrl(n);if(!u){openMaps();return}
-  const v=document.createElement('div');v.className='mv';v.setAttribute('role','dialog');v.setAttribute('aria-label','Mappa del libro '+n);
-  v.innerHTML=`<img alt="Mappa del libro ${n}" draggable="false"><div class="mvbar"><span>${esc(BOOKS[n])}</span><button class="btn sm" data-z="-1" aria-label="Riduci">−</button><button class="btn sm" data-z="1" aria-label="Ingrandisci">+</button><button class="btn sm pri" data-z="x">Chiudi</button></div>`;
+  const v=document.createElement('div');v.className='mv';v.setAttribute('role','dialog');v.setAttribute('aria-label',T('Mappa del libro ','Map of book ')+n);
+  v.innerHTML=`<img alt="${T('Mappa del libro','Map of book')} ${n}" draggable="false"><div class="mvbar"><span>${esc(BOOKS[n])}</span><button class="btn sm" data-z="-1" aria-label="${T('Riduci','Zoom out')}">−</button><button class="btn sm" data-z="1" aria-label="${T('Ingrandisci','Zoom in')}">+</button><button class="btn sm pri" data-z="x">${T('Chiudi','Close')}</button></div>`;
   document.body.appendChild(v);const img=v.querySelector('img');
   let s=1,x=0,y=0,fit=1;const P=new Map();let g=null,lastTap=0;
   const W=()=>v.clientWidth,H=()=>v.clientHeight;
@@ -1006,18 +1087,70 @@ function rulesHtml(){
   ['r-fine','Fine del libro',lst(['Scegli una nuova Arte (Ramas fino al libro 5, Ramastan dal 6 all’11) e, se hai la Guerra, una nuova arma.','La RESISTENZA torna al massimo.','Zaino, armi, Oggetti Speciali e monete passano al libro successivo; le valute straniere si convertono in Corone.'])]];
   return {toc:`<ol class="rtoc">${S1.map(([id,t])=>`<li><button data-a="rules-go" data-id="${id}">${t}</button></li>`).join('')}</ol>`,body:S1.map(([id,t,b])=>sec(id,t,b)).join('')};
 }
+function rulesHtmlEN(){
+  const sec=(id,t,body)=>`<section class="rsec" id="${id}"><h2>${t}</h2>${body}<p class="rtop"><button class="btn sm" data-a="rules-top">Back to contents</button></p></section>`;
+  const lst=a=>`<ul class="rl2">${a.map(x=>`<li>${x}</li>`).join('')}</ul>`;
+  const S1=[
+  ['r-pg','The character',`<p>Lone Wolf has two attributes. <b>COMBAT SKILL</b> measures his prowess in combat and is 10 plus a number picked from the Random Number Table. <b>ENDURANCE</b> measures health and stamina and is 20 plus a number picked.</p>
+   <p>ENDURANCE goes up and down during the adventure but can never exceed its maximum, which only grows through armour, helmets, Lore-circles or when the text says so. If it reaches zero, Lone Wolf is dead and the adventure is over: you restart the book from the beginning.</p>`],
+  ['r-tdd','The Random Number Table',`<p>It introduces chance: in combat, when creating your character and whenever the text asks you to pick a number. Numbers run from 0 to 9, and 0 counts as zero. A ten-sided die can also be used. In this app the number is picked with the reel, with the same 1 in 10 chance for every digit.</p>`],
+  ['r-comb','Combat',`<p>A <b>combat</b> is the whole fight against an opponent; a <b>round</b> is a single exchange, that is, each number picked.</p>
+   <ol class="rl2"><li>Add to your base COMBAT SKILL the bonuses from Disciplines, equipped Special Items and any Alether potion.</li><li>Subtract the enemy’s COMBAT SKILL: the result is the <b>Combat Ratio</b>.</li><li>Pick a number.</li><li>Cross-reference Combat Ratio and number on the Combat Results Table to read the ENDURANCE points lost by the enemy (E) and by Lone Wolf (LW).</li><li>Update both ENDURANCE scores and, unless someone has reached zero or the text says otherwise, fight the next round.</li></ol>
+   <p>Whoever reaches zero dies. If Lone Wolf wins, he continues with his reduced ENDURANCE and recovers it later. The app uses the extended table, with ratios from −30 to +30: beyond those values the outermost column applies, and the skull means instant death.</p>
+   <p><b>Unarmed</b> you lose 4 COMBAT SKILL points (less with Weaponmastery improvements). The Bow is not a hand-to-hand weapon: fighting with only a Bow counts as fighting unarmed.</p>
+   <p><b>Evasion</b>: only possible if the section allows it and after at least one round. The evasion round is resolved normally, but the enemy’s losses are ignored: only Lone Wolf can lose points.</p>
+   <p><b>Potions</b>: Alether is drunk before the combat begins; healing potions never during combat.</p>
+   <p><b>Mindforce and immunity</b>: some enemies drain ENDURANCE with their minds every round, unless you have Mindshield or Psi-screen; others are immune to Mindblast and Psi-surge. The text tells you case by case.</p>`],
+  ['r-ramas','Kai Disciplines',`<p>You start book 1 with 5 Kai Disciplines of your choice and gain one for each book completed, up to the 10 of a Kai Master at the end of book 5.</p>
+   <dl class="rdl">${RAMAS.map(a=>`<dt>${a.n}</dt><dd>${a.d}</dd>`).join('')}</dl>
+   <p><b>Weaponskill weapon</b>, picked from the Random Number Table: ${SCHERMA_DRAW.map((w,i)=>i+' '+wl(w)).join(', ')}.</p>
+   <p><b>Kai ranks</b>, by number of Disciplines: ${RAMAS_RANKS.map((r,i)=>(i+1)+' '+r).join(', ')}.</p>`],
+  ['r-ramastan','Magnakai series',`<p>In book 6 the Kai Master continues with the same base COMBAT SKILL and ENDURANCE, keeps all 10 Kai Disciplines and chooses 3 Magnakai Disciplines. He gains one more for each book completed from 6 to 11. A character created from scratch in book 6 also possesses the 10 Kai Disciplines.</p>
+   <p>When you possess a Magnakai Discipline, its effects replace those of the corresponding Kai Discipline: the bonuses are not cumulative.</p>
+   <dl class="rdl">${RAMASTAN.map(a=>`<dt>${a.n}<small> replaces ${RAMAS.find(r=>r.id===a.from).n}</small></dt><dd>${a.d}</dd>`).join('')}</dl>
+   <p><b>Weaponmastery</b>: you start with 3 weapons and add one for each book completed. +3 COMBAT SKILL with a weapon on your list; with the Bow, +3 to the number picked when shooting. Weaponskill (+2) only applies to a weapon that is not on your Weaponmastery list.</p>
+   <p><b>Magnakai ranks</b>, by number of Magnakai Disciplines: ${RAMASTAN_RANKS.map((r,i)=>(i+1)+' '+r).join(', ')}.</p>
+   <h3>Improvements</h3><p>As you rise in rank, the Disciplines you possess gain new powers.</p>
+   ${[4,5,6,7,8,9].map(lv=>{const e=Object.entries(PERF).filter(([,v])=>v[lv]).map(([k,v])=>`<li><b>${RAMASTAN.find(a=>a.id===k).n}</b>: ${v[lv]}</li>`);return e.length?`<p class="rsub">${PERF_TITLES[lv]} (${lv} Disciplines)</p><ul class="rl2">${e.join('')}</ul>`:''}).join('')}
+   <h3>Lore-circles</h3><p>Mastering all the Disciplines of a Lore-circle grants a permanent bonus.</p>
+   <ul class="rl2">${CERCHI.map(k=>`<li><b>${k.n}</b>: ${k.a.map(a=>RAMASTAN.find(x=>x.id===a).n).join(', ')}. ${k.c?'+'+k.c+' COMBAT SKILL, ':''}+${k.r} ENDURANCE.</li>`).join('')}</ul>`],
+  ['r-equip','Equipment',lst([
+   '<b>Weapons</b>: 2 at most. Special weapons (such as the Sommerswerd) are Special Items and do not count towards the limit.',
+   '<b>Backpack</b>: 8 items at most, Meals included; each Meal takes one slot. Items not described as Special Items go in the Backpack.',
+   '<b>Belt Pouch</b>: 50 Gold Crowns at most.',
+   '<b>Special Items</b>: not carried in the Backpack. From book 8 you can carry 12 at most.',
+   '<b>Armour</b>: several types can be worn together and their bonuses add up, with one exception: Chainmail Waistcoat and Bronin Vest are not compatible. Two pieces of the same type cannot be worn.',
+   '<b>Helmet</b>: one at a time.',
+   '<b>Shield</b>: cannot be used with a two-handed weapon (Broadsword, Quarterstaff, Spear); it can be used with the Sommerswerd.',
+   '<b>Sommerswerd</b>: +8 COMBAT SKILL; counts as Sword, Short Sword or Broadsword for Weaponskill and Weaponmastery; double damage against undead.',
+   '<b>Bow and Arrows</b>: to shoot you need a Quiver (6 Arrows at most) and at least one Arrow.'])],
+  ['r-cura','Healing and potions',lst([
+   '<b>Healing</b> and <b>Curing</b>: +1 ENDURANCE for each section passed through without combat, only if you have lost points and never above the maximum. They are not cumulative.',
+   '<b>Healing potions</b> (such as Laumspur): restore the points stated, without exceeding the maximum, and are never drunk during combat.',
+   '<b>Alether potion</b>: increases COMBAT SKILL for one whole combat; drink it before the first round.',
+   '<b>Archmaster Curing</b>: +20 ENDURANCE if you drop to 6 or less, once per book.'])],
+  ['r-pasti','Meals',`<p>When the text tells you to eat, you must use a Meal from your Backpack; if you have none, you lose 3 ENDURANCE points. With <b>Hunting</b> you need not use a Meal, except in wastelands and deserts; with <b>Huntmastery</b> you find food anywhere, even in the desert.</p>`],
+  ['r-dep','Safekeeping',`<p>From book 5 you can leave Backpack Items and Special Items in safekeeping, in any number, and collect them at the start of each book. In the Magnakai series the safekeeping is with the elder magi of Dessi, at Elzian.</p>`],
+  ['r-valute','Currency',`<p>The Gold Crown is the currency of Sommerlund and Vassagonia. The text tells you when you use another currency; at the end of the book it is converted into Crowns.</p><table class="rt"><tr><th>Currency</th><th>Per 1 Crown</th></tr>${Object.entries(CURR).filter(([k])=>k!=='Corone d’oro').map(([k,v])=>`<tr><td>${wl(k)}</td><td>${v}</td></tr>`).join('')}</table>`],
+  ['r-opz','Optional rules',`<p>In the app every optional rule can be switched on or off from the Compendium. Current state:</p><ul class="rl2">${OPTS.map(([k,l,d])=>`<li><b>${S()[k]?'On':'Off'}</b>: ${l}. ${d}</li>`).join('')}</ul><p>The optional rule on the Sommerswerd is not used: the sword can always be used as a weapon.</p>`],
+  ['r-fine','End of the book',lst(['Choose a new Discipline (Kai up to book 5, Magnakai from 6 to 11) and, if you have Weaponmastery, a new weapon.','ENDURANCE returns to its maximum.','Backpack, weapons, Special Items and money carry over to the next book; foreign currency is converted into Crowns.'])]];
+  return {toc:`<ol class="rtoc">${S1.map(([id,t])=>`<li><button data-a="rules-go" data-id="${id}">${t}</button></li>`).join('')}</ol>`,body:S1.map(([id,t,b])=>sec(id,t,b)).join('')};
+}
 function openRules(){
-  const L=document.getElementById('layer');const r=rulesHtml();
-  L.innerHTML=`<div class="full rules" id="rulesv" role="dialog" aria-modal="true" aria-label="Regole"><div class="in"><div class="row"><h1 style="flex:1;margin:0">Regole</h1><button class="btn" data-a="layer-close">Chiudi</button></div>
-  <p class="lead">Sintesi del Manuale del Lettore per la consultazione durante il gioco, con la terminologia Ramas e Ramastan.</p><nav id="rtoc" aria-label="Indice">${r.toc}</nav>${r.body}<div class="row"><button class="btn wide" data-a="layer-close">Chiudi</button></div></div></div>`;
+  const L=document.getElementById('layer');const r=LANG==='en'?rulesHtmlEN():rulesHtml();
+  L.innerHTML=`<div class="full rules" id="rulesv" role="dialog" aria-modal="true" aria-label="${T('Regole','Rules')}"><div class="in"><div class="row"><h1 style="flex:1;margin:0">${T('Regole','Rules')}</h1><button class="btn" data-a="layer-close">${T('Chiudi','Close')}</button></div>
+  <p class="lead">${T('Sintesi del Manuale del Lettore per la consultazione durante il gioco, con la terminologia Ramas e Ramastan.','A summary of the Reader’s Handbook for quick reference while playing.')}</p><nav id="rtoc" aria-label="${T('Indice','Contents')}">${r.toc}</nav>${r.body}<div class="row"><button class="btn wide" data-a="layer-close">${T('Chiudi','Close')}</button></div></div></div>`;
 }
 
+function setLang(v){if(v!=='it'&&v!=='en')return;APP.settings.lang=v;APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;LANG=v;document.documentElement.lang=v;
+  if(!window.claude||typeof window.claude.use!=='function')CLOUD.status=T('Salvataggio su questo dispositivo. Esporta ogni tanto un backup su iCloud Drive','Saved on this device. Export a backup to iCloud Drive from time to time');
+  persist(null);document.getElementById('layer').innerHTML='';render()}
 /* ====== AZIONI ====== */
 function snapshotBook(c){const o=JSON.parse(JSON.stringify(c));delete o.bookStart;delete o.journal;c.bookStart=JSON.stringify(o)}
 function startCombat(c,foe){c.combat={enemies:[foe],idx:0,rounds:[],weapon:bestWeapon(c),psi:psiInfo(c).laser&&!foe.immune?'laser':'none',alether:0,mod:0,ambush:0};UI.lastRound=null}
 function readFoe(){
-  const name=document.getElementById('fname').value.trim()||'Nemico';const comb=num(document.getElementById('fcomb').value,NaN),res=num(document.getElementById('fres').value,NaN);
-  if(!Number.isFinite(comb)||!Number.isFinite(res)||res<=0){toast('Inserisci Combattività e Resistenza del nemico');return null}
+  const name=document.getElementById('fname').value.trim()||T('Nemico','Enemy');const comb=num(document.getElementById('fcomb').value,NaN),res=num(document.getElementById('fres').value,NaN);
+  if(!Number.isFinite(comb)||!Number.isFinite(res)||res<=0){toast(T('Inserisci Combattività e Resistenza del nemico','Enter the enemy’s Combat Skill and Endurance'));return null}
   return {id:uid(),name,comb,res,res0:res,immune:document.getElementById('fimm').checked,undead:document.getElementById('fund').checked,flee:document.getElementById('fflee').checked,mind:Math.max(0,num(document.getElementById('fmind').value)),roundsHere:0};
 }
 function endCombat(c,out){
@@ -1032,116 +1165,118 @@ function computeRound(c,d,flee){
   const cc=combatComb(c,{...cb,psi},e);const ratio=cc.total-e.comb;const r=crt(ratio,d);
   let eL=r.n==='K'?'K':-r.n;const sun=!!(cc.w&&cc.w.sun&&e.undead);if(eL!=='K'&&sun)eL*=2;if(flee)eL=0;
   const lL=r.l==='K'?'K':-r.l;let extra=0;const why=[];
-  if(!e.immune&&psi==='raggio'&&p.raggio){extra+=p.cost;why.push('Raggio Psichico')}
-  if(e.mind&&!mindShield(c)){extra+=e.mind;why.push('attacco mentale')}
+  if(!e.immune&&psi==='raggio'&&p.raggio){extra+=p.cost;why.push(T('Raggio Psichico','Psi-surge'))}
+  if(e.mind&&!mindShield(c)){extra+=e.mind;why.push(T('attacco mentale','Mindforce'))}
   const dmg=(lL==='K'?c.resCur:lL)+extra;
   const eAfter=eL==='K'?0:Math.max(0,e.res-eL),lAfter=Math.max(0,c.resCur-dmg);
   const nextFoe=cb.enemies.find((x,i)=>i!==cb.idx&&x.res>0);
   const end=lAfter<=0?'morte':flee?'fuga':eAfter<=0?(nextFoe?'next':'vittoria'):null;
-  return {d,ratio,total:cc.total,eL,lL,extra,why:why.join(' e '),dmg,eAfter,lAfter,psi,switched,e,sun,end,nextFoe};
+  return {d,ratio,total:cc.total,eL,lL,extra,why:why.join(T(' e ',' and ')),dmg,eAfter,lAfter,psi,switched,e,sun,end,nextFoe};
 }
 function roundHtml(R){
-  const me=R.lL==='K'?'ucciso':R.dmg?`−${R.dmg} RES`:'nessun danno';
-  const foe=R.eL==='K'?'ucciso':R.eL?`−${R.eL} RES`:'nessun danno';
-  const end={morte:'Lupo Solitario cade.',fuga:'Sei fuggito.',vittoria:esc(R.e.name)+' è sconfitto.',next:R.nextFoe?esc(R.e.name)+' è sconfitto: ora affronti '+esc(R.nextFoe.name)+'.':''}[R.end]||'';
-  const notes=[R.extra?`Di cui ${R.extra} per ${R.why}.`:'',R.sun&&R.eL&&R.eL!=='K'?'Danni raddoppiati dalla Spada del Sole.':'',R.switched?'RESISTENZA troppo bassa per il Raggio Psichico: usi lo Psicolaser.':''].filter(Boolean).join(' ');
-  return `<div class="rres"><div class="rl me"><span class="who">Lupo Solitario</span><b class="${R.dmg?'':'zero'}">${me}</b><small>resta ${R.lAfter}</small></div>
-  <div class="rl foe"><span class="who">${esc(R.e.name)}</span><b class="${R.eL?'':'zero'}">${foe}</b><small>resta ${R.eAfter}</small></div></div>
+  const me=R.lL==='K'?T('ucciso','killed'):R.dmg?`−${R.dmg} ${T('RES','EP')}`:T('nessun danno','no damage');
+  const foe=R.eL==='K'?T('ucciso','killed'):R.eL?`−${R.eL} ${T('RES','EP')}`:T('nessun danno','no damage');
+  const end={morte:T('Lupo Solitario cade.','Lone Wolf falls.'),fuga:T('Sei fuggito.','You have evaded.'),vittoria:esc(R.e.name)+T(' è sconfitto.',' is defeated.'),next:R.nextFoe?esc(R.e.name)+T(' è sconfitto: ora affronti ',' is defeated: now you face ')+esc(R.nextFoe.name)+'.':''}[R.end]||'';
+  const notes=[R.extra?T(`Di cui ${R.extra} per ${R.why}.`,`Of which ${R.extra} from ${R.why}.`):'',R.sun&&R.eL&&R.eL!=='K'?T('Danni raddoppiati dalla Spada del Sole.','Damage doubled by the Sommerswerd.'):'',R.switched?T('RESISTENZA troppo bassa per il Raggio Psichico: usi lo Psicolaser.','ENDURANCE too low for Psi-surge: you use Mindblast.'):''].filter(Boolean).join(' ');
+  return `<div class="rres"><div class="rl me"><span class="who">${T('Lupo Solitario','Lone Wolf')}</span><b class="${R.dmg?'':'zero'}">${me}</b><small>${T('resta','left')} ${R.lAfter}</small></div>
+  <div class="rl foe"><span class="who">${esc(R.e.name)}</span><b class="${R.eL?'':'zero'}">${foe}</b><small>${T('resta','left')} ${R.eAfter}</small></div></div>
   ${notes?`<p class="note">${notes}</p>`:''}${end?`<p class="rend">${end}</p>`:''}`;
 }
 async function doRound(flee){
   const c=C();if(!c||!c.combat)return;const e0=c.combat.enemies[c.combat.idx];
   const P=computeRound(c,0,flee);
-  const r=await drawReel(flee?'Scontro di fuga':'Scontro con '+e0.name,null,{
-    pre:`Rapporto di Forza <b>${sgn(P.ratio)}</b>: ${P.total} contro ${e0.comb}.${flee?' Nella fuga il nemico non subisce danni.':''}`,
+  const r=await drawReel(flee?T('Scontro di fuga','Evasion round'):T('Scontro con ','Round against ')+e0.name,null,{
+    pre:`${T('Rapporto di Forza','Combat Ratio')} <b>${sgn(P.ratio)}</b>: ${P.total} ${T('contro','against')} ${e0.comb}.${flee?T(' Nella fuga il nemico non subisce danni.',' When evading, the enemy takes no damage.'):''}`,
     describe:k=>roundHtml(computeRound(C(),k,flee)),
     canAgain:k=>{const R=computeRound(C(),k,flee);return !R.end||R.end==='next'}});
   if(!r)return;
   mutate(c=>{
     const cb=c.combat,e=cb.enemies[cb.idx],R=computeRound(c,r.d,flee);
-    if(R.switched){cb.psi=R.psi;toast('RESISTENZA troppo bassa per il Raggio Psichico: passi allo Psicolaser')}
+    if(R.switched){cb.psi=R.psi;toast(T('RESISTENZA troppo bassa per il Raggio Psichico: passi allo Psicolaser','ENDURANCE too low for Psi-surge: switching to Mindblast'))}
     e.res=R.eAfter;c.resCur-=R.dmg;if(c.para){c.para.fought=true;if(R.dmg>0)c.para.lost=true}
     e.roundsHere++;cb.rounds.push({d:r.d,ratio:R.ratio,eL:R.eL,lL:R.lL==='K'?'K':R.lL+R.extra,extra:R.extra,why:R.why,foe:e.name,fi:cb.idx,flee});
-    UI.lastRound=`Numero ${r.d}, Rapporto ${sgn(R.ratio)}: ${e.name} ${R.eL==='K'?'ucciso':'−'+R.eL}, tu ${R.lL==='K'?'ucciso':'−'+(R.lL+R.extra)}.`;
+    UI.lastRound=`${T('Numero','Number')} ${r.d}, ${T('Rapporto','Ratio')} ${sgn(R.ratio)}: ${e.name} ${R.eL==='K'?T('ucciso','killed'):'−'+R.eL}, ${T('tu','you')} ${R.lL==='K'?T('ucciso','killed'):'−'+(R.lL+R.extra)}.`;
     if(c.resCur<=0){c.resCur=0;endCombat(c,'morte');return}
-    if(flee){endCombat(c,'fuga');toast('Sei fuggito');return}
+    if(flee){endCombat(c,'fuga');toast(T('Sei fuggito','You have evaded'));return}
     if(e.res<=0){
       const next=cb.enemies.findIndex(x=>x.res>0);
-      if(next>=0){cb.idx=next;cb.enemies[next].roundsHere=0;toast(e.name+' è sconfitto. Ora affronti '+cb.enemies[next].name)}
-      else{endCombat(c,'vittoria');toast('Vittoria: '+e.name+' è sconfitto')}
+      if(next>=0){cb.idx=next;cb.enemies[next].roundsHere=0;toast(e.name+T(' è sconfitto. Ora affronti ',' is defeated. Now you face ')+cb.enemies[next].name)}
+      else{endCombat(c,'vittoria');toast(T('Vittoria: ','Victory: ')+e.name+T(' è sconfitto',' is defeated'))}
     }
   });
   const c2=C();if(r.again&&c2&&c2.combat&&c2.status==='alive')doRound(false);
 }
 function addFromSheet(){
   const g=id=>document.getElementById(id);const kind=g('skind').value;const name=g('sname').value.trim();
-  if(!name){toast('Dai un nome all’oggetto');return}
+  if(!name){toast(T('Dai un nome all’oggetto','Give the item a name'));return}
   const it={id:uid(),kind,name,comb:num(g('scomb').value),res:num(g('sres').value),eq:false,note:g('snote').value.trim()};
   if(kind==='arma')it.wtype=g('swtype').value;
   if(kind==='armatura')it.atype=g('satype').value;
   if(kind==='faretra'){it.arrows=Math.min(6,Math.max(0,num(g('sarr').value)));it.comb=0;it.res=0}
   closeSheet();
-  mutate(c=>{if(c.specials.length>=specialLimit(c)){toast('Hai già 12 Oggetti Speciali');return}
-    withMaxDelta(c,()=>{c.specials.push(it);if(['armatura','elmo','scudo','altro'].includes(kind)){const err=eqCheck(c,it);if(!err)it.eq=true;else toast('Aggiunto ma non indossato: '+err)}})});
+  mutate(c=>{if(c.specials.length>=specialLimit(c)){toast(T('Hai già 12 Oggetti Speciali','You already have 12 Special Items'));return}
+    withMaxDelta(c,()=>{c.specials.push(it);if(['armatura','elmo','scudo','altro'].includes(kind)){const err=eqCheck(c,it);if(!err)it.eq=true;else toast(T('Aggiunto ma non indossato: ','Added but not worn: ')+err)}})});
 }
 function eqCheck(c,it){
   const on=c.specials.filter(s=>s.eq&&s.id!==it.id);
-  if(it.kind==='elmo'&&on.some(s=>s.kind==='elmo'))return 'puoi indossare un solo elmo';
-  if(it.kind==='scudo'&&on.some(s=>s.kind==='scudo'))return 'puoi usare un solo scudo';
+  if(it.kind==='elmo'&&on.some(s=>s.kind==='elmo'))return T('puoi indossare un solo elmo','you can wear only one helmet');
+  if(it.kind==='scudo'&&on.some(s=>s.kind==='scudo'))return T('puoi usare un solo scudo','you can use only one shield');
   if(it.kind==='armatura'){for(const s of on.filter(s=>s.kind==='armatura')){
-    if(s.atype===it.atype&&it.atype!=='Altra armatura')return 'indossi già un’armatura dello stesso tipo';
-    if(ARMOR_CLASH.some(([a,b])=>(a===s.atype&&b===it.atype)||(b===s.atype&&a===it.atype)))return it.atype+' non è compatibile con '+s.atype}}
+    if(s.atype===it.atype&&it.atype!=='Altra armatura')return T('indossi già un’armatura dello stesso tipo','you already wear armour of the same type');
+    if(ARMOR_CLASH.some(([a,b])=>(a===s.atype&&b===it.atype)||(b===s.atype&&a===it.atype)))return wl(it.atype)+T(' non è compatibile con ',' is not compatible with ')+wl(s.atype)}}
   return null;
 }
 function closeSheet(){document.getElementById('layer').innerHTML=''}
 function openSpecialSheet(){
   const L=document.getElementById('layer');
-  L.innerHTML=`<div class="veil"><div class="sheet" role="dialog" aria-modal="true"><h3>Oggetto Speciale</h3>
-  <label class="f"><span>Nome</span><input id="sname" placeholder="es. Elmo"></label>
-  <label class="f"><span>Tipo</span><select id="skind">${Object.entries(SPECIAL_KINDS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>
+  L.innerHTML=`<div class="veil"><div class="sheet" role="dialog" aria-modal="true"><h3>${T('Oggetto Speciale','Special Item')}</h3>
+  <label class="f"><span>${T('Nome','Name')}</span><input id="sname" placeholder="${T('es. Elmo','e.g. Helmet')}"></label>
+  <label class="f"><span>${T('Tipo','Type')}</span><select id="skind">${Object.entries(SPECIAL_KINDS).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></label>
   <div id="sx"></div>
-  <div class="grid2"><label class="f"><span>Bonus COMBATTIVITÀ</span><input id="scomb" type="number" inputmode="numeric" value="0"></label><label class="f"><span>Bonus RESISTENZA</span><input id="sres" type="number" inputmode="numeric" value="0"></label></div>
-  <label class="f"><span>Nota (facoltativa)</span><input id="snote" placeholder="es. apre le porte di Holmgard"></label>
-  <div class="row end"><button class="btn" data-a="sheet-close">Annulla</button><button class="btn pri" data-a="sheet-save">Aggiungi</button></div></div></div>`;
+  <div class="grid2"><label class="f"><span>${T('Bonus COMBATTIVITÀ','COMBAT SKILL bonus')}</span><input id="scomb" type="number" inputmode="numeric" value="0"></label><label class="f"><span>${T('Bonus RESISTENZA','ENDURANCE bonus')}</span><input id="sres" type="number" inputmode="numeric" value="0"></label></div>
+  <label class="f"><span>${T('Nota (facoltativa)','Note (optional)')}</span><input id="snote" placeholder="${T('es. apre le porte di Holmgard','e.g. opens the gates of Holmgard')}"></label>
+  <div class="row end"><button class="btn" data-a="sheet-close">${T('Annulla','Cancel')}</button><button class="btn pri" data-a="sheet-save">${T('Aggiungi','Add')}</button></div></div></div>`;
   const upd=()=>{const k=document.getElementById('skind').value;document.getElementById('sx').innerHTML=
-    k==='arma'?`<label class="f"><span>Tipo di arma (per i bonus di Scherma e Guerra)</span><select id="swtype">${WEAPON_TYPES.map(t=>`<option>${t}</option>`).join('')}</select></label>`:
-    k==='armatura'?`<label class="f"><span>Armatura</span><select id="satype">${ARMORS.map(t=>`<option>${t}</option>`).join('')}</select></label>`:
-    k==='faretra'?`<label class="f"><span>Frecce (massimo 6)</span><input id="sarr" type="number" inputmode="numeric" value="6"></label>`:'';};
+    k==='arma'?`<label class="f"><span>${T('Tipo di arma (per i bonus di Scherma e Guerra)','Weapon type (for Weaponskill and Weaponmastery bonuses)')}</span><select id="swtype">${WEAPON_TYPES.map(t=>`<option value="${t}">${wl(t)}</option>`).join('')}</select></label>`:
+    k==='armatura'?`<label class="f"><span>${T('Armatura','Armour')}</span><select id="satype">${ARMORS.map(t=>`<option value="${t}">${wl(t)}</option>`).join('')}</select></label>`:
+    k==='faretra'?`<label class="f"><span>${T('Frecce (massimo 6)','Arrows (6 maximum)')}</span><input id="sarr" type="number" inputmode="numeric" value="6"></label>`:'';};
   document.getElementById('skind').addEventListener('change',upd);upd();
   document.querySelector('#layer .veil').addEventListener('click',e=>{if(e.target.classList.contains('veil'))closeSheet()});
 }
 async function eatMeal(){
   const c=C();const L=document.getElementById('layer');
-  L.innerHTML=`<div class="veil"><div class="sheet" role="dialog" aria-modal="true"><h3>Devi consumare un Pasto</h3>
-  <p class="lead">Pasti nello Zaino: ${meals(c)}.${c.ramas.includes('caccia')&&!hasR(c,'fiuto')?' La Caccia non funziona nelle zone desertiche.':''}</p>
-  <label class="chip" style="margin:6px 0"><input type="checkbox" id="desert"> Zona desertica o territorio desolato</label>
-  <div class="row end"><button class="btn" data-a="sheet-close">Annulla</button><button class="btn pri" data-a="meal-go">Conferma</button></div></div></div>`;
+  L.innerHTML=`<div class="veil"><div class="sheet" role="dialog" aria-modal="true"><h3>${T('Devi consumare un Pasto','You must eat a Meal')}</h3>
+  <p class="lead">${T('Pasti nello Zaino','Meals in Backpack')}: ${meals(c)}.${c.ramas.includes('caccia')&&!hasR(c,'fiuto')?T(' La Caccia non funziona nelle zone desertiche.',' Hunting does not work in wastelands and deserts.'):''}</p>
+  <label class="chip" style="margin:6px 0"><input type="checkbox" id="desert"> ${T('Zona desertica o territorio desolato','Desert or wasteland')}</label>
+  <div class="row end"><button class="btn" data-a="sheet-close">${T('Annulla','Cancel')}</button><button class="btn pri" data-a="meal-go">${T('Conferma','Confirm')}</button></div></div></div>`;
 }
 
 const A={
  tab:d=>{APP.tab=d.t;saveLocal();render();window.scrollTo(0,0)},
- fate:async()=>{const d=await drawFate('Rullo del Destino');if(d!==null&&!S().animateFate)toast('Numero estratto: '+d)},
+ fate:async()=>{const d=await drawFate(T('Rullo del Destino','Reel of Fate'));if(d!==null&&!S().animateFate)toast(T('Numero estratto: ','Number picked: ')+d)},
  undo,
  journal:openJournal,
  'journal-close':()=>{document.getElementById('layer').innerHTML='';render()},
  'layer-close':()=>{document.getElementById('layer').innerHTML='';render()},
  rules:openRules,
+ 'set-lang':d=>setLang(d.v),
+ 'lang-menu':()=>{document.getElementById('layer').innerHTML=`<div class="veil lmv" data-a="layer-close"><div class="lmenu" role="menu"><button role="menuitemradio" aria-checked="${LANG==='it'}" data-a="set-lang" data-v="it">Italiano</button><button role="menuitemradio" aria-checked="${LANG==='en'}" data-a="set-lang" data-v="en">English</button></div></div>`},
  'reset-app':async()=>{
-   if(!await confirmBox('Reimposta l’app','Vengono eliminati tutti i personaggi, il diario, le mappe e le impostazioni. Se vuoi conservarli, prima esporta un backup.','Elimina tutto',true))return;
-   if(!await confirmBox('Sei sicuro?','L’operazione non si può annullare.','Sì, elimina tutto',true))return;
+   if(!await confirmBox(T('Reimposta l’app','Reset the app'),T('Vengono eliminati tutti i personaggi, il diario, le mappe e le impostazioni. Se vuoi conservarli, prima esporta un backup.','All characters, journal, maps and settings will be deleted. Export a backup first if you want to keep them.'),T('Elimina tutto','Delete everything'),true))return;
+   if(!await confirmBox(T('Sei sicuro?','Are you sure?'),T('L’operazione non si può annullare.','This cannot be undone.'),T('Sì, elimina tutto','Yes, delete everything'),true))return;
    for(const id of Object.keys(APP.slots))CLOUD.pending.add(id);
    const mapIds=Object.values(S().maps||{});
    APP.slots={};APP.current=null;APP.settings={...DEFAULT_SETTINGS};APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;APP.tab='pers';UNDO=[];UI.create=null;UI.wiz=null;
    try{const as=await getAssets();if(as)for(const id of mapIds){try{await as.delete(id)}catch(e){}}}catch(e){}
    try{const ks=await IDB.keys();for(const k of ks)await IDB.del(k)}catch(e){}
    Object.keys(MAPURL).forEach(k=>delete MAPURL[k]);
-   persist(null);document.getElementById('layer').innerHTML='';render();window.scrollTo(0,0);toast('App reimpostata')},
+   persist(null);document.getElementById('layer').innerHTML='';render();window.scrollTo(0,0);toast(T('App reimpostata','App reset'))},
  'rules-go':d=>{const el=document.getElementById(d.id),box=document.getElementById('rulesv');if(el&&box)box.scrollTo({top:el.offsetTop-12,behavior:'smooth'})},
  'rules-top':()=>{const el=document.getElementById('rtoc'),box=document.getElementById('rulesv');if(el&&box)box.scrollTo({top:el.offsetTop-80,behavior:'smooth'})},
- maps:async()=>{try{await openMaps()}catch(e){toast('Errore nell’apertura delle mappe: '+(e&&e.message||e))}},
+ maps:async()=>{try{await openMaps()}catch(e){toast(T('Errore nell’apertura delle mappe: ','Error opening the maps: ')+(e&&e.message||e))}},
  'map-add':d=>pickMap(+d.n),
  'map-view':d=>viewMap(+d.n),
- 'map-del':async d=>{if(!await confirmBox('Rimuovi la mappa','La mappa del libro '+d.n+' viene eliminata da questo telefono.','Rimuovi',true))return;const m={...mapsCloud()};const id=m[d.n];if(id){delete m[d.n];APP.settings.maps=m;APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);try{const as=await getAssets();if(as)await as.delete(id)}catch(e){}}else{try{await IDB.del('map-'+d.n)}catch(e){}}Object.keys(MAPURL).forEach(k=>delete MAPURL[k]);openMaps()},
+ 'map-del':async d=>{if(!await confirmBox(T('Rimuovi la mappa','Remove the map'),T('La mappa del libro '+d.n+' viene eliminata.','The map of book '+d.n+' will be deleted.'),T('Rimuovi','Remove'),true))return;const m={...mapsCloud()};const id=m[d.n];if(id){delete m[d.n];APP.settings.maps=m;APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);try{const as=await getAssets();if(as)await as.delete(id)}catch(e){}}else{try{await IDB.del('map-'+d.n)}catch(e){}}Object.keys(MAPURL).forEach(k=>delete MAPURL[k]);openMaps()},
  'map-alias':d=>{const a={...(S().mapAlias||{})};if(d.v)a[d.n]=+d.v;else delete a[d.n];APP.settings.mapAlias=a;APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);openMaps()},
  'map-cur':async()=>{const c=C();if(c&&(mapAssetId(c.book)||await mapBlob(c.book)))viewMap(c.book);else openMaps()},
  'lose-n':d=>{UI.loseN=Math.max(1,UI.loseN+ +d.d);render()},
@@ -1151,55 +1286,55 @@ const A={
  gain:()=>mutate(c=>textHeal(c,UI.gainN)),
  eat:eatMeal,
  'meal-go':()=>{const desert=document.getElementById('desert').checked;closeSheet();mutate(c=>{
-   if(canHunt(c,desert)){toast(hasR(c,'fiuto')?'Fiuto: trovi da mangiare, nessun Pasto consumato':'Caccia: nessun Pasto consumato');return}
-   const i=c.backpack.findIndex(x=>x.kind==='pasto');if(i>=0){c.backpack.splice(i,1);toast('Hai consumato un Pasto')}else{loseRes(c,3,'stenti');toast('Nessun Pasto: perdi 3 RESISTENZA')}})},
- 'arci-med':()=>mutate(c=>{const ceil=healCeil(c,'arci');const g=Math.max(0,Math.min(20,ceil-c.resCur));c.resCur+=g;c.arciUsed=true;toast('Medicina da Arcimaestro: +'+g+' RESISTENZA')}),
- goto:()=>{const v=document.getElementById('pn').value.trim();const n=num(v,NaN);if(!Number.isFinite(n)||n<1){toast('Inserisci il numero del paragrafo');return}
+   if(canHunt(c,desert)){toast(hasR(c,'fiuto')?T('Fiuto: trovi da mangiare, nessun Pasto consumato','Huntmastery: you find food, no Meal used'):T('Caccia: nessun Pasto consumato','Hunting: no Meal used'));return}
+   const i=c.backpack.findIndex(x=>x.kind==='pasto');if(i>=0){c.backpack.splice(i,1);toast(T('Hai consumato un Pasto','You ate a Meal'))}else{loseRes(c,3,'stenti');toast(T('Nessun Pasto: perdi 3 RESISTENZA','No Meal: you lose 3 ENDURANCE'))}})},
+ 'arci-med':()=>mutate(c=>{const ceil=healCeil(c,'arci');const g=Math.max(0,Math.min(20,ceil-c.resCur));c.resCur+=g;c.arciUsed=true;toast(T('Medicina da Arcimaestro: +'+g+' RESISTENZA','Archmaster Curing: +'+g+' ENDURANCE'))}),
+ goto:()=>{const v=document.getElementById('pn').value.trim();const n=num(v,NaN);if(!Number.isFinite(n)||n<1){toast(T('Inserisci il numero del paragrafo','Enter the section number'));return}
    mutate(c=>{
      if(c.phase==='prep'){c.phase='play';snapshotBook(c)}
      else if(c.para&&canHeal(c)&&!c.para.fought&&!c.para.lost){const ceil=healCeil(c,'para');
        if(c.resCur<ceil&&(!S().healLimit10||c.healed<10)){c.resCur++;c.healed++;toast('+1 RESISTENZA ('+(hasR(c,'medicina')?'Medicina':'Guarigione')+')')}}
      logNotes(c);c.history.push(n);c.journal.push({k:'p',n});c.para={n,fought:false,lost:false};c.postCombat=false;
    })},
- 'add-weapon':()=>{const type=document.getElementById('wtype').value;const name=document.getElementById('wname').value.trim()||type;mutate(c=>{if(c.weapons.length>=2)return;c.weapons.push({id:uid(),name,type})})},
+ 'add-weapon':()=>{const type=document.getElementById('wtype').value;const name=document.getElementById('wname').value.trim()||wl(type);mutate(c=>{if(c.weapons.length>=2)return;c.weapons.push({id:uid(),name,type})})},
  'del-weapon':d=>mutate(c=>{c.weapons=c.weapons.filter(w=>w.id!==d.id)}),
  'add-pack':()=>{const kind=document.getElementById('pkind').value;const v=Math.abs(num(document.getElementById('pval').value,kind==='cura'?4:kind==='alether'?2:0));
-   const name=document.getElementById('pname').value.trim()||({pasto:'Pasto',cura:'Pozione curativa',alether:'Pozione di Alether',altro:''}[kind]);
-   if(!name){toast('Dai un nome all’oggetto');return}mutate(c=>{if(c.backpack.length>=8){toast('Lo Zaino è pieno');return}c.backpack.push({id:uid(),name,kind,v})})},
- 'add-meal':()=>mutate(c=>{if(c.backpack.length>=8){toast('Lo Zaino è pieno: libera un posto');return}c.backpack.push({id:uid(),name:'Pasto',kind:'pasto',v:0})}),
+   const name=document.getElementById('pname').value.trim()||({pasto:T('Pasto','Meal'),cura:T('Pozione curativa','Healing potion'),alether:T('Pozione di Alether','Alether potion'),altro:''}[kind]);
+   if(!name){toast(T('Dai un nome all’oggetto','Give the item a name'));return}mutate(c=>{if(c.backpack.length>=8){toast(T('Lo Zaino è pieno','Your Backpack is full'));return}c.backpack.push({id:uid(),name,kind,v})})},
+ 'add-meal':()=>mutate(c=>{if(c.backpack.length>=8){toast(T('Lo Zaino è pieno: libera un posto','Your Backpack is full: free a slot'));return}c.backpack.push({id:uid(),name:T('Pasto','Meal'),kind:'pasto',v:0})}),
  'del-pack':d=>mutate(c=>{c.backpack=c.backpack.filter(i=>i.id!==d.id)}),
  drink:d=>{const c=C();const it=c.backpack.find(i=>i.id===d.id);if(!it)return;
-   if(S().potionAfterCombat&&!c.postCombat){toast('Regola opzionale attiva: puoi berla solo subito dopo un combattimento vinto');return}
-   const g=Math.min(it.v,healCeil(c,'potion')-c.resCur);if(g<=0){toast(c.debt&&S().potionOnlyWounds?'Non hai ferite da curare: i punti persi per fame o fatica non si recuperano con le pozioni':'Non hai ferite da curare');return}
+   if(S().potionAfterCombat&&!c.postCombat){toast(T('Regola opzionale attiva: puoi berla solo subito dopo un combattimento vinto','Optional rule on: you can drink it only right after a won combat'));return}
+   const g=Math.min(it.v,healCeil(c,'potion')-c.resCur);if(g<=0){toast(c.debt&&S().potionOnlyWounds?T('Non hai ferite da curare: i punti persi per fame o fatica non si recuperano con le pozioni','No wounds to heal: points lost to hunger or fatigue cannot be restored with potions'):T('Non hai ferite da curare','No wounds to heal'));return}
    mutate(c=>{c.backpack=c.backpack.filter(i=>i.id!==d.id);c.resCur+=g;toast('+'+g+' RESISTENZA')})},
- gold:d=>mutate(c=>{const n=c.gold+ +d.d;if(n>50)toast('La Borsa contiene al massimo 50 monete');c.gold=n}),
- gold5:d=>mutate(c=>{const n=c.gold+ +d.d;if(n>50)toast('La Borsa contiene al massimo 50 monete: le eccedenti vanno perse');c.gold=n}),
- convert:()=>mutate(c=>{const r=CURR[c.currency];const g=Math.floor(c.gold/r);toast(c.gold+' '+c.currency+' = '+g+' Corone d’oro');c.gold=g;c.currency='Corone d’oro'}),
+ gold:d=>mutate(c=>{const n=c.gold+ +d.d;if(n>50)toast(T('La Borsa contiene al massimo 50 monete','The Belt Pouch holds 50 coins at most'));c.gold=n}),
+ gold5:d=>mutate(c=>{const n=c.gold+ +d.d;if(n>50)toast(T('La Borsa contiene al massimo 50 monete: le eccedenti vanno perse','The Belt Pouch holds 50 coins at most: the excess is lost'));c.gold=n}),
+ convert:()=>mutate(c=>{const r=CURR[c.currency];const g=Math.floor(c.gold/r);toast(c.gold+' '+wl(c.currency)+' = '+g+' '+wl('Corone d’oro'));c.gold=g;c.currency='Corone d’oro'}),
  'special-sheet':openSpecialSheet,'sheet-close':closeSheet,'sheet-save':addFromSheet,
- 'sun-sword':()=>mutate(c=>{if(c.specials.length>=specialLimit(c))return;c.specials.push({id:uid(),kind:'arma',name:'Spada del Sole',wtype:'Spada',sun:true,comb:8,res:0,eq:false,note:''})}),
+ 'sun-sword':()=>mutate(c=>{if(c.specials.length>=specialLimit(c))return;c.specials.push({id:uid(),kind:'arma',name:T('Spada del Sole','Sommerswerd'),wtype:'Spada',sun:true,comb:8,res:0,eq:false,note:''})}),
  'del-special':d=>mutate(c=>withMaxDelta(c,()=>{c.specials=c.specials.filter(s=>s.id!==d.id)})),
- 'toggle-eq':d=>mutate(c=>{const it=c.specials.find(s=>s.id===d.id);if(!it)return;if(!it.eq){const err=eqCheck(c,it);if(err){toast('Non puoi: '+err);return}}withMaxDelta(c,()=>{it.eq=!it.eq})}),
+ 'toggle-eq':d=>mutate(c=>{const it=c.specials.find(s=>s.id===d.id);if(!it)return;if(!it.eq){const err=eqCheck(c,it);if(err){toast(T('Non puoi: ','You can’t: ')+err);return}}withMaxDelta(c,()=>{it.eq=!it.eq})}),
  arrows:d=>mutate(c=>{const it=c.specials.find(s=>s.id===d.id);if(it)it.arrows=Math.max(0,Math.min(6,it.arrows+ +d.d))}),
- 'lose-pack':async()=>{if(await confirmBox('Perdi lo Zaino','Perdi tutti gli Oggetti dello Zaino e i Pasti. Armi, Oggetti Speciali e Borsa restano con te.','Perdi lo Zaino',true))mutate(c=>{c.backpack=[];c.hasBackpack=false})},
+ 'lose-pack':async()=>{if(await confirmBox(T('Perdi lo Zaino','Lose the Backpack'),T('Perdi tutti gli Oggetti dello Zaino e i Pasti. Armi, Oggetti Speciali e Borsa restano con te.','You lose all Backpack Items and Meals. Weapons, Special Items and Belt Pouch stay with you.'),T('Perdi lo Zaino','Lose the Backpack'),true))mutate(c=>{c.backpack=[];c.hasBackpack=false})},
  'regain-pack':()=>mutate(c=>{c.hasBackpack=true}),
- seize:()=>mutate(c=>{c.seized={weapons:c.weapons,specials:c.specials.filter(s=>s.kind==='arma')};c.weapons=[];c.specials=c.specials.filter(s=>s.kind!=='arma');toast('Armi e armi speciali sequestrate')}),
+ seize:()=>mutate(c=>{c.seized={weapons:c.weapons,specials:c.specials.filter(s=>s.kind==='arma')};c.weapons=[];c.specials=c.specials.filter(s=>s.kind!=='arma');toast(T('Armi e armi speciali sequestrate','Weapons and special weapons confiscated'))}),
  unseize:()=>mutate(c=>{const s=c.seized;const room=2-c.weapons.length;c.weapons.push(...s.weapons.slice(0,room));const lost=s.weapons.slice(room);
-   const sp=specialLimit(c)-c.specials.length;c.specials.push(...s.specials.slice(0,Math.max(0,sp)));c.seized=null;if(lost.length)toast('Spazio insufficiente: '+lost.map(w=>w.name).join(', ')+' non recuperate')}),
+   const sp=specialLimit(c)-c.specials.length;c.specials.push(...s.specials.slice(0,Math.max(0,sp)));c.seized=null;if(lost.length)toast(T('Spazio insufficiente: ','Not enough room: ')+lost.map(w=>w.name).join(', ')+T(' non recuperate',' not recovered'))}),
  dep:d=>mutate(c=>{let it;if(d.src==='pack'){it=c.backpack.find(i=>i.id===d.id);c.backpack=c.backpack.filter(i=>i.id!==d.id)}
    else if(d.src==='arm'){it=c.weapons.find(i=>i.id===d.id);c.weapons=c.weapons.filter(i=>i.id!==d.id)}
    else withMaxDelta(c,()=>{it=c.specials.find(i=>i.id===d.id);c.specials=c.specials.filter(i=>i.id!==d.id);if(it)it.eq=false});
    if(it)c.deposit.push({src:d.src,item:it})}),
  withdraw:d=>mutate(c=>{const k=c.deposit.findIndex(x=>x.item.id===d.id);if(k<0)return;const x=c.deposit[k];
-   if(x.src==='pack'){if(!c.hasBackpack||c.backpack.length>=8){toast('Non c’è posto nello Zaino');return}c.backpack.push(x.item)}
-   else if(x.src==='arm'){if(c.weapons.length>=2){toast('Porti già 2 armi');return}c.weapons.push(x.item)}
-   else{if(c.specials.length>=specialLimit(c)){toast('Hai già 12 Oggetti Speciali');return}c.specials.push(x.item)}
+   if(x.src==='pack'){if(!c.hasBackpack||c.backpack.length>=8){toast(T('Non c’è posto nello Zaino','No room in the Backpack'));return}c.backpack.push(x.item)}
+   else if(x.src==='arm'){if(c.weapons.length>=2){toast(T('Porti già 2 armi','You already carry 2 weapons'));return}c.weapons.push(x.item)}
+   else{if(c.specials.length>=specialLimit(c)){toast(T('Hai già 12 Oggetti Speciali','You already have 12 Special Items'));return}c.specials.push(x.item)}
    c.deposit.splice(k,1)}),
  shoot:async d=>{const c=C();let bonus=0,why=[];
-   if(d.k==='arco'){if(hasR(c,'guerra')&&c.guerra.includes('Arco')){bonus+=3;why.push('Guerra +3')}}
-   if(hasR(c,'guerra')&&rsN(c)>=7){bonus+=2;why.push('Mentore +2')}
-   const n=await drawFate(d.k==='arco'?'Tiro con l’Arco':'Arma da lancio');if(n===null)return;
+   if(d.k==='arco'){if(hasR(c,'guerra')&&c.guerra.includes('Arco')){bonus+=3;why.push(T('Guerra +3','Weaponmastery +3'))}}
+   if(hasR(c,'guerra')&&rsN(c)>=7){bonus+=2;why.push(T('Mentore +2','Mentora +2'))}
+   const n=await drawFate(d.k==='arco'?T('Tiro con l’Arco','Bow shot'):T('Arma da lancio','Thrown weapon'));if(n===null)return;
    if(d.k==='arco')mutate(c=>{const q=c.specials.find(s=>s.kind==='faretra'&&s.arrows>0);if(q)q.arrows--});
-   toast(`Numero ${n}${bonus?' + '+bonus+' ('+why.join(', ')+') = '+(n+bonus):''}`)},
+   toast(`${T('Numero','Number')} ${n}${bonus?' + '+bonus+' ('+why.join(', ')+') = '+(n+bonus):''}`)},
  // combattimento
  'foe-add':()=>{const f=readFoe();if(f)mutate(c=>startCombat(c,f))},
  'foe-queue':()=>{const f=readFoe();if(f)mutate(c=>{c.combat.enemies.push(f)})},
@@ -1210,14 +1345,14 @@ const A={
  'cb-alether':d=>mutate(c=>{const it=c.backpack.find(i=>i.id===d.id);if(!it||c.combat.rounds.length)return;c.combat.alether=it.v;c.backpack=c.backpack.filter(i=>i.id!==d.id)}),
  round:()=>doRound(false),
  flee:()=>doRound(true),
- 'end-combat':async()=>{if(await confirmBox('Interrompi il combattimento','Usalo quando il testo pone fine allo scontro, per esempio dopo un certo numero di scontri o se il nemico fugge.','Interrompi'))mutate(c=>endCombat(c,'interrotto'))},
+ 'end-combat':async()=>{if(await confirmBox(T('Interrompi il combattimento','End the combat'),T('Usalo quando il testo pone fine allo scontro, per esempio dopo un certo numero di scontri o se il nemico fugge.','Use this when the text ends the fight, for example after a number of rounds or if the enemy flees.'),T('Interrompi','End')))mutate(c=>endCombat(c,'interrotto'))},
  // diario
  'book-done':()=>{UI.wiz={ramas:null,scherma:'',rs:[],g:[]};render();window.scrollTo(0,0)},
- 'restart-book':async()=>{const c=C();if(!c.bookStart){toast('Nessun punto di partenza salvato per questo libro');return}
-   if(!await confirmBox('Ricomincia il libro '+c.book,'Il personaggio torna com’era all’inizio del libro. Puoi annullare subito dopo.','Ricomincia',true))return;
-   mutate(c2=>{const o=JSON.parse(c2.bookStart);const keep=c2.bookStart,j=c2.journal||[],nt=c2.notes,nl=c2.notesLogged;Object.keys(c2).forEach(k=>delete c2[k]);Object.assign(c2,o);c2.bookStart=keep;c2.status='alive';c2.notes=nt;c2.notesLogged=nl;c2.journal=[...j,{k:'e',txt:'Ricominci il libro '+c2.book,t:Date.now()}];if(c2.para)c2.journal.push({k:'p',n:c2.para.n})})},
+ 'restart-book':async()=>{const c=C();if(!c.bookStart){toast(T('Nessun punto di partenza salvato per questo libro','No starting point saved for this book'));return}
+   if(!await confirmBox(T('Ricomincia il libro ','Restart book ')+c.book,T('Il personaggio torna com’era all’inizio del libro. Puoi annullare subito dopo.','The character returns to how it was at the start of the book. You can undo right after.'),T('Ricomincia','Restart'),true))return;
+   mutate(c2=>{const o=JSON.parse(c2.bookStart);const keep=c2.bookStart,j=c2.journal||[],nt=c2.notes,nl=c2.notesLogged;Object.keys(c2).forEach(k=>delete c2[k]);Object.assign(c2,o);c2.bookStart=keep;c2.status='alive';c2.notes=nt;c2.notesLogged=nl;c2.journal=[...j,{k:'e',ev:'restart',book:c2.book,t:Date.now()}];if(c2.para)c2.journal.push({k:'p',n:c2.para.n})})},
  'wz-ramas':d=>{UI.wiz.ramas=d.v;render()},
- 'wz-sch':async()=>{const n=await drawFate('Arma della Scherma');if(n!==null){UI.wiz.scherma=SCHERMA_DRAW[n];toast('Sei maestro di '+SCHERMA_DRAW[n]);render()}},
+ 'wz-sch':async()=>{const n=await drawFate(T('Arma della Scherma','Weaponskill weapon'));if(n!==null){UI.wiz.scherma=SCHERMA_DRAW[n];toast(T('Sei maestro di ','You have mastered the ')+wl(SCHERMA_DRAW[n]));render()}},
  'wz-rs':d=>{const w=UI.wiz;if(w.rs.includes(d.v))w.rs=w.rs.filter(x=>x!==d.v);else if(w.rs.length<3)w.rs.push(d.v);if(!w.rs.includes('guerra'))w.g=[];render()},
  'wz-rs1':d=>{const w=UI.wiz;w.rs=[d.v];w.g=[];render()},
  'wz-g':d=>{const w=UI.wiz;if(w.g.includes(d.v))w.g=w.g.filter(x=>x!==d.v);else if(w.g.length<+d.n)w.g.push(d.v);render()},
@@ -1231,29 +1366,29 @@ const A={
    });
    if(S().mealsPerish)c.backpack=c.backpack.filter(i=>i.kind!=='pasto');
    if(c.currency!=='Corone d’oro'){c.gold=Math.floor(c.gold/CURR[c.currency]);c.currency='Corone d’oro'}
-   const got=b<=4?w.ramas&&RAMAS.find(a=>a.id===w.ramas).n:b===5?w.rs.map(id=>RAMASTAN.find(a=>a.id===id).n).join(', '):b<=11&&w.rs[0]?RAMASTAN.find(a=>a.id===w.rs[0]).n:'';
-   logNotes(c);c.journal.push({k:'e',txt:'Libro '+b+' completato'+(got?(b===5?'. Diventi Maestro Ramas, nuove Arti Ramastan: ':'. Nuova Arte: ')+got:''),t:Date.now()},{k:'b',book:b+1});
+   const got=b<=4?(w.ramas?[w.ramas]:[]):b===5?[...w.rs]:b<=11&&w.rs[0]?[w.rs[0]]:[];
+   logNotes(c);c.journal.push({k:'e',ev:'done',book:b,arts:got,master:b===5,t:Date.now()},{k:'b',book:b+1});
    c.book=b+1;c.phase='prep';c.para=null;c.history=[];c.healed=0;c.arciUsed=false;c.debt=0;c.postCombat=false;c.combat=null;c.resCur=maxRes(c);
    snapshotBook(c);APP.tab='pers';
- });UNDO=[];toast('Benvenuto nel libro '+C().book+': '+BOOKS[C().book])},
+ });UNDO=[];toast(T('Benvenuto nel libro ','Welcome to book ')+C().book+': '+BOOKS[C().book])},
  // opzioni
  opt:d=>{APP.settings[d.k]=!APP.settings[d.k];APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;persist(null);render()},
  'slot-load':d=>{APP.current=d.id;UNDO=[];UI.lastRound=null;APP.tab='pers';saveLocal();render()},
- 'slot-del':async d=>{const s=APP.slots[d.id];if(!await confirmBox('Elimina '+s.name,'Il personaggio viene eliminato da questo dispositivo e dal tuo account Claude. Esportalo prima se vuoi conservarlo.','Elimina',true))return;
+ 'slot-del':async d=>{const s=APP.slots[d.id];if(!await confirmBox(T('Elimina ','Delete ')+s.name,T('Il personaggio viene eliminato da questo dispositivo e dal tuo account Claude. Esportalo prima se vuoi conservarlo.','The character will be deleted from this device and your Claude account. Export it first if you want to keep it.'),T('Elimina','Delete'),true))return;
    delete APP.slots[d.id];if(APP.current===d.id){APP.current=Object.keys(APP.slots)[0]||null;UNDO=[]}persist(d.id);render()},
- rename:()=>{const c=C();const n=prompt('Nome del personaggio',c.name);if(n&&n.trim())mutate(c=>{c.name=n.trim()})},
+ rename:()=>{const c=C();const n=prompt(T('Nome del personaggio','Character name'),c.name);if(n&&n.trim())mutate(c=>{c.name=n.trim()})},
  export:()=>exportJSON([C()],'lupo-solitario-'+slug(C().name)+'-libro'+C().book+'.json'),
  'export-all':()=>exportJSON(Object.values(APP.slots),'lupo-solitario-tutti.json'),
  import:importJSON,
  'new-char':()=>{UI.create=newCR();render();window.scrollTo(0,0)},
  // creazione
  'cr-book':d=>{const r=UI.create;r.book=+d.v;r.ramas=r.ramas.slice(0,reqRamas(r.book));r.ramastan=r.ramastan.slice(0,reqRamastan(r.book));if(r.book<6){r.ramastan=[];r.guerra=[]}render()},
- 'cr-draw':async d=>{const n=await drawFate(d.k==='comb'?'Combattività':'Resistenza',d.k==='comb'?'Il numero estratto più 10 è la tua COMBATTIVITÀ.':'Il numero estratto più 20 è la tua RESISTENZA.');if(n===null)return;UI.create[d.k]=String((d.k==='comb'?10:20)+n);render()},
- 'cr-ramas':d=>{const r=UI.create;if(r.ramas.includes(d.v)){r.ramas=r.ramas.filter(x=>x!==d.v);if(d.v==='scherma')r.scherma=''}else if(r.ramas.length<reqRamas(r.book))r.ramas.push(d.v);else toast('Hai già scelto '+reqRamas(r.book)+' Arti');render()},
- 'cr-sch':async()=>{const n=await drawFate('Arma della Scherma');if(n===null)return;UI.create.scherma=SCHERMA_DRAW[n];toast(n+': sei maestro di '+SCHERMA_DRAW[n]);render()},
- 'cr-rs':d=>{const r=UI.create;if(r.ramastan.includes(d.v)){r.ramastan=r.ramastan.filter(x=>x!==d.v);if(d.v==='guerra')r.guerra=[]}else if(r.ramastan.length<reqRamastan(r.book))r.ramastan.push(d.v);else toast('Hai già scelto '+reqRamastan(r.book)+' Arti');render()},
+ 'cr-draw':async d=>{const n=await drawFate(d.k==='comb'?T('Combattività','Combat Skill'):T('Resistenza','Endurance'),d.k==='comb'?T('Il numero estratto più 10 è la tua COMBATTIVITÀ.','The number picked plus 10 is your COMBAT SKILL.'):T('Il numero estratto più 20 è la tua RESISTENZA.','The number picked plus 20 is your ENDURANCE.'));if(n===null)return;UI.create[d.k]=String((d.k==='comb'?10:20)+n);render()},
+ 'cr-ramas':d=>{const r=UI.create;if(r.ramas.includes(d.v)){r.ramas=r.ramas.filter(x=>x!==d.v);if(d.v==='scherma')r.scherma=''}else if(r.ramas.length<reqRamas(r.book))r.ramas.push(d.v);else toast(T('Hai già scelto '+reqRamas(r.book)+' Arti','You have already chosen '+reqRamas(r.book)+' Disciplines'));render()},
+ 'cr-sch':async()=>{const n=await drawFate(T('Arma della Scherma','Weaponskill weapon'));if(n===null)return;UI.create.scherma=SCHERMA_DRAW[n];toast(n+T(': sei maestro di ',': you have mastered the ')+wl(SCHERMA_DRAW[n]));render()},
+ 'cr-rs':d=>{const r=UI.create;if(r.ramastan.includes(d.v)){r.ramastan=r.ramastan.filter(x=>x!==d.v);if(d.v==='guerra')r.guerra=[]}else if(r.ramastan.length<reqRamastan(r.book))r.ramastan.push(d.v);else toast(T('Hai già scelto '+reqRamastan(r.book)+' Arti','You have already chosen '+reqRamastan(r.book)+' Disciplines'));render()},
  'cr-g':d=>{const r=UI.create;if(r.guerra.includes(d.v))r.guerra=r.guerra.filter(x=>x!==d.v);else if(r.guerra.length<reqGuerra(r.book))r.guerra.push(d.v);render()},
- 'cr-gold':async()=>{const n=await drawFate('Corone d’oro','Nel libro 1 il numero estratto indica le Corone nella Borsa. Negli altri libri segui il testo.');if(n!==null){UI.create.gold=String(n);render()}},
+ 'cr-gold':async()=>{const n=await drawFate(T('Corone d’oro','Gold Crowns'),T('Nel libro 1 il numero estratto indica le Corone nella Borsa. Negli altri libri segui il testo.','In book 1 the number picked is the Crowns in your Belt Pouch. In other books follow the text.'));if(n!==null){UI.create.gold=String(n);render()}},
  'cr-cancel':()=>{UI.create=null;render()},
  'cr-done':()=>{const r=UI.create;const rs=r.book>=6;
    const c={id:uid(),name:r.name.trim(),book:r.book,phase:'prep',combBase:num(r.comb),resBase:num(r.res),resCur:0,
@@ -1261,28 +1396,28 @@ const A={
      weapons:[],backpack:[],hasBackpack:true,gold:Math.min(50,num(r.gold)),currency:'Corone d’oro',specials:[],deposit:[],seized:null,
      para:null,history:[],journal:[{k:'b',book:r.book}],notesLogged:'',healed:0,arciUsed:false,debt:0,notes:'',log:[],combat:null,postCombat:false,status:'alive',bookStart:null,created:Date.now(),updated:Date.now()};
    c.resCur=maxRes(c);snapshotBook(c);APP.slots[c.id]=c;APP.current=c.id;APP.tab='equip';UI.create=null;UNDO=[];persist(c.id);render();window.scrollTo(0,0);
-   toast('Inserisci l’equipaggiamento iniziale indicato dal libro')},
+   toast(T('Inserisci l’equipaggiamento iniziale indicato dal libro','Enter the starting equipment given in the book'))},
 };
 const slug=s=>s.toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'personaggio';
 async function exportJSON(list,filename){
   const data=JSON.stringify({app:'registro-di-guerra',v:1,exported:new Date().toISOString(),slots:list,settings:APP.settings},null,1);
   try{const dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null;
     if(!dl){await shareFile(filename,data);return}
-    await dl.save({filename,data});toast('File esportato: salvalo in File, su iCloud Drive o Google Drive');
-  }catch(e){if(e&&e.code==='declined')return;toast('Esportazione non riuscita')}
+    await dl.save({filename,data});toast(T('File esportato: salvalo in File, su iCloud Drive o Google Drive','File exported: save it in Files, on iCloud Drive or Google Drive'));
+  }catch(e){if(e&&e.code==='declined')return;toast(T('Esportazione non riuscita','Export failed'))}
 }
 async function shareFile(filename,data){
   const file=new File([data],filename,{type:'application/json'});
   if(navigator.canShare&&navigator.canShare({files:[file]})){try{await navigator.share({files:[file]});return}catch(e){if(e&&e.name==='AbortError')return}}
   const a=document.createElement('a');a.href=URL.createObjectURL(file);a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},2000);
-  toast('File esportato: salvalo in File, su iCloud Drive o Google Drive');
+  toast(T('File esportato: salvalo in File, su iCloud Drive o Google Drive','File exported: save it in Files, on iCloud Drive or Google Drive'));
 }
 function importJSON(){
   const inp=document.createElement('input');inp.type='file';inp.accept='application/json,.json';
   inp.onchange=async()=>{const f=inp.files[0];if(!f)return;try{const o=JSON.parse(await f.text());const list=o.slots||(o.id?[o]:[]);if(!list.length)throw 0;
-    let n=0;for(const s of list){if(!s||!s.id||!s.ramas)continue;const ex=APP.slots[s.id];if(ex&&(ex.updated||0)>(s.updated||0)&&!await confirmBox('Sovrascrivere '+s.name+'?','Sul dispositivo c’è una versione più recente di questo personaggio.','Sovrascrivi',true))continue;s.updated=Date.now();APP.slots[s.id]=s;CLOUD.pending.add(s.id);n++}
-    if(n){APP.current=list[list.length-1].id;UNDO=[];persist(APP.current);render();toast(n===1?'Personaggio importato':n+' personaggi importati')}
-  }catch(e){toast('Il file non è un salvataggio valido del Registro di Guerra')}};
+    let n=0;for(const s of list){if(!s||!s.id||!s.ramas)continue;const ex=APP.slots[s.id];if(ex&&(ex.updated||0)>(s.updated||0)&&!await confirmBox(T('Sovrascrivere ','Overwrite ')+s.name+'?',T('Sul dispositivo c’è una versione più recente di questo personaggio.','There is a newer version of this character on the device.'),T('Sovrascrivi','Overwrite'),true))continue;s.updated=Date.now();APP.slots[s.id]=s;CLOUD.pending.add(s.id);n++}
+    if(n){APP.current=list[list.length-1].id;UNDO=[];persist(APP.current);render();toast(n===1?T('Personaggio importato','Character imported'):n+T(' personaggi importati',' characters imported'))}
+  }catch(e){toast(T('Il file non è un salvataggio valido','The file is not a valid save'))}};
   inp.click();
 }
 
@@ -1300,16 +1435,16 @@ document.addEventListener('change',e=>{const f=e.target.dataset&&e.target.datase
   if(f==='currency')mutate(c=>{c.currency=e.target.value});
   if(f==='notes'){const c=C();if(!c)return;c.notes=e.target.value;if(logNotes(c)){c.updated=Date.now();persist(c.id);const jp=document.getElementById('jprev');if(jp)jp.innerHTML=journalHtml(journalTail(c.journal))}}
   if(f==='pkind'){const k=e.target.value,inp=document.getElementById('pval'),lb=document.getElementById('pvl');
-    const m={cura:['Punti RES','4'],alether:['Punti COMB','2']}[k];
-    if(m){lb.textContent=m[0];inp.disabled=false;inp.placeholder='+'+m[1];inp.value=m[1]}else{lb.textContent='Nessun valore';inp.disabled=true;inp.value='';inp.placeholder=''}}
+    const m={cura:[T('Punti RES','EP points'),'4'],alether:[T('Punti COMB','CS points'),'2']}[k];
+    if(m){lb.textContent=m[0];inp.disabled=false;inp.placeholder='+'+m[1];inp.value=m[1]}else{lb.textContent=T('Nessun valore','No value');inp.disabled=true;inp.value='';inp.placeholder=''}}
   if(f==='cr-sch'){UI.create.scherma=e.target.value;render()}
   if(f==='wz-sch'){UI.wiz.scherma=e.target.value;render()}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pn')A.goto()});
 
-loadLocal();render();initCloud();getAssets();
+loadLocal();LANG=APP.settings.lang||((navigator.language||'it').toLowerCase().startsWith('it')?'it':'en');document.documentElement.lang=LANG;render();initCloud();getAssets();
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 </script>
-<script>if('serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)toast('Nuova versione disponibile: chiudi e riapri l’app')})})}).catch(()=>{})})}</script>
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>{r.addEventListener('updatefound',()=>{const w=r.installing;w&&w.addEventListener('statechange',()=>{if(w.state==='installed'&&navigator.serviceWorker.controller)toast(T('Nuova versione disponibile: chiudi e riapri l’app','New version available: close and reopen the app'))})})}).catch(()=>{})})}</script>
 </body>
 </html>
