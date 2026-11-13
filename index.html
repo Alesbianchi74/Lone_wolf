@@ -773,7 +773,8 @@ function renderOpz(c){
   <div class="row"><button class="btn" data-a="new-char">Nuovo personaggio</button><button class="btn" data-a="rename">Rinomina</button></div></section>
   <section class="sec"><h2>Salvataggi</h2><p class="lead">Ogni modifica viene salvata sul dispositivo e, quando disponibile, sul tuo account Claude. Per un backup su iCloud Drive o Google Drive esporta il file e salvalo dall’app File.</p>
   <p class="note">Account Claude: <span id="cloudst">${esc(CLOUD.status)}</span></p>
-  <div class="row"><button class="btn pri" data-a="export">Esporta questo personaggio</button><button class="btn" data-a="export-all">Esporta tutto</button><button class="btn" data-a="import">Importa</button></div></section>`;
+  <div class="row"><button class="btn pri" data-a="export">Esporta questo personaggio</button><button class="btn" data-a="export-all">Esporta tutto</button><button class="btn" data-a="import">Importa</button></div>
+  <div class="row" style="margin-top:18px"><button class="btn dng" data-a="reset-app">Reimposta l’app</button></div><p class="note">Elimina tutti i personaggi, il diario, le mappe e le impostazioni, e riporta l’app alla schermata iniziale.</p></section>`;
 }
 
 /* --- Creazione --- */
@@ -1116,6 +1117,16 @@ const A={
  'journal-close':()=>{document.getElementById('layer').innerHTML='';render()},
  'layer-close':()=>{document.getElementById('layer').innerHTML='';render()},
  rules:openRules,
+ 'reset-app':async()=>{
+   if(!await confirmBox('Reimposta l’app','Vengono eliminati tutti i personaggi, il diario, le mappe e le impostazioni. Se vuoi conservarli, prima esporta un backup.','Elimina tutto',true))return;
+   if(!await confirmBox('Sei sicuro?','L’operazione non si può annullare.','Sì, elimina tutto',true))return;
+   for(const id of Object.keys(APP.slots))CLOUD.pending.add(id);
+   const mapIds=Object.values(S().maps||{});
+   APP.slots={};APP.current=null;APP.settings={...DEFAULT_SETTINGS};APP.settingsUpdated=Date.now();CLOUD.settingsDirty=true;APP.tab='pers';UNDO=[];UI.create=null;UI.wiz=null;
+   try{const as=await getAssets();if(as)for(const id of mapIds){try{await as.delete(id)}catch(e){}}}catch(e){}
+   try{const ks=await IDB.keys();for(const k of ks)await IDB.del(k)}catch(e){}
+   Object.keys(MAPURL).forEach(k=>delete MAPURL[k]);
+   persist(null);document.getElementById('layer').innerHTML='';render();window.scrollTo(0,0);toast('App reimpostata')},
  'rules-go':d=>{const el=document.getElementById(d.id),box=document.getElementById('rulesv');if(el&&box)box.scrollTo({top:el.offsetTop-12,behavior:'smooth'})},
  'rules-top':()=>{const el=document.getElementById('rtoc'),box=document.getElementById('rulesv');if(el&&box)box.scrollTo({top:el.offsetTop-80,behavior:'smooth'})},
  maps:async()=>{try{await openMaps()}catch(e){toast('Errore nell’apertura delle mappe: '+(e&&e.message||e))}},
